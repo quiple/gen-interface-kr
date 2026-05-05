@@ -23,7 +23,7 @@ export function Footer() {
 
           <div className="footer__credits">
             <span className="footer__credit-label footer__credit-row-1-label">
-              Noto Sans by:
+              Noto Sans:
             </span>
             <span className="footer__credit-value footer__credit-row-1-value">
               {
@@ -31,16 +31,25 @@ export function Footer() {
               }
             </span>
             <span className="footer__credit-label footer__credit-row-2-label">
-              Inter by:
+              Inter:
             </span>
             <span className="footer__credit-value footer__credit-row-2-value">
               Rasmus Andersson
             </span>
             <span className="footer__credit-label footer__credit-row-3-label">
-              Composed by:
+              Gen Interface JP:
             </span>
             <span className="footer__credit-value footer__credit-row-3-value">
-              Yamato Iizuka with{" "}
+              Composed by{" "}
+              <a
+                className="footer__credit-link"
+                href="https://yamatoiizuka.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Yamato Iizuka
+              </a>{" "}
+              with{" "}
               <a
                 className="footer__credit-link"
                 href="https://github.com/yamatoiizuka/ofl-font-baker"
@@ -48,6 +57,19 @@ export function Footer() {
                 rel="noreferrer"
               >
                 OFL Font Baker
+              </a>
+            </span>
+            <span className="footer__credit-label footer__credit-row-4-label">
+              GitHub:
+            </span>
+            <span className="footer__credit-value footer__credit-row-4-value">
+              <a
+                className="footer__credit-link"
+                href="https://github.com/yamatoiizuka/gen-interface-jp"
+                target="_blank"
+                rel="noreferrer"
+              >
+                yamatoiizuka/gen-interface-jp
               </a>
             </span>
           </div>
