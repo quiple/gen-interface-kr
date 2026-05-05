@@ -37,7 +37,7 @@ jobs:
         run: python3 -m font.build
 
       - name: Build webfont subsets
-        run: python3 -m webfont.build --clean --strategy google-japanese
+        run: python3 -m webfont.build --all --clean --strategy google-japanese
 
       - name: Package release assets
         run: python3 -m release.build --version "$TAG_NAME"
