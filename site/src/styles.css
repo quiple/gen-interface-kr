@@ -1700,8 +1700,12 @@ h2 {
     margin-bottom: 5rem; /* 80 — mobile-specific override of medium's 120 */
   }
   .footer__credits {
-    grid-template-columns: 1fr;
+    /* Keep the [label | value] 2-col rhythm from the medium breakpoint —
+       labels collapse to their intrinsic width so the long Noto Sans credit
+       gets the rest of the row on narrow viewports. */
+    grid-template-columns: auto 1fr;
     row-gap: 1.5rem; /* 24 */
+    column-gap: 1.25rem; /* 20 */
   }
   .footer__credit-label,
   .footer__credit-value {
