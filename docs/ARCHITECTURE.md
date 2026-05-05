@@ -97,7 +97,7 @@ Read dist/ttf/{family}/{family}-{weight}.ttf
 
 ```
 require dist/ttf/ + dist/webfont/gen-interface-jp/
-  → zip GenInterfaceJP.zip           (TTF, all weights × both families)
+  → zip GenInterfaceJP-<version>.zip (TTF, all weights × both families)
   → copy webfont package → npm/      (with package.json)
   → copy webfont package → webfonts/ (Pages-hosted mirror)
   → manifest.json with version, tag, asset URLs
@@ -261,11 +261,12 @@ artifact set.
 Three downstream consumers, three outputs:
 
 - **GitHub Releases** (`dist/release/github/`) — single
-  `GenInterfaceJP.zip` containing all 16 TTFs (both families × 8
-  weights). Asset URLs are stable per tag and via
-  `releases/latest/download/...`. Full single-file WOFF2 is intentionally
-  not redistributed — web delivery flows through the npm subset package
-  below; self-hosters can convert TTF→WOFF2 trivially with fontTools.
+  `GenInterfaceJP-<version>.zip` containing all 16 TTFs (both families ×
+  8 weights). The asset filename embeds the version so each release is
+  linkable unambiguously even after a newer "latest" lands. Full
+  single-file WOFF2 is intentionally not redistributed — web delivery
+  flows through the npm subset package below; self-hosters can convert
+  TTF→WOFF2 trivially with fontTools.
 - **npm package** (`dist/release/npm/`) — webfont subsets + a generated
   `package.json` (name, version, files, OFL-1.1 license). jsDelivr serves
   `all.css` and per-weight CSS from the package root.
@@ -305,9 +306,9 @@ Tests live under `tests/`, split by surface:
   palt scaling, squeeze SB sidebearing math, palt_override precedence,
   CFF rejection, LangSys index validity post-removal).
 - **`tests/test_release.py`** — public distribution contracts: GitHub
-  asset URL shape (referenced by site + release.yml), npm package layout
-  including `files` glob and license metadata that jsDelivr / `npm
-  publish` consume.
+  asset URL shape (referenced by the site download button), npm package
+  layout including `files` glob and license metadata that jsDelivr /
+  `npm publish` consume.
 - **`tests/test_webfont_build.py`** — codepoint range merging, unicode-range
   formatting, JIS row → codepoint mapping, subset plan non-overlap +
   per-bucket placement, Google-Japanese strategy parsing including the
@@ -336,9 +337,10 @@ Tests live under `tests/`, split by surface:
 | `python3 -m font.build [family] [weight ...]` | Build a slice (e.g. `normal Regular`) |
 | `python3 -m pytest` | Run the test suite |
 
-CI: `.github/workflows/release.yml` runs the full pipeline on `v*` tags
-and uploads `dist/release/github/*.zip` to the GitHub Release. Pages
-deployment runs on every push to `main`.
+CI: `.github/workflows/pages.yml` deploys the demo site to GitHub Pages
+on every push to `main`. Release packaging is run locally — see
+`src/release/README.md` for the `make release` + `gh release upload`
+flow.
 
 ## Dependencies
 

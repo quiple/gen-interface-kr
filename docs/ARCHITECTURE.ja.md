@@ -99,7 +99,7 @@ dist/ttf/{family}/{family}-{weight}.ttf を読み込み
 
 ```
 dist/ttf/ + dist/webfont/gen-interface-jp/ を要求
-  → GenInterfaceJP.zip           (TTF、全ウェイト × 両ファミリー)
+  → GenInterfaceJP-<version>.zip (TTF、全ウェイト × 両ファミリー)
   → webfont package を npm/      にコピー (package.json 同梱)
   → webfont package を webfonts/ にコピー (Pages 配信用ミラー)
   → manifest.json に version, tag, アセット URL を記録
@@ -257,9 +257,10 @@ dist/webfont/gen-interface-jp/
 
 下流のコンシューマーが 3 種類、出力も 3 種類:
 
-- **GitHub Releases** (`dist/release/github/`) — `GenInterfaceJP.zip`
-  1 本に TTF 全 16 本 (両ファミリー × 8 ウェイト) を同梱。アセット URL は
-  タグごとに固定で `releases/latest/download/...` 経由でも取得可能。
+- **GitHub Releases** (`dist/release/github/`) —
+  `GenInterfaceJP-<version>.zip` 1 本に TTF 全 16 本 (両ファミリー × 8
+  ウェイト) を同梱。アセット名にバージョンが埋め込まれているので、より
+  新しいリリースが「latest」になった後でも各リリースを一意にリンクできる。
   フル WOFF2 単一ファイルは意図的に再配布しない — Web 配信は下記 npm
   サブセット経由が本道、自前ホスティングする場合も TTF→WOFF2 変換は
   fontTools / pyftsubset で容易。
@@ -302,8 +303,8 @@ PYTHONPATH=src python3 -m pytest        # 全テスト (~0.6 秒)
   scale、squeeze SB の sidebearing 計算、palt_override の優先、CFF 拒否、
   feature 削除後の LangSys index 整合性)。
 - **`tests/test_release.py`** — 公開配布の契約: GitHub アセット URL の形
-  (site と release.yml が参照)、npm パッケージのレイアウト (`files` glob、
-  `license` メタデータ、CSS エントリポイントの root 配置)。
+  (サイトのダウンロードボタンが参照)、npm パッケージのレイアウト
+  (`files` glob、`license` メタデータ、CSS エントリポイントの root 配置)。
 - **`tests/test_webfont_build.py`** — コードポイント範囲のマージ、
   unicode-range のフォーマット (5 桁含む)、JIS 区 → コードポイント、
   サブセット計画の配置 / 非重複 / 完全カバレッジ、Google-Japanese
@@ -332,9 +333,10 @@ PYTHONPATH=src python3 -m pytest        # 全テスト (~0.6 秒)
 | `python3 -m font.build [family] [weight ...]` | 部分ビルド (例: `normal Regular`) |
 | `python3 -m pytest` | テスト実行 |
 
-CI: `.github/workflows/release.yml` は `v*` タグでフルパイプラインを実行し、
-`dist/release/github/*.zip` を GitHub Release にアップロード。Pages の
-デプロイは `main` への push ごとに実行。
+CI: `.github/workflows/pages.yml` が `main` への push ごとにデモサイトを
+GitHub Pages にデプロイ。リリースパッケージングはローカル実行に統一 —
+詳細は `src/release/README.md` の `make release` + `gh release upload`
+の手順を参照。
 
 ## 依存
 

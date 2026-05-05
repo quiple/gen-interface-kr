@@ -65,23 +65,48 @@ GitHub Release assets are written to:
 
 ```text
 dist/release/github/
-  GenInterfaceJP.zip        # TTF, all weights × both families
+  GenInterfaceJP-<version>.zip   # TTF, all weights × both families
 ```
+
+The asset filename embeds the version so each release can be linked
+unambiguously even after a newer "latest" lands.
 
 Web delivery flows through the npm package below; full single-file WOFF2
 is intentionally not redistributed.
 
+### Publishing
+
+Run `make release` to produce the zip, then upload it to a GitHub
+Release with the `gh` CLI:
+
+```bash
+# Create a new release
+gh release create v<version> dist/release/github/GenInterfaceJP-<version>.zip \
+  --title "Gen Interface JP v<version>" \
+  --notes "Release notes..."
+
+# Or attach to an existing (e.g. draft) release
+gh release upload v<version> dist/release/github/*.zip --clobber
+```
+
+A draft can be created up front and assets attached afterwards:
+
+```bash
+gh release create v<version> --draft --target main \
+  --title "Gen Interface JP v<version>" --notes "..."
+make release
+gh release upload v<version> dist/release/github/*.zip --clobber
+# Review on the GitHub UI, then "Publish release"
+```
+
 The site download button defaults to:
 
 ```text
-https://github.com/yamatoiizuka/gen-interface-jp/releases/latest/download/GenInterfaceJP.zip
+https://github.com/yamatoiizuka/gen-interface-jp/releases/download/v<version>/GenInterfaceJP-<version>.zip
 ```
 
 Use `VITE_DOWNLOAD_URL` and `VITE_DOWNLOAD_LABEL` when building the site to
 override the URL or label.
-
-Pushing a `v*` tag runs `.github/workflows/release.yml` and uploads the same
-assets to GitHub Release.
 
 ## Web Font Hosting
 
