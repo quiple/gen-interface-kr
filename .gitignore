@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+venv/
+
+# Build output
+dist/
+
+# Node
+node_modules/
+site/node_modules/
+site/dist/
+.vite/
+.npm-cache/
+
+# OS
+.DS_Store
+.claude/

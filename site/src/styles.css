@@ -1,0 +1,1726 @@
+/* === Tokens ========================================================= */
+
+:root {
+  --color-bg: #ffffff;
+  --color-fg: #000000;
+  --color-accent: #0000ff;
+  --color-divider: rgba(0, 0, 0, 0.5);
+  --color-pill-bg: #f4f4f4;
+  --color-placeholder: #e4e4e4;
+
+  /* Sample-code syntax highlight palette. Three flavors:
+     - value:  literal values (strings, numbers, "sans-serif")
+     - label:  tag / attribute / property / selector identifiers
+     - symbol: brackets, commas, equals, comments — anything structural */
+  --color-code-value: #0000ff;
+  --color-code-label: #3c3c3c;
+  --color-code-symbol: #a9a7a7;
+}
+
+html {
+  /* Below 460px scales down linearly so the mobile layout never overflows on
+     narrow phones. 460–1280px stays at 16px. Above 1280px scales linearly
+     with viewport (1.25vw = 16px at 1280, 24px at 1920). */
+  font-size: max(min(16px, calc(100vw / 28.75)), 1.25vw);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: "Gen Interface JP", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body.site-loading #root {
+  opacity: 0;
+}
+
+body.site-ready #root {
+  opacity: 1;
+  transition: opacity 240ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.site-ready #root {
+    transition: none;
+  }
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+p {
+  margin: 0;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Mobile-only — paired with .sp-none (added inside the 48.75rem media
+   query) to swap copy/labels between viewports. */
+.pc-none {
+  display: none;
+}
+
+/* === Page shell ===================================================== */
+
+.page {
+  position: relative;
+  max-width: 80rem; /* 1280 */
+  width: 100%;
+  margin: 0 auto;
+  background: var(--color-bg);
+}
+
+.deferred-section {
+  min-width: 0;
+}
+
+.deferred-section__placeholder {
+  width: 100%;
+}
+
+/* === Hero (semi-absolute, magazine layout) ========================== */
+
+.hero {
+  position: relative;
+  height: 51.875rem; /* 830 — covers content up to descriptions end (y=507+320=827) */
+}
+
+.hero__title {
+  position: absolute;
+  left: 3.125rem; /* 50 — matches .main left padding */
+  top: 15.125rem; /* 242 */
+  font-size: 5.25rem; /* 84 */
+  line-height: 1.214; /* 102/84 */
+  font-weight: 400;
+}
+
+.hero__download {
+  /* Right-anchored AND fixed width 360 so its left edge lines up with the
+     EN description below — the button shares the same vertical column as
+     the right-side desc, with the icon flush left and the text-block
+     stretching out to fill the column. */
+  position: absolute;
+  right: 3.125rem; /* 50 — matches .main right padding */
+  top: 3rem; /* 48 */
+  width: 22.5rem; /* 360 — matches .hero__desc */
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  gap: 1.3125rem; /* 21 */
+}
+/* Hover reveals the secondary 1px underline beneath each primary rule. */
+.hero__download:hover .download-icon-rule::after,
+.hero__download:hover .download-text-rule::after {
+  display: block;
+}
+
+.download-icon-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem; /* 20 — bumped from 17 to lift the arrow ~3px so it
+                   sits visually centered against "Download v1.0" */
+  width: 1.5rem; /* 24 — matches .download-icon */
+}
+
+.download-icon {
+  width: 1.5rem; /* 24 — matches the asset's native viewBox */
+  height: 1.6875rem; /* 27 */
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.download-icon-rule {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.125rem solid var(--color-accent); /* 2 — primary line */
+}
+/* Hover-only secondary line: 1px solid, 8px below the primary. Positioned
+   absolute so it doesn't change layout; toggled via display so the user
+   sees it appear/disappear instantly (no animation, per spec). */
+.download-icon-rule::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.5rem; /* 8 — gap to the primary 2px rule */
+  height: 0;
+  border-top: 0.0625rem solid var(--color-accent); /* 1 */
+  display: none;
+}
+
+.download-text-block {
+  /* Sits at its natural width so the underline rule only spans
+     "Download v1.0" — the parent .hero__download keeps the 360 column
+     width via its own `width`, while this block stays content-sized. */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* 12 */
+}
+
+.download-text {
+  font-size: 2rem; /* 32 */
+  line-height: 1.5; /* 48/32 */
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.download-text-rule {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.125rem solid var(--color-accent); /* 2 — primary line */
+}
+.download-text-rule::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0.5rem; /* 8 — gap to the primary 2px rule */
+  height: 0;
+  border-top: 0.0625rem solid var(--color-accent); /* 1 */
+  display: none;
+}
+
+.hero__desc {
+  /* Right-anchored, fixed 360-wide pair: en on the right edge, jp 50px left
+     of it. The pair (360 + 50 + 360 = 770) lines up with every other
+     section's content panel and stays put as the page narrows. */
+  position: absolute;
+  width: 22.5rem; /* 360 */
+  top: 31.6875rem; /* 507 */
+  font-size: 1.5rem; /* 24 */
+  line-height: 1.667; /* 40/24 */
+}
+
+.hero__desc--jp {
+  right: 28.75rem; /* 460 = 50 + 360 + 50 */
+}
+
+.hero__desc--en {
+  right: 3.125rem; /* 50 — matches .main right padding */
+}
+
+/* === Main content (sections) ======================================== */
+
+.main {
+  padding: 0 3.125rem; /* 50 L/R */
+  margin-top: 10rem; /* 160 — gap below hero before first section */
+  display: flex;
+  flex-direction: column;
+  gap: 12.5rem; /* 200 */
+}
+
+/* === Section head =================================================== */
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 3.75rem; /* 60 */
+}
+
+.section-head__rules {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* 16 */
+}
+
+.section-head__rule {
+  height: 0;
+  margin: 0;
+  border: 0;
+}
+
+.section-head__rule--top {
+  border-top: 0.125rem solid var(--color-fg); /* 2 */
+}
+
+.section-head__rule--bottom {
+  border-top: 0.0625rem solid var(--color-fg); /* 1 */
+}
+
+.section-head__title-row {
+  display: flex;
+  flex-direction: row;
+  gap: 3.75rem; /* 60 */
+}
+
+.section-head__title {
+  font-size: 2.5rem; /* 40 */
+  line-height: 1.2; /* 48/40 */
+  font-weight: 500;
+}
+
+/* === Composition ==================================================== */
+
+.composition {
+  display: flex;
+  flex-direction: column;
+  gap: 4.375rem; /* 70 — between head and body */
+}
+
+.composition__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3.125rem; /* 50 */
+}
+
+.composition__separator {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.0625rem solid var(--color-divider);
+}
+
+.composition__grid {
+  display: grid;
+  /* Liquid label, fixed group: extra horizontal space goes into the label
+     column so the JP+Latin pair stays anchored to a 770-wide visual block
+     (matching Variations' content side). */
+  grid-template-columns: 1fr 48.125rem; /* 770 */
+  align-items: center;
+  row-gap: 1.25rem; /* 20 */
+}
+
+.composition__label {
+  font-size: 1.5rem; /* 24 */
+  line-height: 1.667; /* 40/24 */
+}
+
+.composition__group {
+  position: relative;
+  width: 100%;
+  height: 8rem; /* 128 */
+}
+
+/* Each sub-group is one text + its own bbox guide lines. Desktop overlays
+   them in the same row so JP and Latin share a baseline; mobile stacks them
+   so each sample gets its own visible line set (per Figma mobile mock). */
+.composition__sub-group {
+  position: absolute;
+  inset: 0;
+}
+
+.composition__group-text {
+  position: absolute;
+  top: 0;
+  font-size: 6rem; /* 96 */
+  line-height: 1.333; /* 128/96 */
+  font-weight: 400;
+}
+
+.composition__group-text--left {
+  left: 0;
+}
+
+.composition__group-text--right {
+  left: 25.625rem; /* 410 */
+}
+
+.composition__group-text--svg {
+  fill: currentColor;
+  /* `top` is set inline from the tuner state. Default fallback: align baseline. */
+  top: 1.1875rem;
+}
+
+/* Faint reference: the original Gen Interface JP CSS rendering, tinted blue
+   (var(--color-accent)) at 5% opacity so the actual simulation reads black
+   on top while any misalignment shows as a tiny blue ghost. */
+.composition__group-text--reference {
+  color: #000;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+/* Tuner panel — sliders that drive the HarfBuzz simulation parameters. */
+.comp-tuner {
+  display: grid;
+  grid-template-columns: 7rem 1fr 5rem;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  margin-bottom: 1.875rem; /* 30px */
+  padding: 1rem 1.25rem;
+  background: var(--color-pill-bg);
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.4;
+  font-feature-settings: "tnum";
+}
+
+.comp-tuner__label {
+  font-weight: 500;
+  color: var(--color-fg);
+}
+
+.comp-tuner__range {
+  width: 100%;
+  margin: 0;
+}
+
+.comp-tuner__value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.comp-tuner__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.comp-tuner__buttons {
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.comp-tuner__btn {
+  padding: 0.25rem 0.75rem;
+  background: var(--color-bg);
+  border: 1px solid var(--color-divider);
+  font: inherit;
+  cursor: pointer;
+}
+.comp-tuner__btn:hover {
+  background: var(--color-placeholder);
+}
+
+.composition__group-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  border: 0;
+  border-top: 0.03125rem solid var(--color-accent); /* 0.5px blue */
+  margin: 0;
+}
+
+.composition__tweak {
+  font-size: 1.5rem; /* 24 */
+  line-height: 1.667;
+  white-space: pre-line;
+  /* Tabular figures so the values don't wiggle as digits change. Use the
+     high-level `font-variant-numeric` (Safari respects it more reliably
+     than `font-feature-settings`) and force `lang="en"` on the value spans
+     below so Safari requests `latn/dflt` rather than `latn/JAN`, where its
+     tnum lookup occasionally misses. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Each "scale: …", "yShift: …", etc. is dimmed by default; the matching
+   entry lights up the moment its parameter starts tweening, then stays at
+   full opacity once the value has locked into place — only the loop reset
+   dims everything back to the starting state. */
+.composition__tweak-param {
+  opacity: 0.3;
+  transition: opacity 0.4s ease;
+  /* Reapply the tabular-figures feature on the leaf elements: Safari only
+     honors `font-feature-settings` on the element doing the actual text
+     run, and wrapping each value in a span breaks inheritance otherwise.
+     Drop the explicit `1` value — older Safari ignores the activation
+     value and drops the feature entirely. */
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+.composition__tweak-param.is-active {
+  opacity: 1;
+}
+
+/* === Variations ===================================================== */
+
+.variations {
+  display: flex;
+  flex-direction: column;
+  gap: 4.375rem; /* 70 */
+}
+
+.variations__body {
+  display: flex;
+  flex-direction: column;
+  gap: 3.75rem; /* 60 */
+}
+
+.variations__rule {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.0625rem solid var(--color-divider);
+}
+
+.variations__row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 3.125rem; /* 50 */
+}
+
+.variations__caption {
+  /* Liquid label column: the caption flexes with viewport while the cells /
+     weights grid / bitmap stay at their fixed widths, so the content side
+     never squishes in the large↔medium gap. */
+  flex: 1;
+  min-width: 0;
+  font-size: 1.5rem; /* 24 */
+  line-height: 1.5; /* 36/24 */
+  color: var(--color-accent);
+}
+
+/* 2 Families */
+
+.styles-row {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  gap: 3.125rem; /* 50 */
+}
+
+.styles-cell {
+  width: 22.5rem; /* 360 */
+  display: flex;
+  flex-direction: column;
+  gap: 0.9375rem; /* 15 — tight head→name per Figma */
+}
+
+.styles-cell__head {
+  font-size: 3.375rem; /* 54 */
+  line-height: 1.667; /* 90/54 */
+  font-weight: 400;
+  white-space: pre-line;
+}
+
+/* Second cell renders the Display family so the visual difference between
+   the two styles is visible in the sample itself. */
+.styles-cell--display .styles-cell__head {
+  font-family: "Gen Interface JP Display", sans-serif;
+}
+
+.styles-cell__name {
+  font-size: 1.5rem; /* 24 */
+  line-height: 1.667; /* 40/24 */
+  white-space: pre-line;
+}
+
+.styles-cell__name--narrow {
+  width: 13.375rem; /* 214 */
+}
+.styles-cell__name--wide {
+  width: 19.625rem; /* 314 */
+}
+
+/* 8 Weights */
+
+.weights-grid {
+  width: 48.125rem; /* 770 */
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  row-gap: 5.625rem; /* 90 */
+  column-gap: 3.125rem; /* 50 */
+}
+
+.weights-grid__cell {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* 20 — Figma Frame 12 */
+  min-width: 0;
+}
+
+.weights-grid__sample {
+  font-size: 3.75rem; /* 60 */
+  line-height: 1; /* 60/60 */
+  /* Keep "あA1" / "いB2" etc. on a single line — they're meant to read as
+     one tight composite glyph cluster, not as a wrappable phrase. */
+  white-space: nowrap;
+}
+
+.weights-grid__label {
+  font-size: 1.5rem; /* 24 */
+  line-height: 1; /* 24/24 */
+}
+
+/* Web Fonts */
+
+/* Copy row: JP/EN sit side-by-side at the right column's 770 width. */
+.webfont__copy {
+  width: 48.125rem; /* 770 — preferred, but shrinks with viewport */
+  max-width: 100%;
+  min-width: 0;
+  flex-shrink: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 3.125rem; /* 50 */
+}
+
+.webfont__copy p {
+  flex: 1;
+  min-width: 0; /* allow flex item to shrink below content size */
+  margin: 0;
+  font-size: 1.5rem; /* 24 */
+  line-height: 1.667; /* 40/24 */
+}
+
+.webfont__copy-link {
+  color: var(--color-fg);
+  text-decoration: underline dotted 2px;
+  text-decoration-color: var(--color-divider);
+  text-underline-offset: 0.4rem; /* 8 */
+}
+.webfont__copy-link:hover {
+  text-decoration: underline solid 1px;
+}
+
+/* Controls column: takes the caption-column position (liquid width) and
+   stacks the Normal/Display/All radio group above the weight slider.
+   The border-top is the section divider — only spans this column so the
+   code pill on the right stays visually attached to the copy above it
+   instead of looking like a separate section. The padding-top opens the
+   gap from the divider down to the first radio, matching the body gap. */
+.webfont__controls {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3.75rem; /* 60 — radios → slider */
+  border-top: 0.0625rem solid var(--color-divider);
+  padding-top: 3.75rem; /* 60 — divider → radios */
+}
+
+.webfont__code {
+  width: 48.125rem; /* 770 — matches the copy row above */
+  max-width: 100%;
+  min-width: 0;
+  flex-shrink: 1;
+  margin: 0;
+  background: var(--color-pill-bg);
+  border-radius: 0.5rem; /* 8 */
+  padding: 1.25rem 1.875rem; /* 20 / 30 */
+  font-family:
+    ui-monospace, "SFMono-Regular", Menlo, Consolas, "Gen Interface JP",
+    monospace;
+  font-size: 1.25rem; /* 20 */
+  line-height: 1.8; /* 36/20 */
+  color: var(--color-code-symbol); /* fallback for any orphan whitespace */
+}
+
+/* Syntax highlight palette. Tokens collapse to three colors driven by
+   CSS variables on :root, so the whole sample can be re-tinted from
+   one place. */
+.webfont__code-comment,
+.webfont__code-tag-punct,
+.webfont__code-punct {
+  color: var(--color-code-symbol);
+}
+.webfont__code-tag-name,
+.webfont__code-attr,
+.webfont__code-selector,
+.webfont__code-prop {
+  color: var(--color-code-label);
+}
+.webfont__code-string,
+.webfont__code-value {
+  color: var(--color-code-value);
+}
+
+/* Each logical code line is its own block so wrapped content hangs at the
+   same indent depth as the original line (instead of falling back to
+   column 0). `padding-left` carries the indent; `pre-wrap` + `anywhere`
+   preserve in-line spaces and let long URLs break. */
+.webfont__code-line {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.webfont__code-line--blank {
+  height: 1lh;
+}
+.webfont__code-line--indent-2 {
+  padding-left: 2ch;
+}
+
+/* Bitmap Compatibility */
+
+.bitmap-sample {
+  width: 48.125rem; /* 770 — preferred, but shrinks with viewport */
+  max-width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5rem; /* 80 — main → copy row */
+}
+
+.bitmap-sample__main {
+  display: flex;
+  flex-direction: column;
+  gap: 4.375rem; /* 70 — between tool blocks */
+}
+
+.bitmap-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5625rem; /* 25 — heading / meta / command */
+}
+
+.bitmap-tool__heading {
+  display: flex;
+  font-size: 0; /* eliminate inline whitespace between <img> */
+  align-self: flex-start; /* link wraps content, doesn't stretch full width */
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 0.125rem solid transparent; /* reserved for hover underline */
+}
+
+.bitmap-tool__heading:hover {
+  border-bottom-color: var(--color-fg);
+}
+
+.bitmap-tool__heading-img {
+  display: block;
+  height: 3.75rem; /* 60 — clean 2× of 24px native canvas (asc+desc=30) */
+  width: auto;
+  max-width: 100%; /* shrink with container; browser preserves aspect ratio */
+  image-rendering: pixelated;
+}
+
+.bitmap-tool__meta {
+  margin: 0;
+  font-size: 1.5rem; /* 24 */
+  line-height: 1.667; /* 40/24 */
+  color: var(--color-fg);
+}
+
+.bitmap-tool__command {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-pill-bg);
+  border-radius: 0.5rem; /* 8 */
+  padding: 1.25rem 1.875rem; /* 20 / 30 */
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 1.25rem; /* 20 */
+  line-height: 1.8; /* 36/20 */
+  color: var(--color-code-label); /* command text default */
+}
+
+.bitmap-tool__cmd-line {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0.9375rem; /* 15 — prompt → text */
+}
+
+.bitmap-tool__prompt {
+  color: var(--color-code-value); /* blue $ */
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.bitmap-tool__cmd-text {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.bitmap-tool__cmd-link {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.bitmap-tool__cmd-link:hover {
+  text-decoration: underline 1px;
+  text-underline-offset: 0.35rem; /* 4 — separate underline from baseline */
+}
+
+/* Selection state — driven by `selectionchange` listener in Variations.tsx.
+   Pure CSS ::selection { text-decoration } isn't honored in Chrome/Safari,
+   so we toggle a class on the link while it intersects a non-collapsed
+   selection. The browser's own ::selection rule is kept as a no-op fallback
+   for engines that do honor it. */
+.bitmap-tool__cmd-link.is-selected,
+.bitmap-tool__cmd-link.is-selected:hover {
+  text-decoration: none;
+}
+
+.bitmap-tool__cmd-link::selection {
+  text-decoration: none;
+}
+
+.bitmap-sample__copy {
+  display: flex;
+  flex-direction: row;
+  gap: 3.125rem; /* 50 */
+}
+
+.bitmap-sample__copy p {
+  flex: 1;
+  margin: 0;
+  font-size: 1.5rem; /* 24 */
+  line-height: 1.667; /* 40/24 */
+}
+
+/* === Type Tester / Reading shared body layout =================== */
+
+.tester,
+.reading {
+  display: flex;
+  flex-direction: column;
+  gap: 5rem; /* 80 */
+}
+
+.tester__body,
+.reading__body {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 3.125rem; /* 50 */
+}
+
+.controls {
+  /* Liquid: controls flex with the viewport, the rows panel stays at its
+     fixed 770 width on the right (matches Variations / Composition). */
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3.75rem; /* 60 */
+}
+
+.controls__rule {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.0625rem solid var(--color-divider);
+}
+
+/* Radio (Normal/Display) */
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5625rem; /* 25 */
+}
+
+.radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8125rem; /* 13 */
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--color-accent);
+  font-size: 1.125rem; /* 18 */
+  line-height: 1;
+}
+
+.radio__circle {
+  width: 1.25rem; /* 20 */
+  height: 1.25rem;
+  border: 0.0625rem solid var(--color-accent); /* 1px */
+  border-radius: 50%;
+  position: relative;
+  background: var(--color-bg);
+  flex-shrink: 0;
+}
+
+.radio--active .radio__circle::after {
+  content: "";
+  position: absolute;
+  inset: 0.1875rem; /* center 10x10 inside 20x20 */
+  background: var(--color-accent);
+  border-radius: 50%;
+}
+
+/* Slider (size or weight) */
+
+.slider {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.625rem; /* 10 — main → pill */
+}
+
+.slider__main {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.625rem; /* 10 — icon → track */
+  min-width: 0;
+}
+
+.slider__icon {
+  display: inline-flex;
+  align-items: baseline;
+  flex-shrink: 0;
+  gap: 0.125rem; /* 2 — small breathing room between the two A's */
+}
+
+.slider__icon-a {
+  font-style: normal;
+  line-height: 1;
+}
+
+/* Size icon: A 21px weight 300 + a 14px weight 400. */
+.slider__icon--size .slider__icon-a-large {
+  font-size: 1.3125rem;
+  font-weight: 300;
+}
+.slider__icon--size .slider__icon-a-small {
+  font-size: 0.875rem; /* 14 */
+  font-weight: 400;
+}
+
+/* Weight icon: A 21 weight 300 + A 21 weight 600. */
+.slider__icon--weight .slider__icon-a-large {
+  font-size: 1.3125rem;
+  font-weight: 300;
+}
+.slider__icon--weight .slider__icon-a-small {
+  font-size: 1.3125rem;
+  font-weight: 600;
+}
+
+.slider__track {
+  position: relative;
+  /* Flex with the controls column. The icon (left) and pill (right) stay
+     fixed-width, so the track absorbs whatever horizontal slack the column
+     has — track widens on wider viewports, narrows toward the medium edge. */
+  flex: 1;
+  min-width: 6rem; /* keep enough room to drag */
+  height: 0.875rem; /* 14 */
+  cursor: pointer;
+  touch-action: none;
+  outline: none;
+}
+
+.slider__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.0625rem solid var(--color-fg);
+}
+
+.slider__thumb {
+  position: absolute;
+  width: 0.875rem;
+  height: 0.875rem;
+  border: 0.0625rem solid var(--color-fg);
+  background: var(--color-bg);
+  border-radius: 50%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.slider__pill {
+  /* All pill labels live in the same single grid cell — only the active one
+     is visible, the rest sit in the cell with visibility: hidden so the cell
+     auto-sizes to the widest label. Keeps the track length stable across
+     value changes (e.g. weight: Thin ↔ ExtraLight). */
+  display: inline-grid;
+  justify-items: center;
+  align-items: center;
+  padding: 0.1875rem 0.75rem; /* 3 12 */
+  background: var(--color-pill-bg);
+  border-radius: 0.625rem; /* 10 */
+  font-size: 0.75rem; /* 12 */
+  line-height: 1;
+  color: var(--color-fg);
+  flex-shrink: 0;
+}
+
+.slider__pill-text {
+  grid-row: 1;
+  grid-column: 1;
+  white-space: nowrap;
+  visibility: hidden;
+}
+
+.slider__pill-text.is-active {
+  visibility: visible;
+}
+
+/* === Type Tester rows =============================================== */
+
+.tester__rows {
+  width: 48.125rem; /* 770 */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem; /* 30 */
+}
+
+.tester__row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem; /* 20 */
+}
+
+.tester__row-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* 12 */
+}
+
+.tester__row-rule {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.0625rem solid var(--color-divider);
+}
+
+.tester__row-label {
+  font-size: 1.125rem; /* 18 */
+  line-height: 1;
+}
+
+.tester__phrase-stack {
+  display: grid;
+  width: 100%;
+}
+
+.tester__row-phrase {
+  display: block;
+  width: 100%;
+  font-size: inherit; /* driven by Type Tester size slider */
+  line-height: 1.667; /* 80/48 */
+  font-weight: 400;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  outline: none;
+  cursor: text;
+  -webkit-appearance: none;
+  appearance: none;
+  border-radius: 0;
+  resize: none;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  field-sizing: content; /* auto-grow height to fit content */
+  grid-area: 1 / 1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tester__row-phrase.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* === Reading body =============================================== */
+
+.reading__rows {
+  width: 48.125rem; /* 770 */
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3.75rem; /* 60 */
+}
+
+.reading__row {
+  display: flex;
+  flex-direction: column;
+  /* 12 between the row's top rule and its inner block (label + body).
+     The 30 between label and body lives on .reading__row-inner. */
+  gap: 0.75rem; /* 12 */
+}
+
+/* Hidden by default; the mobile media query flips this to flex so the
+   12px JP/EN samples reflow into their own rows below the 21px ones. */
+.reading__row--mobile-only {
+  display: none;
+}
+
+.reading__row-rule {
+  height: 0;
+  margin: 0;
+  border: 0;
+  border-top: 0.0625rem solid var(--color-divider);
+}
+
+.reading__row-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem; /* 30 */
+}
+
+.reading__row-label {
+  font-size: 1.125rem; /* 18 */
+  line-height: 1;
+}
+
+.reading__row-text--32 {
+  font-size: 2rem; /* 32 */
+  line-height: 1.5; /* 48/32 */
+}
+
+.reading__row-cols {
+  display: flex;
+  flex-direction: row;
+  gap: 3.125rem; /* 50 */
+}
+
+/* Cols share the row's full width. The flex ratio (572 : 257 from Figma)
+   preserves the original visual proportion as the parent grows or shrinks. */
+.reading__col-21 {
+  flex: 572;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+}
+
+.reading__col-12 {
+  flex: 257;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+}
+
+.reading__row-text--21 {
+  font-size: 1.3125rem; /* 21 */
+  line-height: 1.524; /* 32/21 */
+}
+
+.reading__row-text--12 {
+  font-size: 0.75rem; /* 12 */
+  line-height: 1.667; /* 20/12 */
+}
+
+/* === Footer ========================================================= */
+
+.footer {
+  margin-top: 15.625rem; /* 250 — gap before footer */
+  padding-bottom: 3.125rem; /* 50 */
+}
+
+.footer__rules {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem; /* 18 */
+}
+
+.footer__rule--1,
+.footer__rule--2,
+.footer__rule--3,
+.footer__rule--4 {
+  height: 0;
+  margin: 0;
+  border: 0;
+}
+
+.footer__rule--1 {
+  border-top: 0.125rem solid var(--color-fg); /* 2 */
+}
+.footer__rule--2 {
+  border-top: 0.09375rem solid var(--color-fg); /* 1.5 */
+}
+.footer__rule--3 {
+  border-top: 0.0625rem solid var(--color-fg); /* 1 */
+}
+.footer__rule--4 {
+  border-top: 0.03125rem solid var(--color-fg); /* 0.5 */
+}
+
+.footer__inner {
+  padding: 0 3.125rem; /* 50 L/R */
+  margin-top: 6.25rem; /* 100 — gap between rules and inner content */
+  display: flex;
+  flex-direction: column;
+  gap: 7.5rem; /* 120 — gap between credits row and license */
+}
+
+.footer__top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 3.125rem; /* 50 */
+}
+
+.footer__credits {
+  /* 4-col grid keeps the same rhythm as `.weights-grid`, but the first
+     column is widened to ~1.5× the natural 1fr (≈155 → 232.5) so labels
+     like "Noto Sans JP from:" fit on a single line. The value still spans
+     the remaining three columns. */
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 14.5rem repeat(3, 1fr); /* 232 + 3× flex */
+  column-gap: 3.125rem; /* 50 — matches weights-grid */
+  row-gap: 2.5rem; /* 40 */
+}
+
+.footer__credit-label {
+  grid-column: span 1;
+}
+
+.footer__credit-value {
+  grid-column: span 3;
+}
+
+.footer__credit-label,
+.footer__credit-value {
+  font-size: 1.3125rem; /* 21 */
+  line-height: 1.524; /* 32/21 */
+}
+
+.footer__credit-row-1-value {
+  white-space: pre-line;
+}
+
+.footer__credit-link {
+  color: var(--color-accent);
+  text-decoration: none;
+  text-underline-offset: 0.125rem; /* 2 */
+}
+.footer__credit-link:hover {
+  text-decoration: underline;
+}
+.footer__credit-link:active {
+  text-underline-offset: 0.25rem; /* 4 — doubles the hover offset on press */
+}
+
+.license {
+  width: 48.5625rem; /* 777 */
+  max-width: 100%;
+  font-size: 2.25rem; /* 36 */
+  line-height: 1.5; /* 54/36 */
+}
+
+.license__link {
+  color: var(--color-accent);
+  text-decoration: none;
+  text-underline-offset: 0.125rem; /* 2 */
+}
+.license__link:hover {
+  text-decoration: underline;
+}
+.license__link:active {
+  text-underline-offset: 0.25rem; /* 4 — doubles the hover offset on press */
+}
+
+/* === Responsive ====================================================== *
+ * Two breakpoints (likely to be tweaked later — change in one place):
+ *   - medium: <=1100px → stacked controls, download moves alongside descs
+ *   - mobile: <= 640px → fully single column
+ *
+ * Below 1280px html font-size stays clamped at 16px (max(16px, 1.25vw)),
+ * so 1rem == 16px throughout these blocks. Numbers in `rem` here equal the
+ * Figma px values divided by 16.
+ * ===================================================================== */
+
+/* ---- Medium (~1100px) --------------------------------------------- */
+@media (max-width: 68.75rem) {
+  /* Page shell */
+  .page {
+    max-width: 100%;
+  }
+  .main {
+    padding: 0 2.5rem; /* 40 */
+    margin-top: 6.25rem; /* 100 */
+    gap: 9.375rem; /* 150 */
+  }
+
+  /* Hero — drop absolute layout, switch to title + (download | descs) row.
+     Top padding 150 so Gen Interface JP (h1) has consistent breathing room
+     at this breakpoint (matches the inter-section gap). */
+  .hero {
+    height: auto;
+    padding: 9.375rem 2.5rem 0; /* 150 top */
+    display: flex;
+    flex-direction: column;
+    gap: 9.375rem; /* 150 between title and content row */
+  }
+  .hero__title,
+  .hero__row,
+  .hero__download,
+  .hero__desc,
+  .hero__desc--jp,
+  .hero__desc--en,
+  .hero__descs {
+    position: static;
+    width: auto;
+    left: auto;
+    right: auto;
+    top: auto;
+  }
+  .hero__title {
+    font-size: 5.25rem; /* 84 */
+    line-height: 1.214; /* 102/84 */
+  }
+  .hero__row {
+    /* 4-col liquid grid: download spans cols 1–2, descs spans cols 3–4.
+     * Mirrors `.weights-grid` so the hero aligns to the same rhythm as the
+     * content panels below at this breakpoint. */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 2.5rem; /* 40 — matches .weights-grid medium */
+    align-items: start;
+  }
+  .hero__download {
+    grid-column: 1 / span 2;
+  }
+  .hero__descs {
+    grid-column: 3 / span 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem; /* 40 */
+    min-width: 0;
+  }
+  .hero__desc {
+    width: 100%;
+  }
+
+  /* Composition — Figma medium reorganizes this section: both visual groups
+     stack as one full-width block, then the two labels sit side-by-side
+     below as a legend, then Tweak below.
+     DOM order is [label-Latin, group-書体/Type, label-JP, group-デザイン/Design];
+     grid-template-areas remaps them to the medium layout, with `l2` (JP label)
+     on the left and `l1` (Latin label) on the right to match Figma's order. */
+  .composition__grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "g1 g1"
+      "g2 g2"
+      "l2 l1";
+    align-items: start;
+    row-gap: 1.25rem; /* 20 — tight stacking inside the visual block */
+    column-gap: 3.125rem; /* 50 */
+  }
+  .composition__group:nth-of-type(1) {
+    grid-area: g1;
+  }
+  .composition__group:nth-of-type(2) {
+    grid-area: g2;
+  }
+  .composition__label:nth-of-type(1) {
+    grid-area: l1;
+  }
+  .composition__label:nth-of-type(2) {
+    grid-area: l2;
+  }
+  /* Push the labels row down by an extra 30 so the gap between group2 and
+     the labels reads as 50, while group1↔group2 stays at the 20 row-gap. */
+  .composition__label {
+    margin-top: 1.875rem; /* 30 */
+  }
+  /* Align Latin (Type / Design) with the right grid column so it sits flush
+     with the "ベース欧文書体 / Inter" label below. The group spans both
+     columns (g1 g1 / g2 g2), so the col-2 boundary inside it is at
+     50% + half the column-gap = 50% + 25px. */
+  .composition__group-text--right {
+    left: calc(50% + 1.5625rem); /* 50% + 25 */
+  }
+
+  /* Variations — caption stacks above the content row (Figma medium spec).
+     The 2 cells / weights grid / bitmap then take the full row width below. */
+  .variations__row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 3.125rem; /* 50 */
+  }
+  .variations__caption {
+    width: auto;
+  }
+  /* Web Fonts controls: drop the desktop-only top border + the padding it
+     pairs with. In stacked layout the rule spans the full row width and
+     reads as a section divider — confusing the user into thinking the
+     code block below is a separate section. A small top margin keeps a
+     bit of breathing room above the radio group. */
+  .webfont__controls {
+    border-top: 0;
+    padding-top: 0;
+    margin-top: 1.25rem; /* 20 */
+  }
+  .styles-row {
+    width: 100%;
+    gap: 2.5rem; /* 40 — Figma medium uses 40 between cells */
+  }
+  .styles-cell {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+  }
+  .weights-grid {
+    width: 100%;
+    column-gap: 2.5rem; /* 40 */
+    row-gap: 5rem; /* 80 — Figma medium spec */
+  }
+  .bitmap-sample,
+  .webfont__copy,
+  .webfont__code {
+    width: 100%;
+  }
+
+  /* Type Tester / Reading — body collapses to one column. Header sits above,
+     then controls become a single horizontal row (radios | slider), then the
+     content rows take the full width below. */
+  .tester__body,
+  .reading__body {
+    flex-direction: column;
+    gap: 3.75rem; /* 60 */
+  }
+  .controls {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2.5rem; /* 40 */
+  }
+  .controls__rule {
+    display: none; /* the section-head rule already separates the header */
+  }
+  .radio-group {
+    flex-direction: row;
+    gap: 1.5625rem; /* 25 */
+  }
+  .tester__rows,
+  .reading__rows {
+    width: 100%;
+  }
+
+  /* Footer — download stacks above the credits grid (Figma medium spec). */
+  .footer {
+    margin-top: 9.375rem; /* 150 */
+  }
+  .footer__inner {
+    padding: 0 2.5rem; /* 40 */
+    gap: 5rem; /* 80 */
+  }
+  .footer__top {
+    flex-direction: column;
+    gap: 0; /* spacing comes from the download button's own margin-bottom */
+  }
+  .footer__top .hero__download {
+    margin-bottom: 7.5rem; /* 120 — per Figma at this breakpoint */
+  }
+  .footer__credits {
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Figma: 419 + 422, basically 50/50 */
+    row-gap: 2.5rem; /* 40 */
+    column-gap: 3.125rem; /* 50 */
+  }
+  .footer__credit-label,
+  .footer__credit-value {
+    position: static;
+    width: auto;
+    /* Reset the desktop label/value spans — at medium the grid is 2-col, so
+       auto placement gives the intended [label | value] rhythm. */
+    grid-column: auto;
+  }
+  .license {
+    font-size: 1.75rem; /* 28 — was 36, scale down for narrower viewports */
+    line-height: 1.5;
+  }
+}
+
+/* ---- Mobile (~780px) ---------------------------------------------- */
+@media (max-width: 48.75rem) {
+  /* Mobile flattens the visual hierarchy into one big stack. Per Figma
+     Frame 120 every top-level beat — title, download, descs, each section —
+     is separated by 150px. The .main container takes care of the section
+     gaps; .hero / .hero__row provide the same 150 between hero pieces. */
+  .main {
+    padding: 0 1.25rem; /* 20 */
+    margin-top: 9.375rem; /* 150 */
+    gap: 9.375rem; /* 150 */
+  }
+
+  /* Hero — single column, poster-style title (clamped so "Interface" fits the
+     narrowest viewports we support). */
+  .hero {
+    padding: 2.5rem 1.25rem 0;
+    gap: 6rem; /* 96 — title → download row */
+  }
+  .hero__title {
+    /* Figma calls for 96px at 460-frame; cap there but scale down on narrower
+       phones so the longest word ("Interface") never spills. */
+    font-size: min(6rem, 15vw);
+    line-height: 1.21;
+  }
+  .hero__row {
+    /* Single column on mobile — undo the medium 4-col grid so download and
+     * descs each stretch to the full page width. */
+    display: flex;
+    flex-direction: column;
+    gap: 7rem; /* 112 — download → descs */
+    align-items: flex-start;
+  }
+  .hero__download,
+  .hero__descs {
+    grid-column: auto;
+    width: 100%;
+  }
+  .hero__desc {
+    width: 100%;
+  }
+
+  /* Section heads keep the desktop sizing (gap 60, title 40px) per Figma —
+     the rem-based downscaling below 460px gives mobile its own scale. */
+
+  /* Composition — show only the デザイン/Design pair, stacked Latin-on-top.
+     Animation spans the top row, labels sit in a 2-col grid below with
+     Inter on the left and Noto on the right (per Figma). */
+  .composition__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "g2 g2"
+      "l1 l2";
+    row-gap: 3.125rem; /* 50 */
+    column-gap: 1.25rem; /* 20 — matches weights-grid mobile */
+    align-items: start;
+  }
+  /* Hide the 書体/Type group; place the Design group + its two labels. */
+  .composition__grid > :nth-child(1) {
+    grid-area: l1;
+  }
+  .composition__grid > :nth-child(2) {
+    display: none;
+  }
+  .composition__grid > :nth-child(3) {
+    grid-area: l2;
+  }
+  .composition__grid > :nth-child(4) {
+    grid-area: g2;
+  }
+  .composition__label {
+    font-size: 1.5rem; /* 24 */
+    line-height: 1.667; /* 40/24 */
+    /* Undo medium's `margin-top: 30` that pads the labels above the
+       legend row at the medium breakpoint — at mobile the labels sit in
+       grid cells with explicit row-gap, so no extra margin is needed. */
+    margin-top: 0;
+  }
+  /* Stack each sub-group (text + own line set) vertically. Latin sub-group
+     comes first (order: -1) per Figma. The lines stay positioned absolute
+     inside their sub-group so each sample gets its own bbox indicators. */
+  .composition__group {
+    position: static;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem; /* 20 — Group 4 top (148) − Group 3 height (128) */
+    /* Scale the simulation visual to 0.8× — `zoom` shrinks layout space too,
+       so the surrounding row-gap (50) reads as designed. */
+    zoom: 0.8;
+  }
+  .composition__sub-group {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 8rem; /* 128 — same as desktop, matches Figma Group 3/4 */
+  }
+  .composition__sub-group--latin {
+    order: -1;
+  }
+  .composition__group-text--right {
+    /* Mobile sub-groups are full-width — drop the desktop 410px offset. */
+    left: 0;
+  }
+  /* The faded reference is for visualizing the desktop "shared baseline"
+     overlay; drop it when the pair stacks. */
+  .composition__group-text--reference {
+    display: none;
+  }
+  .composition__tweak {
+    font-size: 1.5rem; /* 24 */
+    line-height: 1.667; /* 40/24 */
+  }
+
+  /* Variations — caption above, content below; weights to 2 cols.
+     Font sizes (head 54, sample 60) match the desktop default per Figma
+     Frame 66 / Frame 67; only the layout flips. */
+  .variations__row {
+    flex-direction: column;
+    gap: 3.125rem; /* 50 — Figma Frame 66 caption→cells */
+  }
+  .variations__caption {
+    width: auto;
+  }
+  .styles-row {
+    flex-direction: column;
+    gap: 3.125rem; /* 50 — Figma Frame 111 between cells */
+  }
+  .styles-cell {
+    width: 100%;
+  }
+  .weights-grid {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 3.75rem; /* 60 */
+    column-gap: 1.25rem; /* 20 */
+  }
+
+  /* Type Tester / Reading — body stacks; controls go on top */
+  .tester__body,
+  .reading__body {
+    flex-direction: column;
+    gap: 2.5rem; /* 40 */
+  }
+  .controls {
+    /* Stack radio-group above the slider on mobile so the slider gets the
+       full row width to drag in. */
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2.5rem; /* 40 */
+  }
+  .tester__row-phrase {
+    /* Long Latin words (e.g. "Thermography") would otherwise overflow at the
+       slider's default 48px on a 360-wide viewport. Allow break-anywhere so
+       wrapping kicks in before the word reaches the edge. The slider still
+       drives the actual size — the user can drag down on a phone. */
+    overflow-wrap: anywhere;
+  }
+  /* Hide the 12px col inside the 21+12 rows; the 12px samples become their
+     own full-width rows via .reading__row--mobile-only below. */
+  .reading__col-12 {
+    display: none;
+  }
+  .reading__row--mobile-only {
+    display: flex;
+  }
+  /* Reading samples — absolute px on mobile so the rendered text size
+     doesn't shrink with the html font-size scaling below 460vw. */
+  .reading__row-text--32 {
+    font-size: 24px;
+    line-height: 1.5;
+  }
+  .reading__row-text--21 {
+    font-size: 15px;
+    line-height: 1.524;
+  }
+  .reading__row-text--12 {
+    font-size: 10px;
+    line-height: 1.667;
+  }
+
+  /* Web Fonts / Bitmap Compatibility — JP/EN copy stacks vertically on
+     mobile to match the rest of the page (e.g. .styles-row). */
+  .webfont__copy,
+  .bitmap-sample__copy {
+    flex-direction: column;
+  }
+
+  /* Slider on mobile: keep the desktop flex layout so the track stretches
+     across the full row width — finger-friendly drag distance matters more
+     than aligning to the weights grid. Each piece scales to 1.3× of base. */
+  .slider {
+    --slider-thumb-half: 0.56875rem; /* half of 1.1375rem thumb */
+  }
+  .slider__icon--size .slider__icon-a-large,
+  .slider__icon--weight .slider__icon-a-large,
+  .slider__icon--weight .slider__icon-a-small {
+    font-size: 1.70625rem; /* 1.3× of 21 */
+  }
+  .slider__icon--size .slider__icon-a-small {
+    font-size: 1.1375rem; /* 1.3× of 14 */
+  }
+  .slider__track {
+    height: 1.1375rem; /* 1.3× of 14 */
+  }
+  .slider__thumb {
+    width: 1.1375rem;
+    height: 1.1375rem;
+  }
+  .slider__pill {
+    padding: 0.24375rem 0.975rem; /* 1.3× of 3/12 */
+    font-size: 0.975rem; /* 1.3× of 12 */
+    border-radius: 0.8125rem; /* 1.3× of 10 */
+  }
+
+  /* Normal/Display radio buttons — 1.3× so they're easier to tap. */
+  .radio {
+    gap: 1.05625rem; /* 1.3× of 13 */
+    font-size: 1.4625rem; /* 1.3× of 18 */
+  }
+  .radio__circle {
+    width: 1.625rem; /* 1.3× of 20 */
+    height: 1.625rem;
+  }
+  .radio--active .radio__circle::after {
+    inset: 0.24375rem; /* 1.3× of 3 — keeps the inner dot visually centered */
+  }
+
+  /* Footer — single column credits + smaller license */
+  .footer {
+    margin-top: 6.25rem; /* 100 */
+    padding-bottom: 1rem; /* 16 */
+  }
+  .footer__rules {
+    gap: 0.75rem; /* 12 */
+  }
+  .footer__inner {
+    padding: 0 1.25rem; /* 20 */
+    margin-top: 3.75rem; /* 60 */
+    gap: 5rem; /* 80 */
+  }
+  .footer__top {
+    flex-direction: column;
+    gap: 0; /* spacing comes from the download button's own margin-bottom */
+  }
+  .footer__top .hero__download {
+    margin-bottom: 5rem; /* 80 — mobile-specific override of medium's 120 */
+  }
+  .footer__credits {
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem; /* 24 */
+  }
+  .footer__credit-label,
+  .footer__credit-value {
+    font-size: 1.25rem; /* 20 */
+    line-height: 1.5;
+  }
+  .license {
+    font-size: 1.5rem; /* 24 */
+    line-height: 1.5;
+  }
+
+  /* Utility: hide on smartphones — used to drop the desktop-only forced
+     line breaks in the license copy so it reflows naturally on narrow
+     viewports. The `.pc-none` counterpart (defined outside the MQ) flips
+     to `display: revert` here so its content shows on mobile. */
+  .sp-none {
+    display: none;
+  }
+  .pc-none {
+    display: revert;
+  }
+}
