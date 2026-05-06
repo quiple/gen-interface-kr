@@ -1555,11 +1555,6 @@ h2 {
     /* Mobile sub-groups are full-width — drop the desktop 410px offset. */
     left: 0;
   }
-  /* The faded reference is for visualizing the desktop "shared baseline"
-     overlay; drop it when the pair stacks. */
-  .composition__group-text--reference {
-    display: none;
-  }
   .composition__tweak {
     font-size: 1.5rem; /* 24 */
     line-height: 1.667; /* 40/24 */
