@@ -346,7 +346,7 @@ flow.
 
 ### Python
 
-- `ofl-font-baker` (>= 0.3.5) — Composite font merge engine. Inherits
+- `ofl-font-baker` (>= 0.3.6) — Composite font merge engine. Inherits
   base/sub identity records via `metadataMode`. Drives Stage 1 (bake)
   and Stage 3 (merge) of the build pipeline.
 - `fonttools` (>= 4.47.0) — Font parsing, instancer, subsetter, GPOS / GSUB

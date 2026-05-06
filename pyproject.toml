@@ -1,12 +1,12 @@
 [project]
 name = "gen-interface-jp"
-version = "0.1.1"
+version = "0.1.2"
 description = "Typeface harmonizing Latin and Japanese for digital interfaces."
 license = "MIT"
 license-files = ["LICENSE"]
 requires-python = ">=3.9"
 dependencies = [
-    "ofl-font-baker>=0.3.5",
+    "ofl-font-baker>=0.3.6",
     "freetype-py>=2.4.0",
 ]
 
