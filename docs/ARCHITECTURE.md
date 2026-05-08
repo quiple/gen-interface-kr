@@ -372,11 +372,15 @@ flow.
 
 ### Python
 
-- `ofl-font-baker` (>= 0.4.0) — Composite font merge engine. Inherits
+- `ofl-font-baker` (>= 0.4.1) — Composite font merge engine. Inherits
   base/sub identity records via `metadataMode`. Drives Stage 1 (bake)
-  and Stage 3 (merge) of the build pipeline. 0.4.0 adds
+  and Stage 3 (merge) of the build pipeline. 0.4.0 added
   `subFont.excludeCodepoints` and glyph-name collision rename, used by
-  the merge step to keep CJK-conventional symbols on Noto.
+  the merge step to keep CJK-conventional symbols on Noto. 0.4.1
+  preserves vertical metrics (`vmtx` / `VORG`) and `vert` / `vrt2`
+  GSUB mappings when glyphs are renamed or duplicated during the merge,
+  so vertical typesetting of overridden glyphs continues to land at the
+  base font's intended position.
 - `fonttools` (>= 4.47.0) — Font parsing, instancer, subsetter, GPOS / GSUB
   table editing.
 - `freetype-py` — Used by tooling around metrics inspection.
