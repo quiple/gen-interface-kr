@@ -61,6 +61,14 @@ FAMILIES = {
         "trackingKana": 40,
         "halfPaltPunct": True,
         "folderPrefix": "GenInterfaceJP",
+        # Per-glyph sidebearing tweaks applied after tracking. Map a
+        # codepoint (int) or single-char string to a (lsb_delta, rsb_delta)
+        # pair in design units. Positive deltas add whitespace, negative
+        # tighten. Populate when a specific glyph needs a manual margin
+        # nudge that palt + tracking alone can't reach.
+        "glyphSpacing": {
+            "く": (30, 0),
+        },
     },
     "display": {
         "familyName": "Gen Interface JP Display",
@@ -69,6 +77,9 @@ FAMILIES = {
         "trackingKana": 0,
         "halfPaltPunct": True,
         "folderPrefix": "GenInterfaceJPDisplay",
+        "glyphSpacing": {
+            "く": (30, 0),
+        },
     },
 }
 
@@ -500,6 +511,74 @@ def _apply_tracking(font: TTFont, tracking: int, tracking_kana: int | None = Non
 
 
 # ---------------------------------------------------------------------------
+# Per-glyph sidebearing tweaks
+# ---------------------------------------------------------------------------
+
+def _apply_glyph_spacing(font: TTFont, spacing: dict | None) -> int:
+    """Adjust per-glyph left / right sidebearings.
+
+    *spacing* maps a codepoint (``int``) or single-character string to a
+    ``(lsb_delta, rsb_delta)`` pair in design units. Positive deltas add
+    whitespace, negative deltas tighten. The two deltas are independent:
+
+    - ``lsb_delta`` shifts the outline ``lsb_delta`` units to the right
+      *inside* the slot and grows advance by the same amount, so the
+      whitespace between the slot's left edge and the outline grows by
+      ``lsb_delta`` while the right side stays untouched.
+    - ``rsb_delta`` extends the slot on the right by ``rsb_delta`` units
+      without moving the outline, so the whitespace between the outline
+      and the slot's right edge grows by ``rsb_delta``.
+
+    Combined effect: ``advance += lsb_delta + rsb_delta``,
+    ``lsb += lsb_delta``. Outline coordinates are never touched, only
+    the hmtx record is rewritten.
+
+    Designed as a manual fallback for glyphs whose proportional palt
+    plus uniform tracking still leave the sidebearings off — e.g. a
+    bracket whose right side reads too tight against following kana.
+    Apply sparingly and after ``_apply_tracking``, so the deltas layer
+    on top of the canonical proportional metrics.
+
+    Glyphs whose codepoint is absent from cmap and zero-advance glyphs
+    (combining marks, mark anchors) are skipped silently. Returns the
+    number of glyphs actually adjusted.
+    """
+    if not spacing:
+        return 0
+    cmap = font.getBestCmap() or {}
+    hmtx = font["hmtx"]
+    adjusted = 0
+    for key, deltas in spacing.items():
+        if isinstance(key, str):
+            if len(key) != 1:
+                raise ValueError(
+                    f"glyphSpacing key {key!r}: expected a single character "
+                    f"or an integer codepoint"
+                )
+            cp = ord(key)
+        else:
+            cp = int(key)
+        try:
+            lsb_delta, rsb_delta = deltas
+        except (TypeError, ValueError) as exc:
+            raise ValueError(
+                f"glyphSpacing for U+{cp:04X}: expected (lsb_delta, rsb_delta), "
+                f"got {deltas!r}"
+            ) from exc
+        if lsb_delta == 0 and rsb_delta == 0:
+            continue
+        glyph_name = cmap.get(cp)
+        if glyph_name is None:
+            continue
+        aw, lsb = hmtx[glyph_name]
+        if aw == 0:
+            continue
+        hmtx[glyph_name] = (aw + lsb_delta + rsb_delta, lsb + lsb_delta)
+        adjusted += 1
+    return adjusted
+
+
+# ---------------------------------------------------------------------------
 # Pipeline
 # ---------------------------------------------------------------------------
 
@@ -513,8 +592,9 @@ def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -
        Noto identity records survive into the inst.
     2. **Proportionalise** the inst — read palt from the variable cache
        (variable instantiation can corrupt palt), bake those adjustments
-       into hmtx, apply tracking, strip extreme bbox glyphs, optionally
-       apply x-scale.
+       into hmtx, apply tracking, apply per-glyph sidebearing tweaks
+       from ``family["glyphSpacing"]``, strip extreme bbox glyphs,
+       optionally apply x-scale.
     3. **Merge** the proportional Noto with the matching Inter master via
        font-baker. ``subFont.excludeCodepoints`` keeps CJK-conventional
        symbols (※, ◯, ①, Ⓐ, …) on the Noto outline, and font-baker's
@@ -614,6 +694,9 @@ def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -
         palt_override=palt_data,
     )
     _apply_tracking(font, tracking, tracking_kana)
+    spacing_adjusted = _apply_glyph_spacing(font, family.get("glyphSpacing"))
+    if spacing_adjusted:
+        print(f"          Per-glyph spacing: {spacing_adjusted} glyph(s) adjusted")
     _strip_extreme_glyphs(font)
     x_scale = family.get("xScale", 1.0)
     if x_scale != 1.0:

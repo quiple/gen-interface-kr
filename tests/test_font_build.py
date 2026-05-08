@@ -5,7 +5,12 @@ glyph-name codepoint parsing, kana / CJK classification, GSUB feature
 inspection, horizontal scaling, bbox stripping, and tracking.
 """
 
+import copy
+
+import pytest
+
 from font.build import (
+    _apply_glyph_spacing,
     _apply_tracking,
     _apply_x_scale,
     _EXTREME_YMAX,
@@ -449,6 +454,135 @@ class TestApplyTracking:
         assert after_aw == before_aw + 11
         # 11 // 2 = 5 (floor), so RSB ends up 6 wider, LSB 5 wider.
         assert after_lsb == before_lsb + 5
+
+
+# ---------------------------------------------------------------------------
+# _apply_glyph_spacing
+# ---------------------------------------------------------------------------
+
+class TestApplyGlyphSpacing:
+    """Per-glyph LSB / RSB tweaks layered on top of tracking."""
+
+    def test_lsb_delta_grows_advance_and_lsb(self, synthetic_ttf):
+        before_aw, before_lsb = synthetic_ttf["hmtx"]["A"]
+
+        adjusted = _apply_glyph_spacing(synthetic_ttf, {"A": (40, 0)})
+
+        after_aw, after_lsb = synthetic_ttf["hmtx"]["A"]
+        assert adjusted == 1
+        # +40 left whitespace: outline shifts right by 40, slot grows by 40.
+        assert after_aw == before_aw + 40
+        assert after_lsb == before_lsb + 40
+
+    def test_rsb_delta_grows_advance_only(self, synthetic_ttf):
+        before_aw, before_lsb = synthetic_ttf["hmtx"]["A"]
+
+        adjusted = _apply_glyph_spacing(synthetic_ttf, {"A": (0, 25)})
+
+        after_aw, after_lsb = synthetic_ttf["hmtx"]["A"]
+        assert adjusted == 1
+        # +25 right whitespace: slot grows on the right, outline doesn't move.
+        assert after_aw == before_aw + 25
+        assert after_lsb == before_lsb
+
+    def test_both_deltas_combine(self, synthetic_ttf):
+        before_aw, before_lsb = synthetic_ttf["hmtx"]["A"]
+
+        adjusted = _apply_glyph_spacing(synthetic_ttf, {"A": (15, 25)})
+
+        after_aw, after_lsb = synthetic_ttf["hmtx"]["A"]
+        assert adjusted == 1
+        assert after_aw == before_aw + 15 + 25
+        assert after_lsb == before_lsb + 15
+
+    def test_negative_deltas_tighten(self, synthetic_ttf):
+        before_aw, before_lsb = synthetic_ttf["hmtx"]["A"]
+
+        adjusted = _apply_glyph_spacing(synthetic_ttf, {"A": (-10, -10)})
+
+        after_aw, after_lsb = synthetic_ttf["hmtx"]["A"]
+        assert adjusted == 1
+        assert after_aw == before_aw - 20
+        assert after_lsb == before_lsb - 10
+
+    def test_codepoint_int_key_works(self, synthetic_ttf):
+        before_aw, before_lsb = synthetic_ttf["hmtx"]["uni3042"]
+
+        # Pass codepoint as int instead of single-char string.
+        adjusted = _apply_glyph_spacing(synthetic_ttf, {0x3042: (5, 7)})
+
+        after_aw, after_lsb = synthetic_ttf["hmtx"]["uni3042"]
+        assert adjusted == 1
+        assert after_aw == before_aw + 12
+        assert after_lsb == before_lsb + 5
+
+    def test_unknown_codepoint_skipped_silently(self, synthetic_ttf):
+        before_a = synthetic_ttf["hmtx"]["A"]
+
+        # U+5000 is not in the synthetic cmap.
+        adjusted = _apply_glyph_spacing(synthetic_ttf, {0x5000: (40, 0)})
+
+        assert adjusted == 0
+        # Nothing else moved.
+        assert synthetic_ttf["hmtx"]["A"] == before_a
+
+    def test_zero_advance_glyph_skipped(self, synthetic_ttf):
+        # Combining marks have zero advance and serve a placement-only role —
+        # spacing tweaks must not promote them to non-zero.
+        synthetic_ttf["hmtx"]["A"] = (0, 0)
+
+        adjusted = _apply_glyph_spacing(synthetic_ttf, {"A": (40, 0)})
+
+        assert adjusted == 0
+        assert synthetic_ttf["hmtx"]["A"] == (0, 0)
+
+    def test_zero_deltas_no_op(self, synthetic_ttf):
+        before = synthetic_ttf["hmtx"]["A"]
+
+        adjusted = _apply_glyph_spacing(synthetic_ttf, {"A": (0, 0)})
+
+        assert adjusted == 0
+        assert synthetic_ttf["hmtx"]["A"] == before
+
+    def test_empty_or_none_spacing_no_op(self, synthetic_ttf):
+        before = dict(synthetic_ttf["hmtx"].metrics)
+
+        assert _apply_glyph_spacing(synthetic_ttf, None) == 0
+        assert _apply_glyph_spacing(synthetic_ttf, {}) == 0
+        assert dict(synthetic_ttf["hmtx"].metrics) == before
+
+    def test_only_target_glyph_changes(self, synthetic_ttf):
+        # Spacing tweaks must not bleed into untargeted glyphs.
+        before_kana = synthetic_ttf["hmtx"]["uni3042"]
+        before_cjk = synthetic_ttf["hmtx"]["uni4E00"]
+
+        _apply_glyph_spacing(synthetic_ttf, {"A": (40, 40)})
+
+        assert synthetic_ttf["hmtx"]["uni3042"] == before_kana
+        assert synthetic_ttf["hmtx"]["uni4E00"] == before_cjk
+
+    def test_multi_char_string_key_rejected(self, synthetic_ttf):
+        # Catch a likely typo: passing "AB" as a key would otherwise be
+        # silently ignored (no matching codepoint).
+        with pytest.raises(ValueError, match="single character"):
+            _apply_glyph_spacing(synthetic_ttf, {"AB": (10, 10)})
+
+    def test_malformed_value_rejected(self, synthetic_ttf):
+        with pytest.raises(ValueError, match="lsb_delta, rsb_delta"):
+            _apply_glyph_spacing(synthetic_ttf, {"A": 40})
+
+    def test_outline_coordinates_untouched(self, synthetic_ttf):
+        # Sidebearing tweaks rewrite hmtx only — glyph outlines must remain
+        # byte-identical so collateral pipeline steps (bbox check, GPOS
+        # anchors keyed on glyph extents) keep their assumptions.
+        before_glyph = copy.deepcopy(synthetic_ttf["glyf"]["A"])
+
+        _apply_glyph_spacing(synthetic_ttf, {"A": (40, 30)})
+
+        after_glyph = synthetic_ttf["glyf"]["A"]
+        assert after_glyph.xMin == before_glyph.xMin
+        assert after_glyph.xMax == before_glyph.xMax
+        assert list(after_glyph.coordinates) == list(before_glyph.coordinates)
 
 
 # ---------------------------------------------------------------------------

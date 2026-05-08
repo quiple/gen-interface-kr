@@ -72,6 +72,7 @@ FAMILIES × WEIGHTS の各組合せに対して:
   → make_proportional で palt → hmtx に焼き込み
     palt/vpal/halt/vhal 削除
   → _apply_tracking で advance を広げ LSB を半分シフト
+  → _apply_glyph_spacing で family["glyphSpacing"] の個別調整を適用
   → _strip_extreme_glyphs で繰り返し記号 〱〲 を無効化
     (yMax > 1200 / yMin < -400)
   → font-baker merge: Inter + proportional Noto
@@ -125,7 +126,7 @@ Stage 2 に渡る。
 
 ### Stage 2 — プロポーショナル化 + メトリクス調整
 
-inst に対して 3 つのサブパスを in-place で実行:
+inst に対して 4 つのサブパスを in-place で実行:
 
 1. **palt のベイク** (`proportional.make_proportional`) — palt 値は
    キャッシュ済みの variable から読む (instantiation で非デフォルト軸位置の
@@ -140,7 +141,15 @@ inst に対して 3 つのサブパスを in-place で実行:
 2. **トラッキング** (`_apply_tracking`) — advance を `tracking` 分広げ、
    `tracking // 2` を LSB に加算してアウトラインを広がった枠の中央に
    配置。kana / 句読点はファミリー設定の `trackingKana` で別値。
-3. **bbox 除去** (`_strip_extreme_glyphs`) — 下記 [垂直メトリクス] 参照。
+3. **個別グリフのスペーシング** (`_apply_glyph_spacing`) — palt + 一律
+   トラッキングだけでは追い込めない稀なグリフのための手動レイヤー。
+   ファミリー設定の `glyphSpacing` がコードポイント (または 1 文字) を
+   `(lsb_delta, rsb_delta)` ペアにマップする: `lsb_delta` はアウトラインを
+   スロット内で右にシフトしつつ advance を同量広げ、`rsb_delta` は
+   advance を右側だけ広げる。アウトライン座標は触らない。各エントリは
+   特定グリフを特定の隣接リズムに対して個別チューニングする想定なので、
+   慎重に追加すること。現在の調整値は `font/build.py` の `FAMILIES` を参照。
+4. **bbox 除去** (`_strip_extreme_glyphs`) — 下記 [垂直メトリクス] 参照。
 
 オプションの **横スケール** (`xScale` 設定、現在未使用) は上記の後に
 動き、CJK を縦方向は触らず横だけ縮める。

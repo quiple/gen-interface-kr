@@ -71,6 +71,7 @@ For each (family, weight) in FAMILIES × WEIGHTS:
     (CJK ideographs and vert-only glyphs excluded)
   → make_proportional bakes palt → hmtx, strips palt/vpal/halt/vhal
   → _apply_tracking widens advances + half-balances LSB
+  → _apply_glyph_spacing applies family["glyphSpacing"] sidebearing tweaks
   → _strip_extreme_glyphs neutralises iteration marks 〱〲
     (yMax > 1200 / yMin < -400)
   → font-baker merge: Inter + proportional Noto
@@ -123,7 +124,7 @@ save/restore.
 
 ### Stage 2 — Proportionalise + tune metrics
 
-Three sub-passes, all in-place on the inst:
+Four sub-passes, all in-place on the inst:
 
 1. **palt baking** (`proportional.make_proportional`) — palt values are
    read from the cached variable font (instantiation can corrupt palt's
@@ -140,7 +141,16 @@ Three sub-passes, all in-place on the inst:
    `tracking // 2` is added to LSB so the outline sits centred in the
    wider slot. Kana / punctuation get a separate `trackingKana` value
    when set on the family.
-3. **Bbox strip** (`_strip_extreme_glyphs`) — see [Vertical metrics]
+3. **Per-glyph spacing** (`_apply_glyph_spacing`) — manual fallback for
+   the rare glyph whose sidebearings still read off after palt + uniform
+   tracking. The family's `glyphSpacing` dict maps a codepoint or
+   character to a `(lsb_delta, rsb_delta)` pair: `lsb_delta` shifts the
+   outline right within the slot and grows advance by the same amount,
+   `rsb_delta` only grows advance on the right. Outline coordinates are
+   never touched. Populate sparingly — each entry hand-tuned for one
+   glyph against a specific neighbour rhythm. Refer to `FAMILIES` in
+   `font/build.py` for the current set of adjustments.
+4. **Bbox strip** (`_strip_extreme_glyphs`) — see [Vertical metrics]
    below.
 
 Optional **horizontal scale** (`xScale` family setting, currently unused)
