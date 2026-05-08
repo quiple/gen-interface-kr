@@ -18,7 +18,9 @@ from font.build import (
     _is_kana_letter,
     _is_kana_or_punct,
     _strip_extreme_glyphs,
+    SUB_EXCLUDE_CODEPOINTS,
 )
+from merge_fonts import parse_codepoint_list
 
 
 # ---------------------------------------------------------------------------
@@ -337,6 +339,58 @@ class TestStripExtremeGlyphs:
         # If the constants drift, several call sites assume yMax=1200/yMin=-400.
         assert _EXTREME_YMAX == 1200
         assert _EXTREME_YMIN == -400
+
+
+# ---------------------------------------------------------------------------
+# SUB_EXCLUDE_CODEPOINTS
+# ---------------------------------------------------------------------------
+
+class TestSubExcludeCodepoints:
+    """Sub-font codepoints handed to font-baker as ``subFont.excludeCodepoints``.
+
+    The actual cmap-stripping and glyph-name collision rename happens inside
+    font-baker (``parse_codepoint_list`` + the merge step). This project
+    only owns the policy: which codepoints stay Noto-sourced. ◎ (U+25CE)
+    is intentionally absent — Inter does not encode it directly; font-baker's
+    glyph-name collision detection saves it via the ``uni25CE`` rename path.
+    """
+
+    def test_list_parses_via_font_baker_helper(self):
+        # Sanity check that the entries match the format font-baker accepts.
+        codepoints = parse_codepoint_list(SUB_EXCLUDE_CODEPOINTS)
+
+        assert isinstance(codepoints, set)
+        assert codepoints, "expected non-empty codepoint set"
+
+    def test_covers_reported_symbols(self):
+        codepoints = parse_codepoint_list(SUB_EXCLUDE_CODEPOINTS)
+
+        for ch in "※⊕⊖⊗⊘◯":
+            assert ord(ch) in codepoints, f"missing {ch} (U+{ord(ch):04X})"
+        for ch in "⓪①②③④⑤⑥⑦⑧⑨":
+            assert ord(ch) in codepoints, f"missing enclosed digit {ch}"
+        # Dingbat Sans-Serif Circled aliases (Inter and Noto both map ➀ to
+        # the same glyph as ①) — exclude so Inter's outline doesn't leak in.
+        for ch in "➀➁➂➃➄➅➆➇➈":
+            assert ord(ch) in codepoints, f"missing dingbat {ch}"
+        for start, end in ((0x24B6, 0x24CF), (0x1F130, 0x1F149)):
+            for cp in range(start, end + 1):
+                assert cp in codepoints
+
+    def test_excludes_unrelated_symbols(self):
+        # Sanity check: things outside the policy stay out so we don't
+        # accidentally widen Inter's replacement scope.
+        codepoints = parse_codepoint_list(SUB_EXCLUDE_CODEPOINTS)
+
+        for ch in "¼½¾℅A→":
+            assert ord(ch) not in codepoints, f"{ch} unexpectedly excluded"
+
+    def test_omits_bullseye_handled_by_collision_rename(self):
+        # ◎ (U+25CE) is rescued by font-baker's glyph-name collision check
+        # rather than excludeCodepoints — Inter does not encode U+25CE.
+        codepoints = parse_codepoint_list(SUB_EXCLUDE_CODEPOINTS)
+
+        assert 0x25CE not in codepoints
 
 
 # ---------------------------------------------------------------------------

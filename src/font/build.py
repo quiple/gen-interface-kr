@@ -8,7 +8,8 @@ Shared pipeline per weight:
                                                 so Noto's name/OS2 survive)
   2. Convert to proportional metrics           (palt-based, proportional.py)
   3. Apply tracking                            (LSB +half, RSB +half)
-  4. Merge Inter/InterDisplay + proportional Noto  (font-baker)
+  4. Merge Inter/InterDisplay + proportional Noto  (font-baker, with
+     subFont.excludeCodepoints to keep CJK-conventional symbols on Noto)
 
 Families:
   - Gen Interface JP         : Inter       + proportional Noto, tracking +50 (kana/punct +60)
@@ -82,6 +83,34 @@ NOTO_VARIABLE = os.path.join(VENDOR_FONTS, "Noto_Sans_JP", "NotoSansJP-VariableF
 DIST = os.path.join(ROOT, "dist")
 DIST_TTF = os.path.join(DIST, "ttf")
 INTERMEDIATE = os.path.join(DIST, "intermediate")
+
+# Codepoints whose glyphs should stay sourced from the base Noto font even
+# when Inter/InterDisplay also encodes them. Forwarded as
+# subFont.excludeCodepoints to font-baker, which strips them from the sub
+# cmap before merge so the base outline survives. Edit to tune merge policy.
+#
+# ◎ (U+25CE) is intentionally absent: Inter does not encode U+25CE itself,
+# but encodes U+0298 with glyph name ``uni25CE`` which used to silently
+# overwrite Noto's bullseye. font-baker now detects that glyph-name
+# collision and renames the sub glyph to ``uni25CE.sub``, so excluding the
+# codepoint here is unnecessary.
+SUB_EXCLUDE_CODEPOINTS = [
+    "U+2460-U+2469",   # ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨
+    "U+24EA",          # ⓪
+    "U+2780-U+2788",   # ➀-➈ (Dingbat Sans-Serif Circled aliases of ①-⑨)
+    "U+24B6-U+24CF",   # Ⓐ-Ⓩ
+    "U+1F130-U+1F149", # 🄰-🅉
+    "U+203B",          # ※
+    "U+2295",          # ⊕
+    "U+2296",          # ⊖
+    "U+2297",          # ⊗
+    "U+2298",          # ⊘
+    "U+25EF",          # ◯
+]
+# Note: Dingbat Sans-Serif Circled has no 0 (Unicode never assigned one).
+# ➉ (U+2789) exists but Inter does not encode it, so excluding it is moot.
+# Negative-circled families (❶-❿ U+2776-U+277F, ➊-➓ U+278A-U+2793) are
+# absent from Inter entirely, so they fall through to Noto without help.
 
 # Vertical alignment between Inter and Noto.
 #
@@ -477,7 +506,7 @@ def _apply_tracking(font: TTFont, tracking: int, tracking_kana: int | None = Non
 def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -> dict:
     """Build a single weight of a Gen Interface JP family.
 
-    Three-stage pipeline:
+    Pipeline:
 
     1. **Bake** Noto variable → static TTF at the chosen wght axis location,
        passed through font-baker with ``metadataMode: inheritBase`` so the
@@ -487,9 +516,13 @@ def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -
        into hmtx, apply tracking, strip extreme bbox glyphs, optionally
        apply x-scale.
     3. **Merge** the proportional Noto with the matching Inter master via
-       font-baker. Output identity is rewritten to "Gen Interface JP",
-       Inter's vertical metrics drive the merged hhea (``metricsSource: "sub"``),
-       and our manufacturer / URL get stamped into nameID 8 / 11.
+       font-baker. ``subFont.excludeCodepoints`` keeps CJK-conventional
+       symbols (※, ◯, ①, Ⓐ, …) on the Noto outline, and font-baker's
+       glyph-name collision detection rescues cases like Inter's U+0298
+       sharing the ``uni25CE`` glyph name with Noto's ◎. Output identity
+       is rewritten to "Gen Interface JP", Inter's vertical metrics drive
+       the merged hhea (``metricsSource: "sub"``), and our manufacturer /
+       URL get stamped into nameID 8 / 11.
     """
     inter_path = os.path.join(INTER_DIR, f"{family['interPrefix']}-{weight_name}.ttf")
     if not os.path.isfile(inter_path):
@@ -598,6 +631,7 @@ def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -
             "scale": 1.0,
             "baselineOffset": 0,
             "axes": [],
+            "excludeCodepoints": SUB_EXCLUDE_CODEPOINTS,
         },
         "baseFont": {
             "path": prop_path,

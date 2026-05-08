@@ -28,6 +28,8 @@ consumes the published webfont package.
         │             ↓                                   │
         │   [3/3] Merge — font-baker                      │
         │         Inter (sub) + proportional Noto (base)  │
+        │         subFont.excludeCodepoints keeps         │
+        │         CJK-conventional symbols on Noto        │
         │         metricsSource=sub, manufacturer stamp   │
         │             ↓                                   │
         │   dist/ttf/  (one TTF per family × weight)      │
@@ -72,6 +74,10 @@ For each (family, weight) in FAMILIES × WEIGHTS:
   → _strip_extreme_glyphs neutralises iteration marks 〱〲
     (yMax > 1200 / yMin < -400)
   → font-baker merge: Inter + proportional Noto
+                     subFont.excludeCodepoints = SUB_EXCLUDE_CODEPOINTS
+                     keeps CJK-conventional symbols on Noto;
+                     font-baker also auto-renames glyph-name collisions
+                     (e.g. Inter U+0298 vs Noto U+25CE both `uni25CE`)
                      family/weight stamped to "Gen Interface JP …"
                      metricsSource=sub anchors hhea on Inter
                      manufacturer / manufacturerURL stamped
@@ -143,12 +149,22 @@ runs after the above when set, condensing CJK in x without touching y.
 ### Stage 3 — Merge with Inter
 
 font-baker merge mode: Inter is sub, the proportional Noto is base.
-`output.metricsSource = "sub"` anchors the merged hhea / OS/2 envelope on
-Inter so Latin metrics drive line height. `BASELINE_OFFSET = 25` nudges
-Noto up so CJK ideographs share an optical baseline with Latin caps;
-`SCALE = 0.925` shrinks Noto so a CJK character lines up in width with
-Inter's cap-height — a typographic convention for Latin/CJK pairing
-where CJK is slightly down-scaled to feel proportionate.
+`subFont.excludeCodepoints = SUB_EXCLUDE_CODEPOINTS` lists the CJK-conventional
+symbols that must keep the Noto outline (`①` `Ⓐ` `※` `◯` …); font-baker
+strips those entries from Inter's cmap before the merge so the base glyph
+survives. font-baker additionally auto-detects cross-codepoint glyph-name
+collisions — Inter's U+0298 (`ʘ`) and Noto's U+25CE (`◎`) both ship under
+the glyph name `uni25CE`; rather than letting Inter's outline overwrite
+`◎`, font-baker renames the sub glyph to `uni25CE.sub`. Together the two
+mechanisms cover both direct overlaps and the trickier name-collision case
+without any manual cmap surgery in this project.
+
+`output.metricsSource = "sub"` anchors the merged hhea / OS/2 envelope on Inter
+so Latin metrics drive line height. `BASELINE_OFFSET = 25` nudges Noto up so CJK
+ideographs share an optical baseline with Latin caps; `SCALE = 0.925` shrinks
+Noto so a CJK character lines up in width with Inter's cap-height — a
+typographic convention for Latin/CJK pairing where CJK is slightly down-scaled
+to feel proportionate.
 
 `output.manufacturer = "Yamato Iizuka"`, `output.manufacturerURL =
 "https://yamatoiizuka.com"` stamp nameID 8 / 11 on every released TTF.
@@ -346,9 +362,11 @@ flow.
 
 ### Python
 
-- `ofl-font-baker` (>= 0.3.6) — Composite font merge engine. Inherits
+- `ofl-font-baker` (>= 0.4.0) — Composite font merge engine. Inherits
   base/sub identity records via `metadataMode`. Drives Stage 1 (bake)
-  and Stage 3 (merge) of the build pipeline.
+  and Stage 3 (merge) of the build pipeline. 0.4.0 adds
+  `subFont.excludeCodepoints` and glyph-name collision rename, used by
+  the merge step to keep CJK-conventional symbols on Noto.
 - `fonttools` (>= 4.47.0) — Font parsing, instancer, subsetter, GPOS / GSUB
   table editing.
 - `freetype-py` — Used by tooling around metrics inspection.
