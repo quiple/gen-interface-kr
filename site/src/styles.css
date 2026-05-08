@@ -337,6 +337,10 @@ h2 {
   font-size: 6rem; /* 96 */
   line-height: 1.333; /* 128/96 */
   font-weight: 400;
+  /* Lift the reference span and the animated SVG above the bbox guide lines.
+     Without this they share `z-index: auto` with the lines, and Chromium ends
+     up painting the lines on top of the SVG fill (despite later DOM order). */
+  z-index: 1;
 }
 
 .composition__group-text--left {
