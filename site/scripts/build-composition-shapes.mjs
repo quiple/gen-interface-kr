@@ -21,19 +21,19 @@ const WASM_FILE = path.join(
 
 const JOBS = [
   {
-    key: "jp-type",
+    key: "ko-type",
     font: "public/_font-subsets/NotoSansKR-Subset.ttf",
-    text: "書体",
-    script: "Jpan",
-    language: "ja",
+    text: "서체",
+    script: "Kore",
+    language: "ko",
     weights: [400, 465],
   },
   {
-    key: "jp-design",
+    key: "ko-design",
     font: "public/_font-subsets/NotoSansKR-Subset.ttf",
-    text: "デザイン",
-    script: "Jpan",
-    language: "ja",
+    text: "디자인",
+    script: "Kore",
+    language: "ko",
     weights: [400, 465],
   },
   {
