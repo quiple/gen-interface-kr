@@ -4,7 +4,7 @@ This pipeline packages generated outputs for distribution.
 
 It creates a GitHub Release zip of the TTFs (for users installing the
 font into design tools, OS font folders, or bitmap conversion utilities)
-and prepares npm and Pages-hosted web font directories that deliver the
+and prepares an npm package that delivers the
 font on the web via CSS + unicode-range subset WOFF2.
 
 ## Build
@@ -99,19 +99,9 @@ gh release upload v<version> dist/release/github/*.zip --clobber
 # Review on the GitHub UI, then "Publish release"
 ```
 
-The site download button defaults to:
-
-```text
-https://github.com/quiple/gen-interface-kr/releases/download/v<version>/GenInterfaceKR-<version>.zip
-```
-
-Use `VITE_DOWNLOAD_URL` and `VITE_DOWNLOAD_LABEL` when building the site to
-override the URL or label.
-
 ## Web Font Hosting
 
-Web font files are written to an npm package root and to a mirrored Pages
-directory:
+Web font files are written to an npm package root:
 
 ```text
 dist/release/npm/
@@ -122,21 +112,13 @@ dist/release/npm/
   display-100.css ... display-800.css
   w/normal/.../*.woff2
   w/display/.../*.woff2
-
-dist/release/webfonts/
-  gen-interface-kr/
-    all.css
-    100.css ... 800.css
-    display-100.css ... display-800.css
-    w/normal/.../*.woff2
-    w/display/.../*.woff2
 ```
 
-For non-npm static hosting, copy `dist/release/webfonts/gen-interface-kr/` to
-the public directory. Example CSS path:
+For non-npm static hosting, copy the contents of `dist/release/npm/` to
+your public directory. Example CSS path:
 
 ```text
-/webfonts/gen-interface-kr/all.css
+/webfonts/all.css
 ```
 
 Publishing `dist/release/npm/` to npm makes the jsDelivr URL:
