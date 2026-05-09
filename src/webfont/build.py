@@ -91,7 +91,6 @@ def codepoints_from_ranges(ranges: Iterable[tuple[int, int]]) -> set[int]:
     return cps
 
 
-
 def _chunk_evenly(values: list[int], chunks: int) -> list[list[int]]:
     if not values:
         return []
