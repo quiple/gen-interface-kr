@@ -76,34 +76,7 @@ the page text. If preloading is needed, preload the CSS only:
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/all.css">
 ```
 
-## Benchmark
-
-The benchmark starts a local HTTP server and a headless Chrome instance via
-CDP. The server adds configurable latency and bandwidth throttling to font
-responses. Results are written to `dist/webfont/benchmark/*.json`.
-
-```bash
-node src/webfont/benchmark.mjs --runs 3 --latency 80 --kbps 1600
-```
-
-Profiles:
-
-- `site`: short Korean text similar to a typical website
-- `novel`: long-form Korean text that touches many kanji subsets
-
-Modes:
-
-- `subset`: subset CSS with `unicode-range`
-- `full`: one unsubsetted WOFF2
-
-If Chrome cannot be detected automatically:
-
-```bash
-CHROME_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
-node src/webfont/benchmark.mjs
-```
-
-References:
+## References
 
 - https://github.com/googlefonts/nam-files
 - https://github.com/googlefonts/nam-files/tree/main/slices

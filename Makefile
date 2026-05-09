@@ -12,7 +12,7 @@ NPM_CACHE ?= $(CURDIR)/.npm-cache
 
 .PHONY: all clean \
         font \
-        webfont webfont-benchmark \
+        webfont \
         release npm-pack npm-publish-dry-run npm-publish \
         site serve
 

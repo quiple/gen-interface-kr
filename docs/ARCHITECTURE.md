@@ -97,7 +97,6 @@ Read dist/ttf/{family}/{family}-{weight}.ttf
       .nam file → human-readable codepoint list
   → emit @font-face per slice with `unicode-range:` guard
   → write all.css (full family) + per-weight CSS files
-  → manifest.json with sizes / brotli sizes for benchmarking
 ```
 
 ### 3. Package & Publish (`release.build`)
@@ -276,12 +275,6 @@ dist/webfont/gen-interface-kr/
   manifest.json          # sizes / brotli sizes per slice
 ```
 
-`benchmark.mjs` (Node) replays a throttled fetch against the local
-subsets to validate the slicing pays off vs. a full single-file WOFF2.
-The benchmark generates the full WOFF2 from the Regular TTF on demand
-(via `webfont.build` without `--all`); it is not part of the release
-artifact set.
-
 ## Release Packaging (`release/build.py`)
 
 Three downstream consumers, three outputs:
@@ -354,7 +347,6 @@ Tests live under `tests/`, split by surface:
 | `make font` | Build TTF for both families × all weights |
 | `make webfont` | Build unicode-range subsets (depends on `font`) |
 | `make release` | Build GitHub zips + npm + Pages package (depends on `webfont`) |
-| `make webfont-benchmark` | Throttled fetch benchmark of slicing strategy |
 | `make npm-pack` | Dry-run npm package inspection |
 | `make npm-publish` | Publish to npm |
 | `make site` | Build the demo site (`site/dist/` doubles as the GitHub Pages artifact) |
