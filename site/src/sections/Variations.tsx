@@ -6,14 +6,14 @@ import { Slider } from "./Slider";
 type WeightCell = { sample: string; label: string; weight: number };
 
 const WEIGHTS: WeightCell[] = [
-  { sample: "あA1", label: "Thin", weight: 100 },
-  { sample: "いB2", label: "ExtraLight", weight: 200 },
-  { sample: "うC3", label: "Light", weight: 300 },
-  { sample: "えD4", label: "Regular", weight: 400 },
-  { sample: "おE5", label: "Medium", weight: 500 },
-  { sample: "かF6", label: "SemiBold", weight: 600 },
-  { sample: "きG7", label: "Bold", weight: 700 },
-  { sample: "くH8", label: "ExtraBold", weight: 800 },
+  { sample: "가A1", label: "Thin", weight: 100 },
+  { sample: "나B2", label: "ExtraLight", weight: 200 },
+  { sample: "다C3", label: "Light", weight: 300 },
+  { sample: "라D4", label: "Regular", weight: 400 },
+  { sample: "마E5", label: "Medium", weight: 500 },
+  { sample: "바F6", label: "SemiBold", weight: 600 },
+  { sample: "사G7", label: "Bold", weight: 700 },
+  { sample: "아H8", label: "ExtraBold", weight: 800 },
 ];
 
 const WEIGHT_NAMES: Record<number, string> = Object.fromEntries(
@@ -34,7 +34,7 @@ const TOOLS: ToolBlock[] = [
   {
     name: "LVGL / lv_font_conv",
     href: "https://github.com/lvgl/lv_font_conv",
-    meta: "24px ･ Regular ･ 16階調",
+    meta: "24px ･ Regular ･ 16단계",
     commands: [
       [
         { text: "lv_font_conv", href: "https://github.com/lvgl/lv_font_conv" },
@@ -46,7 +46,7 @@ const TOOLS: ToolBlock[] = [
   {
     name: "U8g2 / bdfconv",
     href: "https://github.com/olikraus/u8g2",
-    meta: "24px ･ Regular ･ 2階調",
+    meta: "24px ･ Regular ･ 2단계",
     commands: [
       [
         { text: "otf2bdf", href: "https://github.com/jirutka/otf2bdf" },
@@ -201,18 +201,18 @@ export function Variations() {
           <div className="styles-row">
             <div className="styles-cell">
               <span className="styles-cell__head">
-                {"Type Design\n書体デザイン"}
+                {"Type Design\n서체 디자인"}
               </span>
               <span className="styles-cell__name styles-cell__name--narrow">
-                {"Gen Interface KR\n汎用／本文用"}
+                {"Gen Interface KR\n범용／본문용"}
               </span>
             </div>
             <div className="styles-cell styles-cell--display">
               <span className="styles-cell__head">
-                {"Type Design\n書体デザイン"}
+                {"Type Design\n서체 디자인"}
               </span>
               <span className="styles-cell__name styles-cell__name--wide">
-                {"Gen Interface KR Display\n見出し用"}
+                {"Gen Interface KR Display\n제목용"}
               </span>
             </div>
           </div>
@@ -243,17 +243,17 @@ export function Variations() {
           <span className="variations__caption">Web Fonts</span>
           <div className="webfont__copy">
             <p>
-              Web プロジェクトにおいて、head 内のスタイルシートの読み込みのみで
-              Web フォントを使用できます。
+              웹 프로젝트에서 head 내의 스타일시트 로드만으로 웹 폰트를 사용할 수
+              있습니다.
               <a
                 className="webfont__copy-link"
                 href="https://developers.googleblog.com/google-fonts-launches-korean-support/"
                 target="_blank"
                 rel="noreferrer"
               >
-                Google Fonts と同様のサブセット化
+                Google Fonts와 동일한 서브셋화
               </a>
-              により、単一フォントデータと比べ高速な表示を実現しています。
+              를 통해, 단일 폰트 데이터와 비교해 빠른 표시를 실현했습니다.
             </p>
             <p>
               You can use web fonts simply by loading a stylesheet within the
@@ -353,8 +353,9 @@ export function Variations() {
           <div className="bitmap-sample">
             <div className="bitmap-sample__copy">
               <p>
-                外部ツールを使用することで、組み込み機器向けのビットマップフォントへの変換が可能です。変換後も
-                OFL ライセンスが保持されることに留意してください。
+                외부 도구를 사용하면 임베디드 장치용 비트맵 글꼴로 변환할 수
+                있습니다. 변환 후에도 OFL 라이선스가 유지된다는 점에 유의해
+                주세요.
               </p>
               <p>
                 External tools can convert this font into bitmap fonts for
