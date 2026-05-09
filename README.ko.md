@@ -93,7 +93,7 @@ vendor/
   fonts/      # Inter와 Noto Sans KR의 입력 폰트
   nam-files/  # 웹 폰트 분할용 googlefonts/nam-files 데이터
 docs/
-  ARCHITECTURE.ja.md  # 빌드 파이프라인 전체 사양
+  ARCHITECTURE.md  # 빌드 파이프라인 전체 사양
 ```
 
 이 저장소의 주요 성과물은 `src/font/`에서 생성하는 폰트 패밀리입니다. `src/webfont/`와 `src/release/`는 해당 생성물로부터 파생되는 배포·공개용 공정입니다. 생성물은 `dist/` 아래에 위치하며, 저장소에는 커밋하지 않습니다.
