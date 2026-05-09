@@ -19,7 +19,6 @@ make font
 make webfont
 make webfont-benchmark
 make release
-make site
 ```
 
 Direct module execution is also possible when `src/` is on `PYTHONPATH`:
