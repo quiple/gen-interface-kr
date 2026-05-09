@@ -444,7 +444,7 @@ class CdpClient {
 async function withBrowser(args, fn) {
   const chrome = findChrome(args.chromePath);
   const debugPort = await freePort();
-  const userDataDir = await mkdtemp(path.join(os.tmpdir(), "gen-interface-jp-font-bench-"));
+  const userDataDir = await mkdtemp(path.join(os.tmpdir(), "gen-interface-kr-font-bench-"));
   const proc = spawn(chrome, [
     "--headless=new",
     `--remote-debugging-port=${debugPort}`,

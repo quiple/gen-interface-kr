@@ -7,7 +7,7 @@ the GitHub Release download entry point.
 The site loads the published web font CSS from npm through jsDelivr:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/all.css">
 ```
 
 Local `dist/ttf/` outputs are not required for site development or
@@ -52,7 +52,7 @@ bundle font files for site display.
 The download button defaults to the latest GitHub Release asset:
 
 ```text
-https://github.com/yamatoiizuka/gen-interface-jp/releases/latest/download/GenInterfaceKR.zip
+https://github.com/quiple/gen-interface-kr/releases/latest/download/GenInterfaceKR.zip
 ```
 
 Override it at build time:

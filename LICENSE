@@ -29,7 +29,7 @@ repository. The font files this project produces, and the upstream sources
 under `vendor/`, carry their own licenses:
 
 - Generated font files (TTF in dist/ttf/, WOFF2 in dist/webfont/, anything
-  shipped via the GitHub Release zip or the `gen-interface-jp` npm package)
+  shipped via the GitHub Release zip or the `gen-interface-kr` npm package)
   — SIL Open Font License 1.1. See OFL.txt inside each release artifact.
 
 - vendor/fonts/Inter-4.1/        — SIL Open Font License 1.1

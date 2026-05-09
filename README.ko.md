@@ -1,6 +1,6 @@
 # Gen Interface KR
 
-<p><strong><a href="https://github.com/yamatoiizuka/gen-interface-jp/blob/main/README.md">English</a></strong> | 한국어</p>
+<p><strong><a href="https://github.com/quiple/gen-interface-kr/blob/main/README.md">English</a></strong> | 한국어</p>
 
 Gen Interface KR는 디지털 인터페이스를 위해 설계된, 영문과 국문의 조화를 목표로 하는 서체입니다.  
 명쾌한 UI용 서체인 Inter에 Noto Sans KR의 국문 글리프를 맞추어, 다국어 환경에서 일관된 가독성을 실현합니다.
@@ -38,7 +38,7 @@ Gen Interface KR는 디지털 인터페이스를 위해 설계된, 영문과 국
 <head>
   <link
     rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/400.css"
+    href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/400.css"
   />
 </head>
 ```
@@ -61,7 +61,7 @@ body {
 <head>
   <link
     rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/display-800.css"
+    href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/display-800.css"
   />
 </head>
 ```

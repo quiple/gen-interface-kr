@@ -65,11 +65,11 @@ export function Footer() {
             <span className="footer__credit-value footer__credit-row-4-value">
               <a
                 className="footer__credit-link"
-                href="https://github.com/yamatoiizuka/gen-interface-jp"
+                href="https://github.com/quiple/gen-interface-kr"
                 target="_blank"
                 rel="noreferrer"
               >
-                yamatoiizuka/gen-interface-jp
+                quiple/gen-interface-kr
               </a>
             </span>
           </div>

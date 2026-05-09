@@ -9,7 +9,7 @@ export const APP_VERSION = __APP_VERSION__
 // against, even after newer releases ship.
 export const DOWNLOAD_URL =
   import.meta.env.VITE_DOWNLOAD_URL ||
-  `https://github.com/yamatoiizuka/gen-interface-jp/releases/download/v${APP_VERSION}/GenInterfaceKR-${APP_VERSION}.zip`
+  `https://github.com/quiple/gen-interface-kr/releases/download/v${APP_VERSION}/GenInterfaceKR-${APP_VERSION}.zip`
 
 export const DOWNLOAD_LABEL =
   import.meta.env.VITE_DOWNLOAD_LABEL || `Download v${APP_VERSION}`

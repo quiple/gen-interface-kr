@@ -91,7 +91,7 @@ function Tok({ type, children }: { type: string; children: ReactNode }) {
 }
 
 function LinkLine({ fileName }: { fileName: string }) {
-  const url = `https://cdn.jsdelivr.net/npm/gen-interface-jp@${APP_VERSION}/${fileName}`;
+  const url = `https://cdn.jsdelivr.net/npm/gen-interface-kr@${APP_VERSION}/${fileName}`;
   return (
     <CodeLine className="webfont__code-line--indent-2">
       <Tok type="tag-punct">{"<"}</Tok>

@@ -56,7 +56,7 @@ The npm cache defaults to the repository-local `.npm-cache/` directory. Override
 it with `NPM_CACHE` if needed:
 
 ```bash
-make npm-pack NPM_CACHE=/tmp/gen-interface-jp-npm-cache
+make npm-pack NPM_CACHE=/tmp/gen-interface-kr-npm-cache
 ```
 
 ## GitHub Release Assets
@@ -102,7 +102,7 @@ gh release upload v<version> dist/release/github/*.zip --clobber
 The site download button defaults to:
 
 ```text
-https://github.com/yamatoiizuka/gen-interface-jp/releases/download/v<version>/GenInterfaceKR-<version>.zip
+https://github.com/quiple/gen-interface-kr/releases/download/v<version>/GenInterfaceKR-<version>.zip
 ```
 
 Use `VITE_DOWNLOAD_URL` and `VITE_DOWNLOAD_LABEL` when building the site to
@@ -124,7 +124,7 @@ dist/release/npm/
   w/display/.../*.woff2
 
 dist/release/webfonts/
-  gen-interface-jp/
+  gen-interface-kr/
     all.css
     100.css ... 800.css
     display-100.css ... display-800.css
@@ -132,19 +132,19 @@ dist/release/webfonts/
     w/display/.../*.woff2
 ```
 
-For non-npm static hosting, copy `dist/release/webfonts/gen-interface-jp/` to
+For non-npm static hosting, copy `dist/release/webfonts/gen-interface-kr/` to
 the public directory. Example CSS path:
 
 ```text
-/webfonts/gen-interface-jp/all.css
+/webfonts/gen-interface-kr/all.css
 ```
 
 Publishing `dist/release/npm/` to npm makes the jsDelivr URL:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/all.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/400.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/display-400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/display-400.css">
 ```
 
 The WOFF2 URLs inside the CSS are relative, so the CSS files and `w/` only need

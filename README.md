@@ -1,6 +1,6 @@
 # Gen Interface KR
 
-<p>English | <strong><a href="https://github.com/yamatoiizuka/gen-interface-jp/blob/main/README.ko.md">한국어</a></strong></p>
+<p>English | <strong><a href="https://github.com/quiple/gen-interface-kr/blob/main/README.ko.md">한국어</a></strong></p>
 
 Gen Interface KR is a typeface designed for digital interfaces that aims to harmonize Latin script with Korean. Blending Inter with Noto Sans KR, it ensures consistent readability across multiple languages.
 
@@ -37,7 +37,7 @@ With [subsetting similar to Google Fonts](https://developers.googleblog.com/goog
 <head>
   <link
     rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/400.css"
+    href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/400.css"
   />
 </head>
 ```
@@ -60,7 +60,7 @@ body {
 <head>
   <link
     rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/display-800.css"
+    href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/display-800.css"
   />
 </head>
 ```

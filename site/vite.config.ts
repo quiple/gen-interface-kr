@@ -8,7 +8,7 @@ import react from '@vitejs/plugin-react'
 // the repo root. Read it once at config-load time and surface it to both
 // the runtime (via `define`) and to index.html (via a tiny HTML transform
 // plugin) so a single bump in pyproject.toml propagates to:
-//   - <link href="https://cdn.jsdelivr.net/npm/gen-interface-jp@X.Y.Z/...">
+//   - <link href="https://cdn.jsdelivr.net/npm/gen-interface-kr@X.Y.Z/...">
 //     in index.html
 //   - the "Download vX.Y.Z" label rendered in Hero / Footer
 //   - the @X.Y.Z reference inside the Variation Web Fonts code sample

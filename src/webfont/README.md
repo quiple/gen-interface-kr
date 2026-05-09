@@ -41,7 +41,7 @@ inputs because subsetting from already-compressed WOFF2 is much slower.
 Outputs:
 
 ```text
-dist/webfont/gen-interface-jp/
+dist/webfont/gen-interface-kr/
   all.css
   100.css ... 800.css
   display-100.css ... display-800.css
@@ -62,9 +62,9 @@ subsets.
 Subset delivery:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/all.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/400.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/display-400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/display-400.css">
 ```
 
 Do not preload individual subset WOFF2 files. That would bypass the
@@ -72,8 +72,8 @@ Do not preload individual subset WOFF2 files. That would bypass the
 the page text. If preloading is needed, preload the CSS only:
 
 ```html
-<link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/all.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/all.css">
+<link rel="preload" as="style" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/all.css">
 ```
 
 ## Benchmark

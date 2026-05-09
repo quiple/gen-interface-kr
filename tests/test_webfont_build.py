@@ -91,15 +91,15 @@ class TestWeightCssFilename:
     """Public CSS file naming on the npm package root.
 
     These names are part of the published distribution contract: jsDelivr
-    consumers reference `gen-interface-jp/400.css` and
-    `gen-interface-jp/display-400.css` directly. Renaming here is a
+    consumers reference `gen-interface-kr/400.css` and
+    `gen-interface-kr/display-400.css` directly. Renaming here is a
     breaking change in the public CDN URL space.
     """
 
     def test_normal_family_uses_bare_weight(self):
         # `normal` is the default family — its CSS lives at the package
         # root with no family prefix, matching how Google Fonts CSS is
-        # commonly imported (`gen-interface-jp/400.css`).
+        # commonly imported (`gen-interface-kr/400.css`).
         assert weight_css_filename("normal", 400) == "400.css"
 
     def test_display_family_is_prefixed(self):

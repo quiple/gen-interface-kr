@@ -1,5 +1,5 @@
 [project]
-name = "gen-interface-jp"
+name = "gen-interface-kr"
 version = "0.1.5"
 description = "Typeface harmonizing Latin and Korean for digital interfaces."
 license = "MIT"

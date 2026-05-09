@@ -40,7 +40,7 @@ consumes the published webfont package.
         │  webfont/build.py — unicode-range subsetting    │
         │     google-korean strategy (default) →          │
         │     all.css + per-weight CSS + WOFF2 chunks     │
-        │     dist/webfont/gen-interface-jp/              │
+        │     dist/webfont/gen-interface-kr/              │
         └─────────────────────┬───────────────────────────┘
                               │
         ┌─────────────────────▼──────────────────────────┐
@@ -103,7 +103,7 @@ Read dist/ttf/{family}/{family}-{weight}.ttf
 ### 3. Package & Publish (`release.build`)
 
 ```
-require dist/ttf/ + dist/webfont/gen-interface-jp/
+require dist/ttf/ + dist/webfont/gen-interface-kr/
   → zip GenInterfaceKR-<version>.zip (TTF, all weights × both families)
   → copy webfont package → npm/      (with package.json)
   → copy webfont package → webfonts/ (Pages-hosted mirror)
@@ -266,7 +266,7 @@ references.
 ### Outputs
 
 ```
-dist/webfont/gen-interface-jp/
+dist/webfont/gen-interface-kr/
   all.css                # all weights × both families
   400.css                # normal Regular (one per weight)
   display-400.css        # display Regular (one per weight)
@@ -296,7 +296,7 @@ Three downstream consumers, three outputs:
 - **npm package** (`dist/release/npm/`) — webfont subsets + a generated
   `package.json` (name, version, files, OFL-1.1 license). jsDelivr serves
   `all.css` and per-weight CSS from the package root.
-- **GitHub Pages mirror** (`dist/release/webfonts/gen-interface-jp/`) —
+- **GitHub Pages mirror** (`dist/release/webfonts/gen-interface-kr/`) —
   identical webfont package, served as static files alongside the demo
   site.
 

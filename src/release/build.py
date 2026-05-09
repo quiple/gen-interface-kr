@@ -6,7 +6,7 @@ Outputs:
 - dist/release/github/GenInterfaceKR-<version>.zip
                                               (TTF, both families × all weights)
 - dist/release/npm/                        (subset webfont package for npm)
-- dist/release/webfonts/gen-interface-jp/  (Pages-hosted mirror of the package)
+- dist/release/webfonts/gen-interface-kr/  (Pages-hosted mirror of the package)
 
 The GitHub zip is the downloadable asset for users who want the TTFs to
 install or to feed into other tools (Illustrator / Figma desktop /
@@ -33,9 +33,9 @@ from font.build import DIST_TTF, FAMILIES, ROOT, WEIGHTS
 ROOT_PATH = Path(ROOT)
 DIST_TTF_PATH = Path(DIST_TTF)
 
-DEFAULT_WEBFONT_SOURCE = ROOT_PATH / "dist" / "webfont" / "gen-interface-jp"
+DEFAULT_WEBFONT_SOURCE = ROOT_PATH / "dist" / "webfont" / "gen-interface-kr"
 DEFAULT_RELEASE_DIR = ROOT_PATH / "dist" / "release"
-DEFAULT_REPOSITORY = "yamatoiizuka/gen-interface-jp"
+DEFAULT_REPOSITORY = "quiple/gen-interface-kr"
 INTER_OFL = ROOT_PATH / "vendor" / "fonts" / "Inter-4.1" / "LICENSE.txt"
 
 
@@ -137,7 +137,7 @@ def ofl_text() -> str:
     inter_license = INTER_OFL.read_text(encoding="utf-8")
     _, ofl_body = inter_license.split("\n\n", 1)
     copyright_lines = [
-        "Copyright 2026 The Gen Interface KR Project Authors (https://github.com/yamatoiizuka/gen-interface-jp)",
+        "Copyright 2026 The Gen Interface KR Project Authors (https://github.com/quiple/gen-interface-kr)",
         "Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)",
         "Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'",
     ]
@@ -150,7 +150,7 @@ def write_npm_license_files(out_dir: Path) -> None:
 
 def write_npm_package(out_dir: Path, version: str, repository: str) -> None:
     package = {
-        "name": "gen-interface-jp",
+        "name": "gen-interface-kr",
         "version": version,
         "description": "Gen Interface KR web font subsets",
         "style": "all.css",
@@ -202,7 +202,7 @@ def build_release(args: argparse.Namespace) -> dict:
     release_dir = args.output.resolve()
     github_dir = release_dir / "github"
     npm_dir = release_dir / "npm"
-    webfont_out = release_dir / "webfonts" / "gen-interface-jp"
+    webfont_out = release_dir / "webfonts" / "gen-interface-kr"
 
     # GitHub Release ships TTFs only. Web delivery (subset WOFF2 chunks
     # behind unicode-range) flows through the npm package below; full
@@ -234,7 +234,7 @@ def build_release(args: argparse.Namespace) -> dict:
         "webfonts": {
             "npmPackage": "npm",
             "npmAllCss": "npm/all.css",
-            "staticAllCss": "webfonts/gen-interface-jp/all.css",
+            "staticAllCss": "webfonts/gen-interface-kr/all.css",
         },
     }
     manifest_path = release_dir / "manifest.json"
