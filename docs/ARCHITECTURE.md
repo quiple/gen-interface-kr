@@ -183,7 +183,7 @@ to feel proportionate.
 
 CJK fonts ship full-width: every glyph occupies the same em-square
 regardless of outline width, with `palt` GPOS narrowing kana / Latin
-optically at runtime. Apps that don't enable `palt` (Adobe's Korean
+optically at runtime. Apps that don't enable `palt` (Adobe's Japanese
 composer, browser fallbacks, anything treating CJK as monospaced for
 layout) miss those adjustments and lay out at full-width spacing.
 
@@ -203,7 +203,7 @@ referenced by other features we keep, and orphaned lookups are harmless.
 
 ### Background
 
-In Illustrator, any font with CJK glyphs is forced through the **Korean
+In Illustrator, any font with CJK glyphs is forced through the **Japanese
 composer**, which fixes leading at `pt × ≈170%`. The Latin-only behaviour
 of Inter — line height adjusted per-line based on glyph extents — is not
 controllable from the font side.
