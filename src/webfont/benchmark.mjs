@@ -123,7 +123,6 @@ function sampleSubsetCharacters(manifest, maxPerSubset = 3) {
     const rangeText = entry.cmapUnicodeRange || entry.unicodeRange;
     const ranges = parseUnicodeRange(rangeText);
     const hanRanges = ranges.filter(([start, end]) => end >= 0x3400 && start <= 0x2FA1F);
-    if (entry.name && !entry.name.startsWith("jp-kanji")) continue;
     if (!hanRanges.length) continue;
     let taken = 0;
     for (const [rawStart, rawEnd] of hanRanges) {
@@ -192,7 +191,7 @@ function escapeHtml(value) {
 
 function makePage({ mode, profile, runId, text, family }) {
   return `<!doctype html>
-<html lang="ja">
+<html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
