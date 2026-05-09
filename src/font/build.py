@@ -729,8 +729,8 @@ def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -
             "italic": False,
             "width": 5,
             "metricsSource": "sub",
-            "manufacturer": "Yamato Iizuka",
-            "manufacturerURL": "https://yamatoiizuka.com",
+            "manufacturer": "Lee Minseo; Yamato Iizuka",
+            "manufacturerURL": "https://quiple.dev; https://yamatoiizuka.com",
         },
         "export": {
             "path": {
