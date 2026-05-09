@@ -1,18 +1,18 @@
 # Gen Interface KR
 
-<p><strong><a href="https://github.com/yamatoiizuka/gen-interface-jp/blob/main/README.md">English</a></strong> | 日本語</p>
+<p><strong><a href="https://github.com/yamatoiizuka/gen-interface-jp/blob/main/README.md">English</a></strong> | 한국어</p>
 
-Gen Interface KR は、デジタルインターフェースのために設計された、欧文と和文の調和を目指す書体です。  
-明快な UI 用書体である Inter に Noto Sans KR の和文グリフを合わせ、多言語環境で一貫した読みやすさを実現します。
+Gen Interface KR는 디지털 인터페이스를 위해 설계된, 영문과 국문의 조화를 목표로 하는 서체입니다.  
+명쾌한 UI용 서체인 Inter에 Noto Sans KR의 국문 글리프를 맞추어, 다국어 환경에서 일관된 가독성을 실현합니다.
 
-## Overview
+## 개요
 
-### 2 Families
+### 2개 패밀리
 
-- **Gen Interface KR**: 汎用／本文用
-- **Gen Interface KR Display**: 見出し用
+- **Gen Interface KR**: 범용/본문용
+- **Gen Interface KR Display**: 제목용
 
-### 8 Weights
+### 8개 굵기
 
 - 100: Thin
 - 200: ExtraLight
@@ -23,10 +23,10 @@ Gen Interface KR は、デジタルインターフェースのために設計さ
 - 700: Bold
 - 800: ExtraBold
 
-### Web Fonts
+### 웹 폰트
 
-Web プロジェクトにおいて、head 内のスタイルシートの読み込みのみで Web フォントを使用できます。  
-[Google Fonts と同様のサブセット化](https://developers.googleblog.com/google-fonts-launches-japanese-support/)により、単一フォントデータと比べ高速な表示を実現しています。
+웹 프로젝트에서 head 내의 스타일시트 로드만으로 웹 폰트를 사용할 수 있습니다.  
+[Google Fonts와 동일한 서브셋화](https://developers.googleblog.com/google-fonts-launches-korean-support/)를 통해, 단일 폰트 데이터와 비교해 빠른 표시를 실현했습니다.
 
 #### Gen Interface KR
 
@@ -85,38 +85,38 @@ h2 {
 
 ```text
 src/
-  font/       # 中核のフォント生成
-  webfont/    # Web フォント配信用 CSS + subset WOFF2
-  release/    # GitHub Release / npm 配信用の梱包
-site/         # ランディングページ兼フォント表示確認サイト
+  font/       # 핵심 폰트 생성
+  webfont/    # 웹 폰트 배포용 CSS + 서브셋 WOFF2
+  release/    # GitHub Release / npm 배포용 패키징
+site/         # 랜딩 페이지 겸 폰트 표시 확인 사이트
 vendor/
-  fonts/      # Inter と Noto Sans KR の入力フォント
-  nam-files/  # Web フォント分割用の googlefonts/nam-files データ
+  fonts/      # Inter와 Noto Sans KR의 입력 폰트
+  nam-files/  # 웹 폰트 분할용 googlefonts/nam-files 데이터
 docs/
-  ARCHITECTURE.ja.md  # ビルドパイプラインの全体仕様
+  ARCHITECTURE.ja.md  # 빌드 파이프라인 전체 사양
 ```
 
-このリポジトリの主成果物は `src/font/` で生成するフォントファミリーです。`src/webfont/` と `src/release/` は、その生成物から派生する配信・公開用の工程です。生成物は `dist/` 配下に置かれ、リポジトリにはコミットしません。
+이 저장소의 주요 성과물은 `src/font/`에서 생성하는 폰트 패밀리입니다. `src/webfont/`와 `src/release/`는 해당 생성물로부터 파생되는 배포·공개용 공정입니다. 생성물은 `dist/` 아래에 위치하며, 저장소에는 커밋하지 않습니다.
 
-ビルドパイプラインや内部仕様の詳細は [`docs/ARCHITECTURE.ja.md`](docs/ARCHITECTURE.ja.md) を参照してください。
+빌드 파이프라인이나 내부 사양의 상세한 내용은 [`docs/ARCHITECTURE.ko.md`](docs/ARCHITECTURE.ja.md)를 참조해 주세요.
 
-## Quick Start
+## 빠른 시작
 
 ```bash
-make font     # dist/ttf/ にフォントを生成
-make site     # サイトをビルド (site/dist/)
-make serve    # サイトのローカル開発サーバー
+make font     # dist/ttf/에 폰트 생성
+make site     # 사이트 빌드 (site/dist/)
+make serve    # 사이트 로컬 개발 서버
 ```
 
-webfont サブセット化、リリース梱包、テスト、npm 公開などの全コマンドは [`docs/ARCHITECTURE.ja.md`](docs/ARCHITECTURE.ja.md) の「コマンド」を参照してください。
+웹 폰트 서브셋화, 릴리스 패키징, 테스트, npm 공개 등의 모든 명령어는[`docs/ARCHITECTURE.ja.md`](docs/ARCHITECTURE.ja.md)의 '명령어' 섹션을 참조해 주세요.
 
-## License
+## 라이선스
 
-このリポジトリのソースコードは [MIT License](LICENSE)、生成されたフォント本体は [SIL Open Font License 1.1](https://scripts.sil.org/OFL) です。　　
+이 저장소의 소스 코드는 [MIT License](LICENSE), 생성된 폰트 본체는 [SIL Open Font License 1.1](https://scripts.sil.org/OFL)입니다.
 
-`vendor/` 配下は、それぞれに同梱のライセンスに従います。
+`vendor/` 하위 폴더는 각각 동봉된 라이선스를 따릅니다.
 
-## References
+## 레퍼런스
 
 - [Noto Sans KR](https://github.com/notofonts/noto-cjk)
 - [Inter](https://github.com/rsms/inter)
