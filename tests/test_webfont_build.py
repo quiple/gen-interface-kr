@@ -17,7 +17,7 @@ testing fontTools' own behavior is out of scope.
 import pytest
 
 from webfont.build import (
-    build_google_japanese_subset_plan,
+    build_google_korean_subset_plan,
     build_subset_plan,
     format_unicode_range,
     is_han_codepoint,
@@ -224,7 +224,7 @@ class TestBuildSubsetPlan:
         flat = {cp for item in extras for cp in item.codepoints}
         assert 0x20000 in flat
 
-    def test_non_japanese_falls_back_to_other(self, diverse_codepoints):
+    def test_non_korean_falls_back_to_other(self, diverse_codepoints):
         plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
         other = [item for item in plan if item.name.startswith("other-")]
         flat = {cp for item in other for cp in item.codepoints}
@@ -336,11 +336,11 @@ class TestParseSlicingStrategy:
 
 
 # ---------------------------------------------------------------------------
-# build_google_japanese_subset_plan
+# build_google_korean_subset_plan
 # ---------------------------------------------------------------------------
 
-class TestGoogleJapaneseSubsetPlan:
-    """Replays Google Fonts' Japanese slicing strategy against this font's cmap."""
+class TestGoogleKoreanSubsetPlan:
+    """Replays Google Fonts' Korean slicing strategy against this font's cmap."""
 
     def _write_strategy(self, tmp_path, blocks):
         strategy = tmp_path / "strategy.txt"
@@ -358,15 +358,15 @@ class TestGoogleJapaneseSubsetPlan:
             [0x20, 0x3042],
             [0x4E00],
         ])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x3042, 0x4E00, 0x41},  # 0x41 not in strategy → extra
             slice_path=strategy,
             remaining_slices=1,
         )
         assert [item.name for item in plan] == [
-            "google-japanese-000",
-            "google-japanese-001",
-            "google-japanese-extra-00",
+            "google-korean-000",
+            "google-korean-001",
+            "google-korean-extra-00",
         ]
         assert [set(item.codepoints) for item in plan] == [
             {0x20, 0x3042},
@@ -382,7 +382,7 @@ class TestGoogleJapaneseSubsetPlan:
             [0x20, 0x3042],
             [0x3042, 0x4E00],
         ])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x3042, 0x4E00},
             slice_path=strategy,
             include_remaining=False,
@@ -394,13 +394,13 @@ class TestGoogleJapaneseSubsetPlan:
 
     def test_include_remaining_false_skips_extras(self, tmp_path):
         strategy = self._write_strategy(tmp_path, [[0x20]])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x41, 0x42},
             slice_path=strategy,
             include_remaining=False,
         )
         # Only the strategy slice; the un-claimed Latin letters get dropped.
-        assert [item.name for item in plan] == ["google-japanese-000"]
+        assert [item.name for item in plan] == ["google-korean-000"]
         assert set(plan[0].codepoints) == {0x20}
 
     def test_empty_intersection_skips_slice(self, tmp_path):
@@ -413,17 +413,17 @@ class TestGoogleJapaneseSubsetPlan:
             [0x99999],       # NOT in font — should drop
             [0x3042],        # in font
         ])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x3042},
             slice_path=strategy,
             include_remaining=False,
         )
         # Note: the surviving slice from block index 2 keeps its
-        # original index in the name (`google-japanese-002`), preserving
+        # original index in the name (`google-korean-002`), preserving
         # the strategy's positional identity for cache-key stability.
         assert [item.name for item in plan] == [
-            "google-japanese-000",
-            "google-japanese-002",
+            "google-korean-000",
+            "google-korean-002",
         ]
 
     def test_slices_are_non_overlapping(self, tmp_path):
@@ -433,7 +433,7 @@ class TestGoogleJapaneseSubsetPlan:
             [0x20, 0x3042, 0x4E00],
             [0x41, 0x3042, 0x4E00],  # overlapping with first
         ])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x3042, 0x4E00, 0x41},
             slice_path=strategy,
             include_remaining=False,

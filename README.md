@@ -1,8 +1,8 @@
 # Gen Interface KR
 
-<p>English | <strong><a href="https://github.com/yamatoiizuka/gen-interface-jp/blob/main/README.ja.md">日本語</a></strong></p>
+<p>English | <strong><a href="https://github.com/yamatoiizuka/gen-interface-jp/blob/main/README.ko.md">한국어</a></strong></p>
 
-Gen Interface KR is a typeface designed for digital interfaces that aims to harmonize Latin script with Japanese. Blending Inter with Noto Sans KR, it ensures consistent readability across multiple languages.
+Gen Interface KR is a typeface designed for digital interfaces that aims to harmonize Latin script with Korean. Blending Inter with Noto Sans KR, it ensures consistent readability across multiple languages.
 
 ## Overview
 
@@ -25,7 +25,7 @@ Gen Interface KR is a typeface designed for digital interfaces that aims to harm
 ### Web Fonts
 
 In web projects, you can use web fonts simply by loading a stylesheet within the head.  
-With [subsetting similar to Google Fonts](https://developers.googleblog.com/google-fonts-launches-japanese-support/), we achieve faster display than a single bundled font file.
+With [subsetting similar to Google Fonts](https://developers.googleblog.com/google-fonts-launches-korean-support/), we achieve faster display than a single bundled font file.
 
 #### Gen Interface KR
 

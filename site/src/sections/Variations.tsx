@@ -247,7 +247,7 @@ export function Variations() {
               Web フォントを使用できます。
               <a
                 className="webfont__copy-link"
-                href="https://developers.googleblog.com/google-fonts-launches-japanese-support/"
+                href="https://developers.googleblog.com/google-fonts-launches-korean-support/"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -260,7 +260,7 @@ export function Variations() {
               head. With{" "}
               <a
                 className="webfont__copy-link"
-                href="https://developers.googleblog.com/google-fonts-launches-japanese-support/"
+                href="https://developers.googleblog.com/google-fonts-launches-korean-support/"
                 target="_blank"
                 rel="noreferrer"
               >

@@ -6,7 +6,7 @@ CJK fonts ship with full-width metrics by default — every glyph occupies
 the same em-square box regardless of its actual outline width — and rely
 on the GPOS ``palt`` feature to optically narrow kana, punctuation, and
 Latin-in-CJK glyphs at runtime. Apps that don't enable ``palt`` (Adobe's
-Japanese composer, browser fallbacks, anything that treats CJK as
+Korean composer, browser fallbacks, anything that treats CJK as
 monospaced for layout) miss those adjustments and lay the text out at
 full-width spacing.
 
@@ -23,8 +23,8 @@ Usage:
 from __future__ import annotations
 
 import sys
-from fontTools.ttLib import TTFont
 
+from fontTools.ttLib import TTFont
 
 # GPOS features that provide proportional metric adjustments.
 # These become redundant once the font itself is proportional, so we strip

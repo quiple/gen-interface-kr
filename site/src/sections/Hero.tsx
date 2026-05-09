@@ -4,7 +4,7 @@ export const HERO_TITLE = "Gen Interface KR";
 export const HERO_COPY_JA =
   "Gen Interface KR は、デジタルインターフェースのために設計された、欧文と和文の調和を目指す書体です。明快な UI 用書体である Inter に Noto Sans KR の和文グリフを合わせ、多言語環境で一貫した読みやすさを実現します。";
 export const HERO_COPY_EN =
-  "Gen Interface KR is a typeface designed for digital interfaces that aims to harmonize Latin script with Japanese. Blending Inter with Noto Sans KR, it ensures consistent readability across multiple languages.";
+  "Gen Interface KR is a typeface designed for digital interfaces that aims to harmonize Latin script with Korean. Blending Inter with Noto Sans KR, it ensures consistent readability across multiple languages.";
 
 export function Hero() {
   return (

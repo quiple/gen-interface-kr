@@ -17,7 +17,7 @@ This target runs:
 
 ```bash
 PYTHONPATH=src python3 -m font.build
-PYTHONPATH=src python3 -m webfont.build --all --clean --strategy google-japanese
+PYTHONPATH=src python3 -m webfont.build --all --clean --strategy google-korean
 PYTHONPATH=src python3 -m release.build
 ```
 

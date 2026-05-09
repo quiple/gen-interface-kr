@@ -43,7 +43,7 @@ from .proportional import make_proportional
 # values below were tuned by eye-matching CJK stem density to each Inter
 # master, hence the off-grid numbers (e.g. 465 for Regular, 800 for Bold).
 WEIGHTS = [
-    (100, "Thin",       100),
+    (100, "Thin",        100),
     (200, "ExtraLight",  260),
     (300, "Light",       355),
     (400, "Regular",     465),

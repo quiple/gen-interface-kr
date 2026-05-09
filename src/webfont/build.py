@@ -175,8 +175,8 @@ def build_subset_plan(font_codepoints: Iterable[int], extra_han_slices: int = 24
         assigned.update(usable)
 
     add("latin", codepoints_from_ranges(LATIN_RANGES), "Latin, Latin punctuation, and shared symbols")
-    add("jp-kana", codepoints_from_ranges(KR_KANA_RANGES), "Japanese punctuation, kana, and fullwidth forms")
-    add("jp-symbols", codepoints_from_ranges(KR_SYMBOL_RANGES), "Japanese radicals, enclosed forms, and CJK symbols")
+    add("jp-kana", codepoints_from_ranges(KR_KANA_RANGES), "Korean punctuation, kana, and fullwidth forms")
+    add("jp-symbols", codepoints_from_ranges(KR_SYMBOL_RANGES), "Korean radicals, enclosed forms, and CJK symbols")
 
     for row in range(16, 48):
         add(
@@ -198,7 +198,7 @@ def build_subset_plan(font_codepoints: Iterable[int], extra_han_slices: int = 24
 
     remaining = sorted(supported - assigned)
     for index, codepoints in enumerate(_chunk_evenly(remaining, 8)):
-        add(f"other-{index:02d}", codepoints, "Non-Japanese fallback coverage")
+        add(f"other-{index:02d}", codepoints, "Non-Korean fallback coverage")
 
     return subsets
 
@@ -245,18 +245,18 @@ def parse_slicing_strategy(path: Path) -> list[set[int]]:
     return parsed
 
 
-def build_google_japanese_subset_plan(
+def build_google_korean_subset_plan(
     font_codepoints: Iterable[int],
     slice_path: Path = DEFAULT_GOOGLE_JAPANESE_SLICE,
     include_remaining: bool = True,
     remaining_slices: int = 8,
 ) -> list[WebFontSubset]:
-    """Build subsets from googlefonts/nam-files' Japanese slicing strategy.
+    """Build subsets from googlefonts/nam-files' Korean slicing strategy.
 
     The strategy file is ordered the same way as Google Fonts' unicode-range
     prioritization. We preserve that order, intersect each slice with this
     font's cmap, then optionally add any cmap codepoints not covered by the
-    Japanese strategy so the self-hosted build can still serve the full font.
+    Korean strategy so the self-hosted build can still serve the full font.
     """
     supported = set(font_codepoints)
     assigned: set[int] = set()
@@ -268,7 +268,7 @@ def build_google_japanese_subset_plan(
             continue
         subsets.append(
             WebFontSubset(
-                name=f"google-japanese-{index:03d}",
+                name=f"google-korean-{index:03d}",
                 codepoints=usable,
                 note=f"googlefonts/nam-files slices/korean_default.txt subset {index}",
             )
@@ -280,9 +280,9 @@ def build_google_japanese_subset_plan(
         for index, codepoints in enumerate(_chunk_evenly(remaining, remaining_slices)):
             subsets.append(
                 WebFontSubset(
-                    name=f"google-japanese-extra-{index:02d}",
+                    name=f"google-korean-extra-{index:02d}",
                     codepoints=tuple(codepoints),
-                    note="Codepoints supported by Gen Interface KR but not covered by googlefonts/nam-files Japanese slicing strategy",
+                    note="Codepoints supported by Gen Interface KR but not covered by googlefonts/nam-files Korean slicing strategy",
                 )
             )
 
@@ -292,10 +292,10 @@ def build_google_japanese_subset_plan(
 def select_subset_plan(args: argparse.Namespace, font_codepoints: Iterable[int]) -> list[WebFontSubset]:
     if args.strategy == "jis-row":
         return build_subset_plan(font_codepoints, extra_han_slices=args.extra_han_slices)
-    if args.strategy == "google-japanese":
-        return build_google_japanese_subset_plan(
+    if args.strategy == "google-korean":
+        return build_google_korean_subset_plan(
             font_codepoints,
-            slice_path=args.google_japanese_slice.resolve(),
+            slice_path=args.google_korean_slice.resolve(),
             include_remaining=not args.no_remaining,
             remaining_slices=args.remaining_slices,
         )
@@ -603,8 +603,8 @@ def build_all(args: argparse.Namespace) -> dict:
             "subsets": list(file_entries.values()),
         },
     }
-    if args.strategy == "google-japanese":
-        manifest["source"]["googleJapaneseSlice"] = _relative_to_root(args.google_japanese_slice.resolve())
+    if args.strategy == "google-korean":
+        manifest["source"]["googleKoreanSlice"] = _relative_to_root(args.google_korean_slice.resolve())
     (out_dir / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
@@ -697,11 +697,11 @@ def build(args: argparse.Namespace) -> dict:
             "coveredCodepoints": len(set().union(*(set(item.codepoints) for item in plan))) if plan else 0,
         },
     }
-    if args.strategy == "google-japanese":
-        manifest["source"]["googleJapaneseSlice"] = (
-            str(args.google_japanese_slice.resolve().relative_to(ROOT))
-            if args.google_japanese_slice.resolve().is_relative_to(ROOT)
-            else str(args.google_japanese_slice.resolve())
+    if args.strategy == "google-korean":
+        manifest["source"]["googleKoreanSlice"] = (
+            str(args.google_korean_slice.resolve().relative_to(ROOT))
+            if args.google_korean_slice.resolve().is_relative_to(ROOT)
+            else str(args.google_korean_slice.resolve())
         )
     (out_dir / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
@@ -720,8 +720,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ttf", type=Path, default=DEFAULT_TTF, help="Source Gen Interface KR Regular TTF")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT, help="Output directory")
     parser.add_argument("--jobs", type=int, default=max(1, min(4, os.cpu_count() or 1)), help="Parallel workers for --all subset generation")
-    parser.add_argument("--strategy", choices=["google-japanese", "jis-row"], default="google-japanese", help="Subset partitioning strategy")
-    parser.add_argument("--google-japanese-slice", type=Path, default=DEFAULT_GOOGLE_JAPANESE_SLICE, help="googlefonts/nam-files slices/korean_default.txt")
+    parser.add_argument("--strategy", choices=["google-korean", "jis-row"], default="google-korean", help="Subset partitioning strategy")
+    parser.add_argument("--google-korean-slice", type=Path, default=DEFAULT_GOOGLE_JAPANESE_SLICE, help="googlefonts/nam-files slices/korean_default.txt")
     parser.add_argument("--no-remaining", action="store_true", help="Do not add extra subsets for cmap codepoints outside the selected strategy")
     parser.add_argument("--remaining-slices", type=int, default=8, help="Number of extra subsets for codepoints outside the selected strategy")
     parser.add_argument("--extra-han-slices", type=int, default=24, help="Slices for CJK codepoints outside JIS X 0208")

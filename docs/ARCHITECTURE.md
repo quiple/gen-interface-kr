@@ -33,12 +33,12 @@ consumes the published webfont package.
         │         metricsSource=sub, manufacturer stamp   │
         │             ↓                                   │
         │   dist/ttf/  (one TTF per family × weight)      │
-        │                                                  │
+        │                                                 │
         └─────────────────────┬───────────────────────────┘
                               │
         ┌─────────────────────▼──────────────────────────┐
         │  webfont/build.py — unicode-range subsetting    │
-        │     google-japanese strategy (default) →        │
+        │     google-korean strategy (default) →          │
         │     all.css + per-weight CSS + WOFF2 chunks     │
         │     dist/webfont/gen-interface-jp/              │
         └─────────────────────┬───────────────────────────┘
@@ -89,7 +89,7 @@ For each (family, weight) in FAMILIES × WEIGHTS:
 ```
 Read dist/ttf/{family}/{family}-{weight}.ttf
   → planner picks strategy:
-      google-japanese (default) — replays Google Fonts' Japanese
+      google-korean (default) — replays Google Fonts' Korean
                                   unicode-range slices (~120 chunks)
       gen              — hand-tuned slice plan
   → for each (family × weight × slice):
@@ -183,7 +183,7 @@ to feel proportionate.
 
 CJK fonts ship full-width: every glyph occupies the same em-square
 regardless of outline width, with `palt` GPOS narrowing kana / Latin
-optically at runtime. Apps that don't enable `palt` (Adobe's Japanese
+optically at runtime. Apps that don't enable `palt` (Adobe's Korean
 composer, browser fallbacks, anything treating CJK as monospaced for
 layout) miss those adjustments and lay out at full-width spacing.
 
@@ -203,7 +203,7 @@ referenced by other features we keep, and orphaned lookups are harmless.
 
 ### Background
 
-In Illustrator, any font with CJK glyphs is forced through the **Japanese
+In Illustrator, any font with CJK glyphs is forced through the **Korean
 composer**, which fixes leading at `pt × ≈170%`. The Latin-only behaviour
 of Inter — line height adjusted per-line based on glyph extents — is not
 controllable from the font side.
@@ -238,7 +238,7 @@ falls through to .notdef.
 
 This font is a **horizontal-only UI / body face**.
 
-- **Vertical typesetting / classical Japanese composition: not supported.**
+- **Vertical typesetting / classical Korean composition: not supported.**
 - Strict em-square compliance (Hiragino-style hhea = 880 / -120) is not
   pursued — `metricsSource: "sub"` inherits Inter's ratio (~1.21×em) so
   Vietnamese / accented Latin (~1.11×em) doesn't clip.
@@ -256,10 +256,10 @@ references.
 
 ### Strategies
 
-- **`google-japanese`** *(default)* — replays Google Fonts' Japanese
+- **`google-korean`** *(default)* — replays Google Fonts' Korean
   slicing strategy (`vendor/nam-files/slices/korean_default.txt`).
   Same chunk boundaries as Google's hosted Noto, so coverage and cache
-  behaviour match what users already encounter on most Japanese sites.
+  behaviour match what users already encounter on most Korean sites.
 - **`gen`** — hand-tuned plan: Latin / kana / punct / JIS row 16-92 /
   remaining Han split into `extra_han_slices` even chunks.
 
@@ -337,7 +337,7 @@ Tests live under `tests/`, split by surface:
   `npm publish` consume.
 - **`tests/test_webfont_build.py`** — codepoint range merging, unicode-range
   formatting, JIS row → codepoint mapping, subset plan non-overlap +
-  per-bucket placement, Google-Japanese strategy parsing including the
+  per-bucket placement, Google-Korean strategy parsing including the
   closing-brace-inside-comment edge case.
 
 | File | Tests | Verifies |

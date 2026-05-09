@@ -35,7 +35,7 @@ font:
 # ---------------------------------------------------------------------------
 
 webfont: font
-	$(PY) -m webfont.build --all --clean --strategy google-japanese --jobs $(WEBFONT_JOBS)
+	$(PY) -m webfont.build --all --clean --strategy google-korean --jobs $(WEBFONT_JOBS)
 
 # Throttled fetch comparison of the slicing plan against the full WOFF2.
 # Runs the single-Regular pipeline (webfont.build without --all) which
@@ -44,7 +44,7 @@ webfont: font
 # Independent of `make webfont` (which is the --all multi-weight path
 # whose manifest shape differs from what benchmark.mjs reads).
 webfont-benchmark: font
-	$(PY) -m webfont.build --clean --strategy google-japanese
+	$(PY) -m webfont.build --clean --strategy google-korean
 	$(NODE) src/webfont/benchmark.mjs
 
 
