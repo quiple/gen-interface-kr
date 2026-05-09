@@ -19,7 +19,6 @@ import pytest
 from webfont.build import (
     build_google_korean_subset_plan,
     format_unicode_range,
-    is_han_codepoint,
     merge_codepoints_to_ranges,
     parse_slicing_strategy,
     weight_css_filename,
@@ -106,39 +105,6 @@ class TestWeightCssFilename:
     def test_unknown_family_falls_back_to_prefix(self):
         # Defensive: any future family key uses `{key}-{weight}.css`.
         assert weight_css_filename("mono", 700) == "mono-700.css"
-
-
-# ---------------------------------------------------------------------------
-# is_han_codepoint
-# ---------------------------------------------------------------------------
-
-class TestIsHanCodepoint:
-    """Boundary check for the Han block list used by the JIS-row planner."""
-
-    def test_main_block(self):
-        assert is_han_codepoint(0x4E00)  # 一
-        assert is_han_codepoint(0x9FFF)
-
-    def test_extension_a(self):
-        assert is_han_codepoint(0x3400)
-        assert is_han_codepoint(0x4DBF)
-
-    def test_extension_supplementary(self):
-        assert is_han_codepoint(0x20000)
-        assert is_han_codepoint(0x2FA1F)
-
-    def test_compatibility(self):
-        assert is_han_codepoint(0xF900)
-        assert is_han_codepoint(0xFAFF)
-
-    def test_kana_excluded(self):
-        assert not is_han_codepoint(0x3042)  # あ
-        assert not is_han_codepoint(0x30A2)  # ア
-
-    def test_ascii_excluded(self):
-        assert not is_han_codepoint(0x0041)
-
-
 
 
 # ---------------------------------------------------------------------------
@@ -324,8 +290,7 @@ class TestGoogleKoreanSubsetPlan:
         ]
 
     def test_slices_are_non_overlapping(self, tmp_path):
-        # Same hard requirement as build_subset_plan — no codepoint may
-        # land in two slices (browser would double-fetch).
+        # No codepoint may land in two slices (browser would double-fetch).
         strategy = self._write_strategy(tmp_path, [
             [0x20, 0x3042, 0x4E00],
             [0x41, 0x3042, 0x4E00],  # overlapping with first
