@@ -12,7 +12,7 @@ consumes the published webfont package.
 │  Source                                                            │
 │    vendor/fonts/Inter-4.1/extras/ttf/Inter-{Weight}.ttf            │
 │    vendor/fonts/Inter-4.1/extras/ttf/InterDisplay-{Weight}.ttf     │
-│    vendor/fonts/Noto_Sans_KR/NotoSansKR-VF.ttf      │
+│    vendor/fonts/Noto_Sans_KR/NotoSansKR-VF.ttf                     │
 └─────────────────────────────┬──────────────────────────────────────┘
                               │
         ┌─────────────────────▼──────────────────────────┐

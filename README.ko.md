@@ -108,7 +108,7 @@ make site     # 사이트 빌드 (site/dist/)
 make serve    # 사이트 로컬 개발 서버
 ```
 
-웹 폰트 서브셋화, 릴리스 패키징, 테스트, npm 공개 등의 모든 명령어는[`docs/ARCHITECTURE.ja.md`](docs/ARCHITECTURE.ja.md)의 '명령어' 섹션을 참조해 주세요.
+웹 폰트 서브셋화, 릴리스 패키징, 테스트, npm 공개 등의 모든 명령어는[`docs/ARCHITECTURE.ja.md`](docs/ARCHITECTURE.md)의 'Commands' 섹션을 참조해 주세요.
 
 ## 라이선스
 
