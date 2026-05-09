@@ -95,6 +95,24 @@ DIST = os.path.join(ROOT, "dist")
 DIST_TTF = os.path.join(DIST, "ttf")
 INTERMEDIATE = os.path.join(DIST, "intermediate")
 
+
+def get_font_version() -> str:
+    """Read version from pyproject.toml and format as M.mpp (e.g. 0.1.6 -> 0.106)."""
+    import re
+    pyproject = os.path.join(ROOT, "pyproject.toml")
+    with open(pyproject, encoding="utf-8") as f:
+        match = re.search(r'^version\s*=\s*"([^"]+)"', f.read(), re.M)
+        if not match:
+            raise ValueError("Could not read project version from pyproject.toml")
+        raw = match.group(1)
+
+    parts = raw.split('.')
+    if len(parts) >= 3:
+        major, minor, patch = parts[0], parts[1], parts[2]
+        return f"{major}.{minor}{int(patch):02d}"
+    return raw
+
+
 # Codepoints whose glyphs should stay sourced from the base Noto font even
 # when Inter/InterDisplay also encodes them. Forwarded as
 # subFont.excludeCodepoints to font-baker, which strips them from the sub
@@ -731,6 +749,7 @@ def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -
             "metricsSource": "sub",
             "manufacturer": "Lee Minseo; Yamato Iizuka",
             "manufacturerURL": "https://quiple.dev; https://yamatoiizuka.com",
+            "version": get_font_version(),
         },
         "export": {
             "path": {
