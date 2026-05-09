@@ -34,7 +34,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_TTF = ROOT / "dist" / "ttf" / "Gen Interface KR" / "GenInterfaceKR-Regular.ttf"
 DEFAULT_OUT = ROOT / "dist" / "webfont" / "GenInterfaceKR-Regular"
 DEFAULT_ALL_OUT = ROOT / "dist" / "webfont" / "gen-interface-kr"
-DEFAULT_GOOGLE_JAPANESE_SLICE = ROOT / "vendor" / "nam-files" / "slices" / "korean_default.txt"
+DEFAULT_GOOGLE_KOREAN_SLICE = ROOT / "vendor" / "nam-files" / "slices" / "korean_default.txt"
 
 FAMILY_NAME = "Gen Interface KR"
 WEIGHT = 400
@@ -168,7 +168,7 @@ def parse_slicing_strategy(path: Path) -> list[set[int]]:
 
 def build_google_korean_subset_plan(
     font_codepoints: Iterable[int],
-    slice_path: Path = DEFAULT_GOOGLE_JAPANESE_SLICE,
+    slice_path: Path = DEFAULT_GOOGLE_KOREAN_SLICE,
     include_remaining: bool = True,
     remaining_slices: int = 8,
 ) -> list[WebFontSubset]:
@@ -640,7 +640,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT, help="Output directory")
     parser.add_argument("--jobs", type=int, default=max(1, min(4, os.cpu_count() or 1)), help="Parallel workers for --all subset generation")
     parser.add_argument("--strategy", choices=["google-korean", "jis-row"], default="google-korean", help="Subset partitioning strategy")
-    parser.add_argument("--google-korean-slice", type=Path, default=DEFAULT_GOOGLE_JAPANESE_SLICE, help="googlefonts/nam-files slices/korean_default.txt")
+    parser.add_argument("--google-korean-slice", type=Path, default=DEFAULT_GOOGLE_KOREAN_SLICE, help="googlefonts/nam-files slices/korean_default.txt")
     parser.add_argument("--no-remaining", action="store_true", help="Do not add extra subsets for cmap codepoints outside the selected strategy")
     parser.add_argument("--remaining-slices", type=int, default=8, help="Number of extra subsets for codepoints outside the selected strategy")
     parser.add_argument("--extra-han-slices", type=int, default=24, help="Slices for CJK codepoints outside JIS X 0208")
