@@ -628,7 +628,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--google-korean-slice", type=Path, default=DEFAULT_GOOGLE_KOREAN_SLICE, help="googlefonts/nam-files slices/korean_default.txt")
     parser.add_argument("--no-remaining", action="store_true", help="Do not add extra subsets for cmap codepoints outside the selected strategy")
     parser.add_argument("--remaining-slices", type=int, default=8, help="Number of extra subsets for codepoints outside the selected strategy")
-    parser.add_argument("--extra-han-slices", type=int, default=24, help="Slices for CJK codepoints outside JIS X 0208")
     parser.add_argument("--clean", action="store_true", help="Remove the output directory before building")
     return parser.parse_args()
 
