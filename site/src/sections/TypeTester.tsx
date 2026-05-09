@@ -7,23 +7,23 @@ type TesterRow = { weight: number; label: string; en: string; jp: string };
 // Split into separate en/jp halves so the mobile layout can break between
 // them — desktop joins with a space, mobile joins with a newline.
 const ROWS: TesterRow[] = [
-  { weight: 100, label: "Thin", en: "Gyroscope", jp: "ジャイロスコープ" },
-  { weight: 200, label: "ExtraLight", en: "Central Gate", jp: "中央改札" },
-  { weight: 300, label: "Light", en: "Driving Range", jp: "航続可能距離" },
-  { weight: 400, label: "Regular", en: "Depth 123m", jp: "水深 123m" },
-  { weight: 500, label: "Medium", en: "Breakfast Included", jp: "朝食付き" },
+  { weight: 100, label: "Thin", en: "Gyroscope", jp: "자이로스코프" },
+  { weight: 200, label: "ExtraLight", en: "Central Gate", jp: "중앙개찰구" },
+  { weight: 300, label: "Light", en: "Driving Range", jp: "주행가능거리" },
+  { weight: 400, label: "Regular", en: "Depth 123m", jp: "수심 123m" },
+  { weight: 500, label: "Medium", en: "Breakfast Included", jp: "조식 포함" },
   {
     weight: 600,
     label: "SemiBold",
     en: "Cruise Control",
-    jp: "オートクルーズ",
+    jp: "크루즈 컨트롤",
   },
-  { weight: 700, label: "Bold", en: "Thermography", jp: "サーモグラフィー" },
+  { weight: 700, label: "Bold", en: "Thermography", jp: "열화상 카메라" },
   {
     weight: 800,
     label: "ExtraBold",
-    en: "Tokyo Clear 27℃",
-    jp: "東京 晴れ 27℃",
+    en: "Seoul Clear 27℃",
+    jp: "서울 맑음 27℃",
   },
 ];
 
