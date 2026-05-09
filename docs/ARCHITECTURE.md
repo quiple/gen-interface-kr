@@ -4,8 +4,7 @@
 
 Gen Interface KR is a font build pipeline (no app, no UI). A `make` target
 turns vendor sources into distributable TTF / WOFF2 / npm artifacts. Each
-weight passes through three Python stages, then a static demo site
-consumes the published webfont package.
+weight passes through three Python stages.
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
@@ -298,13 +297,6 @@ Version is read from `pyproject.toml` (or `GITHUB_REF_NAME` in CI). The
 `manifest.json` next to the github / npm / webfonts dirs records release
 URLs for downstream tooling.
 
-## Site (`site/`)
-
-Vite static site under `site/`. Loads the published webfont package via
-jsDelivr's npm CDN at runtime — i.e. the live site uses the same npm
-artifact a third-party consumer would, exercising the package end-to-end.
-GitHub Pages deploys the build via `.github/workflows/pages.yml`.
-
 ## Tests
 
 ```bash
@@ -351,14 +343,11 @@ Tests live under `tests/`, split by surface:
 | `make webfont-benchmark` | Throttled fetch benchmark of slicing strategy |
 | `make npm-pack` | Dry-run npm package inspection |
 | `make npm-publish` | Publish to npm |
-| `make site` | Build the demo site (`site/dist/` doubles as the GitHub Pages artifact) |
-| `make serve` | Local Vite dev server for the site |
-| `make clean` | Remove `dist/` and `site/dist/` |
+| `make clean` | Remove `dist/` |
 | `python3 -m font.build [family] [weight ...]` | Build a slice (e.g. `normal Regular`) |
 | `python3 -m pytest` | Run the test suite |
 
-CI: `.github/workflows/pages.yml` deploys the demo site to GitHub Pages
-on every push to `main`. Release packaging is run locally — see
+CI: Release packaging is run locally — see
 `src/release/README.md` for the `make release` + `gh release upload`
 flow.
 
@@ -380,12 +369,6 @@ flow.
 - `freetype-py` — Used by tooling around metrics inspection.
 - `brotli` — WOFF2 compression (transitive via fontTools).
 - `pytest` — Test runner.
-
-### Node.js (site only)
-
-- `vite` — Build tool / dev server.
-- The site has no dependency on the webfont source — it loads the
-  published npm package via jsDelivr.
 
 ## Maintaining This Document
 
