@@ -89,7 +89,7 @@ node src/webfont/benchmark.mjs --runs 3 --latency 80 --kbps 1600
 Profiles:
 
 - `site`: short Korean text similar to a typical website
-- `novel`: long-form Korean text that touches many kanji subsets
+- `novel`: long-form Korean text
 
 Modes:
 
