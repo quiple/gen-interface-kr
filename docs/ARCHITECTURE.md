@@ -46,7 +46,6 @@ weight passes through three Python stages.
         │  release/build.py — packaging                   │
         │     dist/release/github/   → GitHub Releases    │
         │     dist/release/npm/      → npm publish        │
-        │     dist/release/webfonts/ → GitHub Pages       │
         └─────────────────────────────────────────────────┘
 ```
 
@@ -99,7 +98,6 @@ Read dist/ttf/{family}/{family}-{weight}.ttf
 require dist/ttf/ + dist/webfont/gen-interface-kr/
   → zip GenInterfaceKR-<version>.zip (TTF, all weights × both families)
   → copy webfont package → npm/      (with package.json)
-  → copy webfont package → webfonts/ (Pages-hosted mirror)
   → manifest.json with version, tag, asset URLs
 ```
 
@@ -277,7 +275,7 @@ artifact set.
 
 ## Release Packaging (`release/build.py`)
 
-Three downstream consumers, three outputs:
+Three downstream consumers, two outputs:
 
 - **GitHub Releases** (`dist/release/github/`) — single
   `GenInterfaceKR-<version>.zip` containing all 16 TTFs (both families ×
@@ -289,12 +287,9 @@ Three downstream consumers, three outputs:
 - **npm package** (`dist/release/npm/`) — webfont subsets + a generated
   `package.json` (name, version, files, OFL-1.1 license). jsDelivr serves
   `all.css` and per-weight CSS from the package root.
-- **GitHub Pages mirror** (`dist/release/webfonts/gen-interface-kr/`) —
-  identical webfont package, served as static files alongside the demo
-  site.
 
 Version is read from `pyproject.toml` (or `GITHUB_REF_NAME` in CI). The
-`manifest.json` next to the github / npm / webfonts dirs records release
+`manifest.json` next to the github / npm dirs records release
 URLs for downstream tooling.
 
 ## Tests
@@ -339,7 +334,7 @@ Tests live under `tests/`, split by surface:
 |---|---|
 | `make font` | Build TTF for both families × all weights |
 | `make webfont` | Build unicode-range subsets (depends on `font`) |
-| `make release` | Build GitHub zips + npm + Pages package (depends on `webfont`) |
+| `make release` | Build GitHub zips + npm package (depends on `webfont`) |
 | `make webfont-benchmark` | Throttled fetch benchmark of slicing strategy |
 | `make npm-pack` | Dry-run npm package inspection |
 | `make npm-publish` | Publish to npm |
