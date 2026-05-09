@@ -31,11 +31,21 @@ font:
 
 
 # ---------------------------------------------------------------------------
-# src/webfont  —  unicode-range subsetting
+# src/webfont  —  unicode-range subsetting + benchmark
 # ---------------------------------------------------------------------------
 
 webfont: font
 	$(PY) -m webfont.build --all --clean --strategy google-korean --jobs $(WEBFONT_JOBS)
+
+# Throttled fetch comparison of the slicing plan against the full WOFF2.
+# Runs the single-Regular pipeline (webfont.build without --all) which
+# generates the full WOFF2 from the Regular TTF on demand into
+# dist/webfont/GenInterfaceKR-Regular/, then drives benchmark.mjs.
+# Independent of `make webfont` (which is the --all multi-weight path
+# whose manifest shape differs from what benchmark.mjs reads).
+webfont-benchmark: font
+	$(PY) -m webfont.build --clean --strategy google-korean
+	$(NODE) src/webfont/benchmark.mjs
 
 
 # ---------------------------------------------------------------------------
