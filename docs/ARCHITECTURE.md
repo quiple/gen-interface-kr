@@ -247,12 +247,10 @@ references.
 
 ### Strategies
 
-- **`google-korean`** *(default)* — replays Google Fonts' Korean
+- **`google-korean`** — replays Google Fonts' Korean
   slicing strategy (`vendor/nam-files/slices/korean_default.txt`).
   Same chunk boundaries as Google's hosted Noto, so coverage and cache
   behaviour match what users already encounter on most Korean sites.
-- **`gen`** — hand-tuned plan: Latin / kana / punct / JIS row 16-92 /
-  remaining Han split into `extra_han_slices` even chunks.
 
 ### Outputs
 
@@ -317,16 +315,16 @@ Tests live under `tests/`, split by surface:
   layout including `files` glob and license metadata that jsDelivr /
   `npm publish` consume.
 - **`tests/test_webfont_build.py`** — codepoint range merging, unicode-range
-  formatting, JIS row → codepoint mapping, subset plan non-overlap +
-  per-bucket placement, Google-Korean strategy parsing including the
-  closing-brace-inside-comment edge case.
+  formatting, subset plan non-overlap + per-bucket placement,
+  Google-Korean strategy parsing including the closing-brace-inside-comment
+  edge case.
 
 | File | Tests | Verifies |
 |---|---|---|
 | `test_font_build.py` | 55 | Glyph-name parsing, kana / CJK classification, GSUB walk, x-scale, bbox strip, tracking |
 | `test_proportional.py` | 19 | palt extraction, glyph translation, GPOS feature removal, three-bucket policy |
 | `test_release.py` | 2 | GitHub asset URL contract, npm package layout (files glob, license, CSS entrypoints at root) |
-| `test_webfont_build.py` | 42 | Range merge / dedup, unicode-range formatting incl. 5-digit, JIS row mapping, subset plan placement / non-overlap / coverage, strategy parser edge cases |
+| `test_webfont_build.py` | 42 | Range merge / dedup, unicode-range formatting incl. 5-digit, subset plan placement / non-overlap / coverage, strategy parser edge cases |
 
 ## Commands
 
