@@ -12,8 +12,8 @@ Shared pipeline per weight:
      subFont.excludeCodepoints to keep CJK-conventional symbols on Noto)
 
 Families:
-  - Gen Interface KR         : Inter       + proportional Noto, tracking +50 (kana/punct +60)
-  - Gen Interface KR Display : InterDisplay + proportional Noto, tracking +20
+  - Gen Interface KR         : Inter       + proportional Noto, tracking +30 (kana/punct +40)
+  - Gen Interface KR Display : InterDisplay + proportional Noto, tracking +0
 
 Outputs TTF into dist/ttf/. Web delivery (subset WOFF2 chunks served via
 unicode-range) is generated separately by the webfont module from these
