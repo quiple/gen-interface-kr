@@ -12,7 +12,7 @@ Gen Interface KR는 디지털 인터페이스를 위해 설계된, 영문과 국
 - **Gen Interface KR**: 범용/본문용
 - **Gen Interface KR Display**: 제목용
 
-### 8개 굵기
+### 8개 웨이트
 
 - 100: Thin
 - 200: ExtraLight
@@ -75,13 +75,13 @@ h2 {
 }
 ```
 
-### CSS List
+### CSS 목록
 
-- `all.css`: 全 16 ウェイトの CSS
-- `400.css`: Gen Interface KR Regular (400) の CSS
-- `display-400.css`: Gen Interface KR Display Regular (400) の CSS
+- `all.css`: 전체 16개 웨이트의 CSS
+- `400.css`: Gen Interface KR Regular (400)의 CSS
+- `display-400.css`: Gen Interface KR Display Regular (400)의 CSS
 
-## Repository
+## 리포지터리
 
 ```text
 src/
