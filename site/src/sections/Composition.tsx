@@ -351,7 +351,7 @@ export function Composition() {
 
         <div className="composition__grid">
           <span className="composition__label">
-            ベース欧文書体
+            베이스 로마자 서체
             <br />
             Inter
           </span>
@@ -368,12 +368,12 @@ export function Composition() {
                 className="composition__group-text composition__group-text--left composition__group-text--reference"
                 aria-hidden="true"
               >
-                書体
+                서체
               </span>
               <CompositionGlyphText
                 className="composition__group-text composition__group-text--left composition__group-text--svg"
-                shapeKey="jp-type"
-                ariaLabel="書体"
+                shapeKey="ko-type"
+                ariaLabel="서체"
                 weight={p.wght}
                 scale={p.scale}
                 tracking={p.tracking}
@@ -405,7 +405,7 @@ export function Composition() {
           </div>
 
           <span className="composition__label">
-            和文書体
+            한글 서체
             <br />
             Noto Sans KR
           </span>
@@ -422,12 +422,12 @@ export function Composition() {
                 className="composition__group-text composition__group-text--left composition__group-text--reference"
                 aria-hidden="true"
               >
-                デザイン
+                디자인
               </span>
               <CompositionGlyphText
                 className="composition__group-text composition__group-text--left composition__group-text--svg"
-                shapeKey="jp-design"
-                ariaLabel="デザイン"
+                shapeKey="ko-design"
+                ariaLabel="디자인"
                 weight={p.wght}
                 scale={p.scale}
                 tracking={p.tracking}
