@@ -1,6 +1,6 @@
 [project]
 name = "gen-interface-kr"
-version = "0.1.5"
+version = "0.2.0"
 description = "Typeface harmonizing Latin and Korean for digital interfaces."
 license = "MIT"
 license-files = ["LICENSE"]
