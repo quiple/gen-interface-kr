@@ -242,7 +242,7 @@ def _is_cjk_codepoint(cp: int) -> bool:
 
     These are the glyphs we keep at full-width metrics — palt's narrowing
     is for kana/punctuation rhythm, but a Han ideograph squeezed below
-    full-width loses its grid alignment with surrounding kanji. The block
+    full-width loses its grid alignment with surrounding Han ideographs. The block
     list mirrors what Adobe and Google Noto treat as "ideographic" for
     the purposes of full-width preservation.
     """
