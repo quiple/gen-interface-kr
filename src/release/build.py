@@ -137,6 +137,7 @@ def ofl_text() -> str:
     _, ofl_body = inter_license.split("\n\n", 1)
     copyright_lines = [
         "Copyright 2026 The Gen Interface KR Project Authors (https://github.com/quiple/gen-interface-kr)",
+        "Copyright 2026 The Gen Interface JP Project Authors (https://github.com/yamatoiizuka/gen-interface-jp)",
         "Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)",
         "Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'",
     ]
