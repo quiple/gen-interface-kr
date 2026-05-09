@@ -9,7 +9,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const DEFAULT_ARTIFACTS = path.join(ROOT, "dist", "webfont", "GenInterfaceKR-Regular");
+const DEFAULT_ARTIFACTS = path.join(ROOT, "dist", "webfont", "gen-interface-kr");
 const DEFAULT_OUT = path.join(ROOT, "dist", "webfont", "benchmark");
 const VALID_MODES = new Set(["subset", "full"]);
 
