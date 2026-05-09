@@ -1,7 +1,7 @@
 """Tests for release packaging — public distribution contracts.
 
 The release pipeline emits artifacts that downstream consumers (jsDelivr,
-the demo site, anyone hot-linking GitHub release assets) bind to by URL
+anyone hot-linking GitHub release assets) bind to by URL
 or file path. The tests here lock those surfaces down so accidental
 renames / restructures fail loudly during CI rather than silently after
 publish.
@@ -20,17 +20,13 @@ from release.build import copy_webfont_package, github_asset_urls, write_npm_pac
 # GitHub Release asset URLs
 # ---------------------------------------------------------------------------
 
-def test_github_asset_urls_are_stable_for_site_downloads():
-    """The site's download buttons and `.github/workflows/release.yml` both
-    bind to these URL shapes by literal string. Any rename of the zip
-    asset or change to GitHub's URL pattern would silently break those
+def test_github_asset_urls_are_stable():
+    """Any rename of the zip
+    asset or change to GitHub's URL pattern would silently break
     callers. Pinning the strings here surfaces the break in CI.
 
     Note: the asset filename embeds the version, and the URL is tag-
-    pinned (no `releases/latest/download/...` form). Older site builds
-    therefore keep linking at the exact archive they were built
-    against, instead of resolving to whatever happens to be latest at
-    download time.
+    pinned (no `releases/latest/download/...` form).
     """
     urls = github_asset_urls("owner/repo", "v1.2.3", "1.2.3")
     assert urls["bundle"] == "https://github.com/owner/repo/releases/download/v1.2.3/GenInterfaceKR-1.2.3.zip"
