@@ -21,12 +21,7 @@ Direct module execution:
 PYTHONPATH=src python3 -m webfont.build --all --clean --jobs 8
 ```
 
-The default strategy is `google-korean`. The older JIS row based strategy is
-still available for comparison:
-
-```bash
-PYTHONPATH=src python3 -m webfont.build --all --clean --strategy jis-row --jobs 8
-```
+The default (and only) strategy is `google-korean`.
 
 Required inputs:
 
