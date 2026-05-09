@@ -6,7 +6,6 @@ Outputs:
 - dist/release/github/GenInterfaceKR-<version>.zip
                                               (TTF, both families × all weights)
 - dist/release/npm/                        (subset webfont package for npm)
-- dist/release/webfonts/gen-interface-kr/  (Pages-hosted mirror of the package)
 
 The GitHub zip is the downloadable asset for users who want the TTFs to
 install or to feed into other tools (Illustrator / Figma desktop /
@@ -174,8 +173,7 @@ def asset_filename(version: str) -> str:
     """Asset filename for the GitHub Release zip.
 
     Embeds the version so a downloaded archive carries its identity in
-    the filename itself (and so a v0.1.1 site build can link at the
-    exact zip that matches the running font).
+    the filename itself.
     """
     return f"GenInterfaceKR-{version}.zip"
 
@@ -187,8 +185,7 @@ def github_asset_urls(repository: str, tag: str, version: str) -> dict[str, str]
     embeds the version: ``releases/latest/download/<filename>`` only
     resolves while the current "latest" release happens to ship that
     exact filename, so a versioned filename and a tag-pinned URL go
-    together — older site builds keep pointing at the asset they were
-    built against, even after a newer release becomes "latest".
+    together.
     """
     base = f"https://github.com/{repository}/releases/download/{tag}"
     return {
@@ -202,7 +199,6 @@ def build_release(args: argparse.Namespace) -> dict:
     release_dir = args.output.resolve()
     github_dir = release_dir / "github"
     npm_dir = release_dir / "npm"
-    webfont_out = release_dir / "webfonts" / "gen-interface-kr"
 
     # GitHub Release ships TTFs only. Web delivery (subset WOFF2 chunks
     # behind unicode-range) flows through the npm package below; full
@@ -224,7 +220,6 @@ def build_release(args: argparse.Namespace) -> dict:
     copy_webfont_package(source, npm_dir, include_nam=False)
     write_npm_license_files(npm_dir)
     write_npm_package(npm_dir, version, args.repository)
-    copy_webfont_package(source, webfont_out)
 
     manifest = {
         "version": version,
@@ -234,7 +229,6 @@ def build_release(args: argparse.Namespace) -> dict:
         "webfonts": {
             "npmPackage": "npm",
             "npmAllCss": "npm/all.css",
-            "staticAllCss": "webfonts/gen-interface-kr/all.css",
         },
     }
     manifest_path = release_dir / "manifest.json"
