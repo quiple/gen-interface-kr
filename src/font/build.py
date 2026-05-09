@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Build Gen Interface JP font families.
+Build Gen Interface KR font families.
 
 Shared pipeline per weight:
-  1. Bake Noto Sans JP variable → static TTF  (font-baker, base-only,
+  1. Bake Noto Sans KR variable → static TTF  (font-baker, base-only,
                                                 metadataMode=inheritBase
                                                 so Noto's name/OS2 survive)
   2. Convert to proportional metrics           (palt-based, proportional.py)
@@ -12,8 +12,8 @@ Shared pipeline per weight:
      subFont.excludeCodepoints to keep CJK-conventional symbols on Noto)
 
 Families:
-  - Gen Interface JP         : Inter       + proportional Noto, tracking +50 (kana/punct +60)
-  - Gen Interface JP Display : InterDisplay + proportional Noto, tracking +20
+  - Gen Interface KR         : Inter       + proportional Noto, tracking +50 (kana/punct +60)
+  - Gen Interface KR Display : InterDisplay + proportional Noto, tracking +20
 
 Outputs TTF into dist/ttf/. Web delivery (subset WOFF2 chunks served via
 unicode-range) is generated separately by the webfont module from these
@@ -27,8 +27,8 @@ import sys
 
 from fontTools.ttLib import TTFont
 from merge_fonts import merge_fonts
-from .proportional import make_proportional
 
+from .proportional import make_proportional
 
 # ---------------------------------------------------------------------------
 # Family / weight matrix
@@ -36,7 +36,7 @@ from .proportional import make_proportional
 
 # (output_weight, weight_name, noto_wght_axis_value)
 #
-# The third column is the wght-axis location used to instantiate Noto Sans JP.
+# The third column is the wght-axis location used to instantiate Noto Sans KR.
 # Inter's discrete static masters happen to live at the round 100/200/.../800
 # positions, but Noto's variable axis is non-linear: pulling the axis at 400
 # yields a CJK weight that visually reads lighter than Inter Regular. The
@@ -55,12 +55,12 @@ WEIGHTS = [
 
 FAMILIES = {
     "normal": {
-        "familyName": "Gen Interface JP",
+        "familyName": "Gen Interface KR",
         "interPrefix": "Inter",
         "tracking": 30,
         "trackingKana": 40,
         "halfPaltPunct": True,
-        "folderPrefix": "GenInterfaceJP",
+        "folderPrefix": "GenInterfaceKR",
         # Per-glyph sidebearing tweaks applied after tracking. Map a
         # codepoint (int) or single-char string to a (lsb_delta, rsb_delta)
         # pair in design units. Positive deltas add whitespace, negative
@@ -71,12 +71,12 @@ FAMILIES = {
         },
     },
     "display": {
-        "familyName": "Gen Interface JP Display",
+        "familyName": "Gen Interface KR Display",
         "interPrefix": "InterDisplay",
         "tracking": 0,
         "trackingKana": 0,
         "halfPaltPunct": True,
-        "folderPrefix": "GenInterfaceJPDisplay",
+        "folderPrefix": "GenInterfaceKRDisplay",
         "glyphSpacing": {
             "く": (30, 0),
         },
@@ -90,7 +90,7 @@ FAMILIES = {
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 VENDOR_FONTS = os.path.join(ROOT, "vendor", "fonts")
 INTER_DIR = os.path.join(VENDOR_FONTS, "Inter-4.1", "extras", "ttf")
-NOTO_VARIABLE = os.path.join(VENDOR_FONTS, "Noto_Sans_JP", "NotoSansJP-VariableFont_wght.ttf")
+NOTO_VARIABLE = os.path.join(VENDOR_FONTS, "Noto_Sans_KR", "NotoSansKR-VF.ttf")
 DIST = os.path.join(ROOT, "dist")
 DIST_TTF = os.path.join(DIST, "ttf")
 INTERMEDIATE = os.path.join(DIST, "intermediate")
@@ -352,7 +352,7 @@ def _scale_gpos_x(st, scale: float) -> None:
     mark-anchor families (MarkArray / Mark1Array / Mark2Array, BaseArray).
     Subtable types not listed here — cursive attachment (type 3),
     contextual positioning (types 7 / 8), Extension (type 9 — handled by
-    the caller via subtable unwrapping) — are not used by Noto Sans JP
+    the caller via subtable unwrapping) — are not used by Noto Sans KR
     in any consequential way for our pipeline, so this targeted walk
     suffices.
     """
@@ -493,7 +493,7 @@ def _apply_tracking(font: TTFont, tracking: int, tracking_kana: int | None = Non
     skipped so they keep their placement-only role intact.
 
     When *tracking_kana* is set, hiragana / katakana / punctuation glyphs
-    receive that value instead of *tracking*. The Gen Interface JP
+    receive that value instead of *tracking*. The Gen Interface KR
     families use this to give kana and punctuation a slightly looser
     rhythm than Latin — kana need more breathing room at small sizes
     to remain legible against the denser Han ideographs.
@@ -583,7 +583,7 @@ def _apply_glyph_spacing(font: TTFont, spacing: dict | None) -> int:
 # ---------------------------------------------------------------------------
 
 def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -> dict:
-    """Build a single weight of a Gen Interface JP family.
+    """Build a single weight of a Gen Interface KR family.
 
     Pipeline:
 
@@ -600,7 +600,7 @@ def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -
        symbols (※, ◯, ①, Ⓐ, …) on the Noto outline, and font-baker's
        glyph-name collision detection rescues cases like Inter's U+0298
        sharing the ``uni25CE`` glyph name with Noto's ◎. Output identity
-       is rewritten to "Gen Interface JP", Inter's vertical metrics drive
+       is rewritten to "Gen Interface KR", Inter's vertical metrics drive
        the merged hhea (``metricsSource: "sub"``), and our manufacturer /
        URL get stamped into nameID 8 / 11.
     """
@@ -610,15 +610,15 @@ def build_one(family: dict, weight_num: int, weight_name: str, noto_wght: int) -
 
     os.makedirs(INTERMEDIATE, exist_ok=True)
 
-    inst_path = os.path.join(INTERMEDIATE, f"NotoSansJP-{weight_name}-Inst.ttf")
-    prop_path = os.path.join(INTERMEDIATE, f"NotoSansJP-{weight_name}-Prop.ttf")
+    inst_path = os.path.join(INTERMEDIATE, f"NotoSansKR-{weight_name}-Inst.ttf")
+    prop_path = os.path.join(INTERMEDIATE, f"NotoSansKR-{weight_name}-Prop.ttf")
 
     # ── Step 1: Bake Noto variable → static (font-baker, base-only) ──
     # `metadataMode: inheritBase` keeps Noto's name/OS2 records intact so
     # designer/OFL/version metadata survives into the inst TTF (no manual
     # save/restore needed). Only `weight` is overridden to stamp the static
     # instance — family/italic/width inherit from the Noto base.
-    print(f"    [1/3] Baking Noto Sans JP (wght={noto_wght})...")
+    print(f"    [1/3] Baking Noto Sans KR (wght={noto_wght})...")
     bake_config = {
         "baseFont": {
             "path": NOTO_VARIABLE,

@@ -22,7 +22,7 @@ type TunerProps = {
   yShift: number;
 };
 
-/** "Raw Noto Sans JP, no transforms applied" — the start of the simulation. */
+/** "Raw Noto Sans KR, no transforms applied" — the start of the simulation. */
 const INITIAL_PARAMS: TunerProps = {
   wght: 400,
   scale: 1.0,
@@ -210,7 +210,7 @@ export function Composition() {
 
     const loopBack = () => {
       // Tween every param back to INITIAL_PARAMS while dimming the Tweak
-      // entries 1 → 0.3 in lockstep — that's the only reset cue. The JP
+      // entries 1 → 0.3 in lockstep — that's the only reset cue. The KR
       // simulation stays visible throughout; viewers see the live glyphs
       // morph back to the raw "before" state alongside the number countdown.
       setActiveKeys(new Set());
@@ -407,7 +407,7 @@ export function Composition() {
           <span className="composition__label">
             和文書体
             <br />
-            Noto Sans JP
+            Noto Sans KR
           </span>
           <div className="composition__group">
             <div className="composition__sub-group composition__sub-group--jp">

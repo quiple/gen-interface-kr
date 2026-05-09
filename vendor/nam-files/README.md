@@ -10,4 +10,4 @@ Included file:
 
 The source project is licensed under Apache-2.0. See `LICENSE` in this
 directory. The data is used as the default Japanese slicing strategy for
-Gen Interface JP web font subset generation.
+Gen Interface KR web font subset generation.

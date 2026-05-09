@@ -16,7 +16,6 @@ import json
 
 from release.build import copy_webfont_package, github_asset_urls, write_npm_package
 
-
 # ---------------------------------------------------------------------------
 # GitHub Release asset URLs
 # ---------------------------------------------------------------------------
@@ -34,7 +33,7 @@ def test_github_asset_urls_are_stable_for_site_downloads():
     download time.
     """
     urls = github_asset_urls("owner/repo", "v1.2.3", "1.2.3")
-    assert urls["bundle"] == "https://github.com/owner/repo/releases/download/v1.2.3/GenInterfaceJP-1.2.3.zip"
+    assert urls["bundle"] == "https://github.com/owner/repo/releases/download/v1.2.3/GenInterfaceKR-1.2.3.zip"
     # No latestBundle: a versioned filename can't reliably resolve via
     # `latest/download/`, so the surface is intentionally tag-only.
     assert "latestBundle" not in urls

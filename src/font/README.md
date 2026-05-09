@@ -1,9 +1,9 @@
 # Font Baking
 
-This is the core pipeline for Gen Interface JP.
+This is the core pipeline for Gen Interface KR.
 
 It builds the downloadable font families by merging Inter / Inter Display with
-proportional Noto Sans JP, then applying the spacing and metric adjustments
+proportional Noto Sans KR, then applying the spacing and metric adjustments
 defined for this project.
 
 Source fonts are read from `vendor/fonts/`:
@@ -11,7 +11,7 @@ Source fonts are read from `vendor/fonts/`:
 ```text
 vendor/fonts/
   Inter-4.1/
-  Noto_Sans_JP/
+  Noto_Sans_KR/
 ```
 
 Outputs:

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build unicode-range web font subsets for Gen Interface JP Regular.
+"""Build unicode-range web font subsets for Gen Interface KR Regular.
 
 The output is one stylesheet with many @font-face rules, each pointing at a
 WOFF2 subset guarded by unicode-range. Browsers only fetch the subset files
@@ -31,12 +31,12 @@ from fontTools.ttLib import TTFont
 logging.getLogger("fontTools.ttLib.tables.otTables").setLevel(logging.ERROR)
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_TTF = ROOT / "dist" / "ttf" / "Gen Interface JP" / "GenInterfaceJP-Regular.ttf"
-DEFAULT_OUT = ROOT / "dist" / "webfont" / "GenInterfaceJP-Regular"
+DEFAULT_TTF = ROOT / "dist" / "ttf" / "Gen Interface KR" / "GenInterfaceKR-Regular.ttf"
+DEFAULT_OUT = ROOT / "dist" / "webfont" / "GenInterfaceKR-Regular"
 DEFAULT_ALL_OUT = ROOT / "dist" / "webfont" / "gen-interface-jp"
 DEFAULT_GOOGLE_JAPANESE_SLICE = ROOT / "vendor" / "nam-files" / "slices" / "japanese_default.txt"
 
-FAMILY_NAME = "Gen Interface JP"
+FAMILY_NAME = "Gen Interface KR"
 WEIGHT = 400
 STYLE = "normal"
 DISPLAY = "swap"
@@ -64,15 +64,15 @@ class WebFontFamily:
 WEBFONT_FAMILIES = (
     WebFontFamily(
         key="normal",
-        css_family="Gen Interface JP",
-        dist_folder="Gen Interface JP",
-        file_prefix="GenInterfaceJP",
+        css_family="Gen Interface KR",
+        dist_folder="Gen Interface KR",
+        file_prefix="GenInterfaceKR",
     ),
     WebFontFamily(
         key="display",
-        css_family="Gen Interface JP Display",
-        dist_folder="Gen Interface JP Display",
-        file_prefix="GenInterfaceJPDisplay",
+        css_family="Gen Interface KR Display",
+        dist_folder="Gen Interface KR Display",
+        file_prefix="GenInterfaceKRDisplay",
     ),
 )
 
@@ -96,7 +96,7 @@ LATIN_RANGES = (
     (0xFFFD, 0xFFFD),
 )
 
-JP_KANA_RANGES = (
+KR_KANA_RANGES = (
     (0x3000, 0x303F),  # CJK punctuation
     (0x3040, 0x309F),  # Hiragana
     (0x30A0, 0x30FF),  # Katakana
@@ -104,7 +104,7 @@ JP_KANA_RANGES = (
     (0xFF00, 0xFFEF),  # Halfwidth and fullwidth forms
 )
 
-JP_SYMBOL_RANGES = (
+KR_SYMBOL_RANGES = (
     (0x2E80, 0x2EFF),  # CJK radicals supplement
     (0x2F00, 0x2FDF),  # Kangxi radicals
     (0x3100, 0x312F),  # Bopomofo
@@ -141,7 +141,7 @@ def jis_row_codepoints(row: int) -> set[int]:
     """Return Unicode codepoints for one JIS X 0208 row.
 
     Rows 16-47 are first-level kanji, rows 48-84 are second-level kanji. Python's
-    EUC-JP codec gives us a portable mapping without vendoring a large table.
+    EUC-KR codec gives us a portable mapping without vendoring a large table.
     """
     cps: set[int] = set()
     for cell in range(1, 95):
@@ -175,8 +175,8 @@ def build_subset_plan(font_codepoints: Iterable[int], extra_han_slices: int = 24
         assigned.update(usable)
 
     add("latin", codepoints_from_ranges(LATIN_RANGES), "Latin, Latin punctuation, and shared symbols")
-    add("jp-kana", codepoints_from_ranges(JP_KANA_RANGES), "Japanese punctuation, kana, and fullwidth forms")
-    add("jp-symbols", codepoints_from_ranges(JP_SYMBOL_RANGES), "Japanese radicals, enclosed forms, and CJK symbols")
+    add("jp-kana", codepoints_from_ranges(KR_KANA_RANGES), "Japanese punctuation, kana, and fullwidth forms")
+    add("jp-symbols", codepoints_from_ranges(KR_SYMBOL_RANGES), "Japanese radicals, enclosed forms, and CJK symbols")
 
     for row in range(16, 48):
         add(
@@ -282,7 +282,7 @@ def build_google_japanese_subset_plan(
                 WebFontSubset(
                     name=f"google-japanese-extra-{index:02d}",
                     codepoints=tuple(codepoints),
-                    note="Codepoints supported by Gen Interface JP but not covered by googlefonts/nam-files Japanese slicing strategy",
+                    note="Codepoints supported by Gen Interface KR but not covered by googlefonts/nam-files Japanese slicing strategy",
                 )
             )
 
@@ -575,7 +575,7 @@ def build_all(args: argparse.Namespace) -> dict:
 
     subset_bytes = sum(entry["bytes"] for entry in file_entries.values())
     manifest = {
-        "family": "Gen Interface JP",
+        "family": "Gen Interface KR",
         "style": STYLE,
         "fontDisplay": DISPLAY,
         "generatedAt": _dt.datetime.now(tz=_dt.timezone.utc).isoformat(),
@@ -642,7 +642,7 @@ def build(args: argparse.Namespace) -> dict:
     font_codepoints = sorted(font.getBestCmap().keys())
     plan = select_subset_plan(args, font_codepoints)
 
-    full_out = out_dir / "full" / "GenInterfaceJP-Regular.woff2"
+    full_out = out_dir / "full" / "GenInterfaceKR-Regular.woff2"
     build_full_woff2(src_ttf, full_out)
     full_entry = {
         "path": str(full_out.relative_to(out_dir)),
@@ -651,7 +651,7 @@ def build(args: argparse.Namespace) -> dict:
 
     subset_entries: list[dict] = []
     for index, item in enumerate(plan, 1):
-        filename = f"GenInterfaceJP-Regular-{item.name}.woff2"
+        filename = f"GenInterfaceKR-Regular-{item.name}.woff2"
         out_path = out_dir / "subsets" / filename
         build_woff2_subset(src_ttf, out_path, item.codepoints)
         write_nam(out_dir / "nam" / f"{item.name}.nam", item.codepoints, item.note)
@@ -717,7 +717,7 @@ def build(args: argparse.Namespace) -> dict:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--all", action="store_true", help="Build Text + Display subset WOFF2 for all weights and CSS entrypoints")
-    parser.add_argument("--ttf", type=Path, default=DEFAULT_TTF, help="Source Gen Interface JP Regular TTF")
+    parser.add_argument("--ttf", type=Path, default=DEFAULT_TTF, help="Source Gen Interface KR Regular TTF")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT, help="Output directory")
     parser.add_argument("--jobs", type=int, default=max(1, min(4, os.cpu_count() or 1)), help="Parallel workers for --all subset generation")
     parser.add_argument("--strategy", choices=["google-japanese", "jis-row"], default="google-japanese", help="Subset partitioning strategy")

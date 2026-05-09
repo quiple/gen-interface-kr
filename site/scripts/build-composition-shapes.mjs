@@ -22,7 +22,7 @@ const WASM_FILE = path.join(
 const JOBS = [
   {
     key: "jp-type",
-    font: "public/_font-subsets/NotoSansJP-Subset.ttf",
+    font: "public/_font-subsets/NotoSansKR-Subset.ttf",
     text: "書体",
     script: "Jpan",
     language: "ja",
@@ -30,7 +30,7 @@ const JOBS = [
   },
   {
     key: "jp-design",
-    font: "public/_font-subsets/NotoSansJP-Subset.ttf",
+    font: "public/_font-subsets/NotoSansKR-Subset.ttf",
     text: "デザイン",
     script: "Jpan",
     language: "ja",
@@ -38,7 +38,7 @@ const JOBS = [
   },
   {
     key: "latin-type",
-    font: "public/_font-subsets/GenInterfaceJP-Regular-Subset.ttf",
+    font: "public/_font-subsets/GenInterfaceKR-Regular-Subset.ttf",
     text: "Type",
     script: "Latn",
     language: "en",
@@ -46,7 +46,7 @@ const JOBS = [
   },
   {
     key: "latin-design",
-    font: "public/_font-subsets/GenInterfaceJP-Regular-Subset.ttf",
+    font: "public/_font-subsets/GenInterfaceKR-Regular-Subset.ttf",
     text: "Design",
     script: "Latn",
     language: "en",

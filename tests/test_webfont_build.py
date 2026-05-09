@@ -27,7 +27,6 @@ from webfont.build import (
     weight_css_filename,
 )
 
-
 # ---------------------------------------------------------------------------
 # merge_codepoints_to_ranges
 # ---------------------------------------------------------------------------
@@ -147,11 +146,11 @@ class TestIsHanCodepoint:
 # ---------------------------------------------------------------------------
 
 class TestJisRowCodepoints:
-    """JIS X 0208 row → Unicode mapping via Python's EUC-JP codec."""
+    """JIS X 0208 row → Unicode mapping via Python's EUC-KR codec."""
 
     def test_first_level_row_16_starts_at_a(self):
         # Row 16 cell 1 is 亜 — the canonical "first ideograph" of JIS
-        # first-level kanji. If this ever fails, Python's EUC-JP table
+        # first-level kanji. If this ever fails, Python's EUC-KR table
         # has shifted and the slicing strategy needs reverification.
         row_16 = jis_row_codepoints(16)
         assert ord("亜") in row_16

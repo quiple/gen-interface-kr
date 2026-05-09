@@ -38,7 +38,7 @@ const TOOLS: ToolBlock[] = [
     commands: [
       [
         { text: "lv_font_conv", href: "https://github.com/lvgl/lv_font_conv" },
-        " --bpp 4 --size 24 --font GenInterfaceJP-Regular.ttf -o GenInterfaceJP-24.bin",
+        " --bpp 4 --size 24 --font GenInterfaceKR-Regular.ttf -o GenInterfaceKR-24.bin",
       ],
     ],
     bitmapDir: "lvgl",
@@ -50,11 +50,11 @@ const TOOLS: ToolBlock[] = [
     commands: [
       [
         { text: "otf2bdf", href: "https://github.com/jirutka/otf2bdf" },
-        " -p 24 GenInterfaceJP-Regular.ttf -o GenInterfaceJP-Regular-24.bdf",
+        " -p 24 GenInterfaceKR-Regular.ttf -o GenInterfaceKR-Regular-24.bdf",
       ],
       [
         { text: "bdfconv", href: "https://github.com/olikraus/u8g2" },
-        " -f 1 GenInterfaceJP-Regular-24.bdf -o gen_interface_r24.c -n u8g2_font_gen_r24",
+        " -f 1 GenInterfaceKR-Regular-24.bdf -o gen_interface_r24.c -n u8g2_font_gen_r24",
       ],
     ],
     bitmapDir: "u8g2",
@@ -204,7 +204,7 @@ export function Variations() {
                 {"Type Design\n書体デザイン"}
               </span>
               <span className="styles-cell__name styles-cell__name--narrow">
-                {"Gen Interface JP\n汎用／本文用"}
+                {"Gen Interface KR\n汎用／本文用"}
               </span>
             </div>
             <div className="styles-cell styles-cell--display">
@@ -212,7 +212,7 @@ export function Variations() {
                 {"Type Design\n書体デザイン"}
               </span>
               <span className="styles-cell__name styles-cell__name--wide">
-                {"Gen Interface JP Display\n見出し用"}
+                {"Gen Interface KR Display\n見出し用"}
               </span>
             </div>
           </div>
@@ -321,7 +321,7 @@ export function Variations() {
             {showNormal && (
               <CssRule
                 selector={<Tok type="selector">{"body"}</Tok>}
-                family="Gen Interface JP"
+                family="Gen Interface KR"
                 weight={mode === "all" ? 400 : weight}
                 weightRange={mode === "all" ? "100–800" : undefined}
               />
@@ -338,7 +338,7 @@ export function Variations() {
                     <Tok type="selector">{"h2"}</Tok>
                   </>
                 }
-                family="Gen Interface JP Display"
+                family="Gen Interface KR Display"
                 weight={mode === "all" ? 700 : weight}
                 weightRange={mode === "all" ? "100–800" : undefined}
               />

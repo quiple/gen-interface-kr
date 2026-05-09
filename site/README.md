@@ -1,6 +1,6 @@
 # Site
 
-This is the landing and font inspection site for Gen Interface JP. It covers
+This is the landing and font inspection site for Gen Interface KR. It covers
 weight and family comparisons, reading samples, HarfBuzz shaping checks, and
 the GitHub Release download entry point.
 
@@ -52,13 +52,13 @@ bundle font files for site display.
 The download button defaults to the latest GitHub Release asset:
 
 ```text
-https://github.com/yamatoiizuka/gen-interface-jp/releases/latest/download/GenInterfaceJP.zip
+https://github.com/yamatoiizuka/gen-interface-jp/releases/latest/download/GenInterfaceKR.zip
 ```
 
 Override it at build time:
 
 ```bash
-VITE_DOWNLOAD_URL="https://example.com/GenInterfaceJP.zip" \
+VITE_DOWNLOAD_URL="https://example.com/GenInterfaceKR.zip" \
 VITE_DOWNLOAD_LABEL="Download" \
 npm run build
 ```

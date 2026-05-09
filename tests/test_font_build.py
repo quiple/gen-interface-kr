@@ -8,13 +8,15 @@ inspection, horizontal scaling, bbox stripping, and tracking.
 import copy
 
 import pytest
+from merge_fonts import parse_codepoint_list
 
 from font.build import (
+    _EXTREME_YMAX,
+    _EXTREME_YMIN,
+    SUB_EXCLUDE_CODEPOINTS,
     _apply_glyph_spacing,
     _apply_tracking,
     _apply_x_scale,
-    _EXTREME_YMAX,
-    _EXTREME_YMIN,
     _get_cjk_glyphs,
     _get_variable_palt,
     _get_vert_alternates,
@@ -23,10 +25,7 @@ from font.build import (
     _is_kana_letter,
     _is_kana_or_punct,
     _strip_extreme_glyphs,
-    SUB_EXCLUDE_CODEPOINTS,
 )
-from merge_fonts import parse_codepoint_list
-
 
 # ---------------------------------------------------------------------------
 # _glyph_codepoint
@@ -232,7 +231,7 @@ class TestGetVertAlternates:
     """GSUB vert/vrt2 lookup walking."""
 
     def test_returns_non_empty_for_noto(self, noto_subset):
-        # Noto Sans JP has vert/vrt2 features for vertical text shaping;
+        # Noto Sans KR has vert/vrt2 features for vertical text shaping;
         # subset should preserve at least some entries.
         alts = _get_vert_alternates(noto_subset)
         assert len(alts) > 0

@@ -9,12 +9,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const DEFAULT_ARTIFACTS = path.join(ROOT, "dist", "webfont", "GenInterfaceJP-Regular");
+const DEFAULT_ARTIFACTS = path.join(ROOT, "dist", "webfont", "GenInterfaceKR-Regular");
 const DEFAULT_OUT = path.join(ROOT, "dist", "webfont", "benchmark");
 const VALID_MODES = new Set(["subset", "full"]);
 
 const SITE_PARAGRAPHS = [
-  "Gen Interface JP は、読みやすい本文と情報設計に向けて調整した日本語 UI フォントです。画面上の見出し、説明文、フォーム、ボタン、数値、短い通知が同じ密度で並ぶ場面を想定しています。",
+  "Gen Interface KR は、読みやすい本文と情報設計に向けて調整した日本語 UI フォントです。画面上の見出し、説明文、フォーム、ボタン、数値、短い通知が同じ密度で並ぶ場面を想定しています。",
   "製品ページでは、導入事例、料金、機能一覧、よくある質問、サポート窓口などの短いセクションが続きます。一般的な Web サイトでは文字数は多すぎず、かな、句読点、基本的な漢字が中心になります。",
   "このテストでは画像や JavaScript の負荷を抑え、Web フォントの CSS と WOFF2 の読み込み時間が見えるようにしています。通信条件はローカルサーバー側で遅延と帯域を加えて再現します。",
 ];
@@ -89,13 +89,13 @@ function loadModeConfigs(args, primaryManifest) {
   return {
     subset: {
       kind: "subset",
-      family: "Gen Interface JP",
+      family: "Gen Interface KR",
       artifacts: args.artifacts,
       manifest: primaryManifest,
     },
     full: {
       kind: "full",
-      family: "Gen Interface JP",
+      family: "Gen Interface KR",
       artifacts: args.artifacts,
       manifest: primaryManifest,
     },

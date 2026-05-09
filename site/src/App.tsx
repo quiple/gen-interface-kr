@@ -24,7 +24,7 @@ const Footer = lazy(() =>
 const FIRST_VIEW_REVEAL_DELAY_MS = 100
 const FIRST_VIEW_FONT_TIMEOUT_MS = 2000
 const SECTION_LOAD_GAP_MS = 140
-const FIRST_VIEW_FONT = "400 84px 'Gen Interface JP'"
+const FIRST_VIEW_FONT = "400 84px 'Gen Interface KR'"
 const FIRST_VIEW_TEXT = [
   HERO_TITLE,
   DOWNLOAD_LABEL,

@@ -3,10 +3,10 @@
 Build tiny font subsets for the site Composition section's build-time SVG
 shape generation:
 
-- Noto Sans JP Variable → "書体デザイン" only, keeping the wght axis and the
+- Noto Sans KR Variable → "書体デザイン" only, keeping the wght axis and the
   features (palt, kern) that the generated shape data needs.
-- Gen Interface JP Regular → "Type Design" only, used to render the Latin
-  reference through the same SVG path as the JP side so the two read with the
+- Gen Interface KR Regular → "Type Design" only, used to render the Latin
+  reference through the same SVG path as the KR side so the two read with the
   same anti-aliasing / weight.
 
 Outputs land in site/public/_font-subsets/.
@@ -15,16 +15,17 @@ Outputs land in site/public/_font-subsets/.
 from __future__ import annotations
 
 import os
+
 from fontTools import subset
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-NOTO_SRC = os.path.join(ROOT, "vendor", "fonts", "Noto_Sans_JP", "NotoSansJP-VariableFont_wght.ttf")
-GEN_SRC = os.path.join(ROOT, "dist", "ttf", "Gen Interface JP", "GenInterfaceJP-Regular.ttf")
+NOTO_SRC = os.path.join(ROOT, "vendor", "fonts", "Noto_Sans_KR", "NotoSansKR-VF.ttf")
+GEN_SRC = os.path.join(ROOT, "dist", "ttf", "Gen Interface KR", "GenInterfaceKR-Regular.ttf")
 # Kept as tiny checked-in build inputs so the site build does not depend on
 # generated dist/ font outputs.
 OUT_DIR = os.path.join(ROOT, "site", "public", "_font-subsets")
-NOTO_OUT = os.path.join(OUT_DIR, "NotoSansJP-Subset.ttf")
-GEN_OUT = os.path.join(OUT_DIR, "GenInterfaceJP-Regular-Subset.ttf")
+NOTO_OUT = os.path.join(OUT_DIR, "NotoSansKR-Subset.ttf")
+GEN_OUT = os.path.join(OUT_DIR, "GenInterfaceKR-Regular-Subset.ttf")
 
 
 def _build_subset(src: str, out: str, chars: str, layout_features: list[str]) -> None:
@@ -49,7 +50,7 @@ def _build_subset(src: str, out: str, chars: str, layout_features: list[str]) ->
 
 def main() -> None:
     os.makedirs(OUT_DIR, exist_ok=True)
-    # palt is what the generated JP shape data stores for tweening.
+    # palt is what the generated KR shape data stores for tweening.
     _build_subset(NOTO_SRC, NOTO_OUT, "書体デザイン", ["palt", "kern"])
     # Latin side just needs basic shaping (kern for Inter's pair adjustments).
     _build_subset(GEN_SRC, GEN_OUT, "Type Design", ["kern"])

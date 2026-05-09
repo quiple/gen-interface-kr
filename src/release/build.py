@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Prepare release artifacts for Gen Interface JP.
+"""Prepare release artifacts for Gen Interface KR.
 
 Outputs:
 
-- dist/release/github/GenInterfaceJP-<version>.zip
+- dist/release/github/GenInterfaceKR-<version>.zip
                                               (TTF, both families × all weights)
 - dist/release/npm/                        (subset webfont package for npm)
 - dist/release/webfonts/gen-interface-jp/  (Pages-hosted mirror of the package)
@@ -66,11 +66,11 @@ def family_files(version: str) -> list[ReleaseFile]:
     """Collect every TTF expected at dist/ttf/ for the GitHub Release zip.
 
     Archive paths are nested under a version-stamped root folder
-    (``GenInterfaceJP-<version>/``) so that unzipping cleanly drops the
+    (``GenInterfaceKR-<version>/``) so that unzipping cleanly drops the
     files into a single labelled directory rather than spilling
     family folders into whatever the user's working directory is.
     """
-    root = f"GenInterfaceJP-{version}"
+    root = f"GenInterfaceKR-{version}"
     files: list[ReleaseFile] = []
     for family in FAMILIES.values():
         family_name = family["familyName"]
@@ -137,7 +137,7 @@ def ofl_text() -> str:
     inter_license = INTER_OFL.read_text(encoding="utf-8")
     _, ofl_body = inter_license.split("\n\n", 1)
     copyright_lines = [
-        "Copyright 2026 The Gen Interface JP Project Authors (https://github.com/yamatoiizuka/gen-interface-jp)",
+        "Copyright 2026 The Gen Interface KR Project Authors (https://github.com/yamatoiizuka/gen-interface-jp)",
         "Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter)",
         "Copyright 2014-2021 Adobe (http://www.adobe.com/), with Reserved Font Name 'Source'",
     ]
@@ -152,7 +152,7 @@ def write_npm_package(out_dir: Path, version: str, repository: str) -> None:
     package = {
         "name": "gen-interface-jp",
         "version": version,
-        "description": "Gen Interface JP web font subsets",
+        "description": "Gen Interface KR web font subsets",
         "style": "all.css",
         "files": [
             "*.css",
@@ -177,7 +177,7 @@ def asset_filename(version: str) -> str:
     the filename itself (and so a v0.1.1 site build can link at the
     exact zip that matches the running font).
     """
-    return f"GenInterfaceJP-{version}.zip"
+    return f"GenInterfaceKR-{version}.zip"
 
 
 def github_asset_urls(repository: str, tag: str, version: str) -> dict[str, str]:
@@ -214,7 +214,7 @@ def build_release(args: argparse.Namespace) -> dict:
     # archive directory so anyone unzipping the bundle has the license
     # immediately at hand (matches OFL §2's "include this license"
     # requirement for redistribution).
-    archive_root = f"GenInterfaceJP-{version}"
+    archive_root = f"GenInterfaceKR-{version}"
     write_zip(
         github_dir / asset_filename(version),
         family_files(version),
@@ -248,7 +248,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--version", help="Release version. Defaults to GITHUB_REF_NAME or pyproject.toml.")
     parser.add_argument("--repository", default=os.environ.get("GITHUB_REPOSITORY", DEFAULT_REPOSITORY), help="GitHub owner/repo for release URLs.")
     parser.add_argument("--output", type=Path, default=DEFAULT_RELEASE_DIR, help="Release output directory.")
-    parser.add_argument("--webfont-source", type=Path, default=DEFAULT_WEBFONT_SOURCE, help="Built Gen Interface JP Regular webfont directory.")
+    parser.add_argument("--webfont-source", type=Path, default=DEFAULT_WEBFONT_SOURCE, help="Built Gen Interface KR Regular webfont directory.")
     return parser.parse_args()
 
 

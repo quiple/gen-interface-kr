@@ -1,7 +1,7 @@
 # Web Font Delivery
 
-This is a derived pipeline built from the baked Gen Interface JP and Gen
-Interface JP Display weights.
+This is a derived pipeline built from the baked Gen Interface KR and Gen
+Interface KR Display weights.
 
 It generates a CSS file with `unicode-range` guarded `@font-face` rules and the
 corresponding WOFF2 subset files for Japanese web font delivery. The default
@@ -31,8 +31,8 @@ PYTHONPATH=src python3 -m webfont.build --all --clean --strategy jis-row --jobs 
 Required inputs:
 
 ```text
-dist/ttf/Gen Interface JP/*.ttf
-dist/ttf/Gen Interface JP Display/*.ttf
+dist/ttf/Gen Interface KR/*.ttf
+dist/ttf/Gen Interface KR Display/*.ttf
 ```
 
 The published assets are subset WOFF2 files only, but the generator uses TTF
@@ -53,7 +53,7 @@ dist/webfont/gen-interface-jp/
 
 `nam/*.nam` follows the `googlefonts/nam-files` machine-readable style: one
 `0x...` codepoint per line. With `google-japanese`, the build intersects the
-120 slices from `japanese_default.txt` with the Gen Interface JP cmap, then
+120 slices from `japanese_default.txt` with the Gen Interface KR cmap, then
 places supported codepoints outside that strategy into `google-japanese-extra-*`
 subsets.
 

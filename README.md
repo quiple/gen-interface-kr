@@ -1,15 +1,15 @@
-# Gen Interface JP
+# Gen Interface KR
 
 <p>English | <strong><a href="https://github.com/yamatoiizuka/gen-interface-jp/blob/main/README.ja.md">日本語</a></strong></p>
 
-Gen Interface JP is a typeface designed for digital interfaces that aims to harmonize Latin script with Japanese. Blending Inter with Noto Sans JP, it ensures consistent readability across multiple languages.
+Gen Interface KR is a typeface designed for digital interfaces that aims to harmonize Latin script with Japanese. Blending Inter with Noto Sans KR, it ensures consistent readability across multiple languages.
 
 ## Overview
 
 ### 2 Families
 
-- **Gen Interface JP**: Body & UI
-- **Gen Interface JP Display**: Headings & display
+- **Gen Interface KR**: Body & UI
+- **Gen Interface KR Display**: Headings & display
 
 ### 8 Weights
 
@@ -27,7 +27,7 @@ Gen Interface JP is a typeface designed for digital interfaces that aims to harm
 In web projects, you can use web fonts simply by loading a stylesheet within the head.  
 With [subsetting similar to Google Fonts](https://developers.googleblog.com/google-fonts-launches-japanese-support/), we achieve faster display than a single bundled font file.
 
-#### Gen Interface JP
+#### Gen Interface KR
 
 ```html
 <!-- 
@@ -45,12 +45,12 @@ With [subsetting similar to Google Fonts](https://developers.googleblog.com/goog
 ```css
 /* style.css */
 body {
-  font-family: "Gen Interface JP", sans-serif;
+  font-family: "Gen Interface KR", sans-serif;
   font-weight: 400; /* 100–800 */
 }
 ```
 
-#### Gen Interface JP Display
+#### Gen Interface KR Display
 
 ```html
 <!-- 
@@ -69,7 +69,7 @@ body {
 /* style.css */
 h1,
 h2 {
-  font-family: "Gen Interface JP Display", sans-serif;
+  font-family: "Gen Interface KR Display", sans-serif;
   font-weight: 800; /* 100–800 */
 }
 ```
@@ -77,8 +77,8 @@ h2 {
 ### CSS List
 
 - `all.css`: All 16 weights
-- `400.css`: Gen Interface JP Regular (400)
-- `display-400.css`: Gen Interface JP Display Regular (400)
+- `400.css`: Gen Interface KR Regular (400)
+- `display-400.css`: Gen Interface KR Display Regular (400)
 
 ## Repository
 
@@ -89,7 +89,7 @@ src/
   release/    # GitHub Release / npm packaging
 site/         # Landing page and font preview site
 vendor/
-  fonts/      # Inter and Noto Sans JP source fonts
+  fonts/      # Inter and Noto Sans KR source fonts
   nam-files/  # googlefonts/nam-files data for subsetting
 docs/
   ARCHITECTURE.md  # Full build pipeline spec
@@ -117,5 +117,5 @@ Items under `vendor/` follow their bundled licenses.
 
 ## References
 
-- [Noto Sans JP](https://github.com/notofonts/noto-cjk)
+- [Noto Sans KR](https://github.com/notofonts/noto-cjk)
 - [Inter](https://github.com/rsms/inter)

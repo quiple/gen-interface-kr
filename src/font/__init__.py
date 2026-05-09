@@ -1,1 +1,1 @@
-"""Core font baking pipeline for Gen Interface JP."""
+"""Core font baking pipeline for Gen Interface KR."""

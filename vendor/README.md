@@ -5,7 +5,7 @@ pipeline.
 
 ```text
 vendor/
-  fonts/      # Inter and Noto Sans JP source fonts
+  fonts/      # Inter and Noto Sans KR source fonts
   nam-files/  # pinned googlefonts/nam-files data for web font slicing
 ```
 

@@ -1,8 +1,8 @@
-# Gen Interface JP — Architecture
+# Gen Interface KR — Architecture
 
 ## Overview
 
-Gen Interface JP is a font build pipeline (no app, no UI). A `make` target
+Gen Interface KR is a font build pipeline (no app, no UI). A `make` target
 turns vendor sources into distributable TTF / WOFF2 / npm artifacts. Each
 weight passes through three Python stages, then a static demo site
 consumes the published webfont package.
@@ -12,7 +12,7 @@ consumes the published webfont package.
 │  Source                                                            │
 │    vendor/fonts/Inter-4.1/extras/ttf/Inter-{Weight}.ttf            │
 │    vendor/fonts/Inter-4.1/extras/ttf/InterDisplay-{Weight}.ttf     │
-│    vendor/fonts/Noto_Sans_JP/NotoSansJP-VariableFont_wght.ttf      │
+│    vendor/fonts/Noto_Sans_KR/NotoSansKR-VF.ttf      │
 └─────────────────────────────┬──────────────────────────────────────┘
                               │
         ┌─────────────────────▼──────────────────────────┐
@@ -79,7 +79,7 @@ For each (family, weight) in FAMILIES × WEIGHTS:
                      keeps CJK-conventional symbols on Noto;
                      font-baker also auto-renames glyph-name collisions
                      (e.g. Inter U+0298 vs Noto U+25CE both `uni25CE`)
-                     family/weight stamped to "Gen Interface JP …"
+                     family/weight stamped to "Gen Interface KR …"
                      metricsSource=sub anchors hhea on Inter
                      manufacturer / manufacturerURL stamped
 ```
@@ -104,7 +104,7 @@ Read dist/ttf/{family}/{family}-{weight}.ttf
 
 ```
 require dist/ttf/ + dist/webfont/gen-interface-jp/
-  → zip GenInterfaceJP-<version>.zip (TTF, all weights × both families)
+  → zip GenInterfaceKR-<version>.zip (TTF, all weights × both families)
   → copy webfont package → npm/      (with package.json)
   → copy webfont package → webfonts/ (Pages-hosted mirror)
   → manifest.json with version, tag, asset URLs
@@ -215,7 +215,7 @@ of new text frames.
 ### Stripped glyphs
 
 `_strip_extreme_glyphs` neutralises any glyph with `yMax > 1200` or
-`yMin < -400` (em = 1000 baseline). In Noto Sans JP these are exclusively
+`yMin < -400` (em = 1000 baseline). In Noto Sans KR these are exclusively
 the vertical-text iteration marks and their `vert` / `vrt2` alternates.
 
 | Glyph | Codepoint | Reason |
@@ -287,7 +287,7 @@ artifact set.
 Three downstream consumers, three outputs:
 
 - **GitHub Releases** (`dist/release/github/`) — single
-  `GenInterfaceJP-<version>.zip` containing all 16 TTFs (both families ×
+  `GenInterfaceKR-<version>.zip` containing all 16 TTFs (both families ×
   8 weights). The asset filename embeds the version so each release is
   linkable unambiguously even after a newer "latest" lands. Full
   single-file WOFF2 is intentionally not redistributed — web delivery

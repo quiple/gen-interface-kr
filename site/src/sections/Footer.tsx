@@ -37,7 +37,7 @@ export function Footer() {
               Rasmus Andersson
             </span>
             <span className="footer__credit-label footer__credit-row-3-label">
-              Gen Interface JP:
+              Gen Interface KR:
             </span>
             <span className="footer__credit-value footer__credit-row-3-value">
               Composed by{" "}

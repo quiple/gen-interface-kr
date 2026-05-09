@@ -2,7 +2,7 @@
 
 Two test fonts back the suite:
 
-* **noto_subset** — a session-scoped subset of vendor Noto Sans JP variable,
+* **noto_subset** — a session-scoped subset of vendor Noto Sans KR variable,
   trimmed to a curated codepoint slice that exercises kana / CJK / punct /
   vertical-alternate / palt code paths. Subsetting once per session keeps
   the per-test cost in the millisecond range while still hitting real
@@ -29,9 +29,8 @@ from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.subset import Options, Subsetter
 from fontTools.ttLib import TTFont
 
-
 REPO = Path(__file__).resolve().parents[1]
-NOTO_VARIABLE_PATH = REPO / "vendor" / "fonts" / "Noto_Sans_JP" / "NotoSansJP-VariableFont_wght.ttf"
+NOTO_VARIABLE_PATH = REPO / "vendor" / "fonts" / "Noto_Sans_KR" / "NotoSansKR-VF.ttf"
 
 
 # ---------------------------------------------------------------------------

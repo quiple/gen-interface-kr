@@ -65,7 +65,7 @@ GitHub Release assets are written to:
 
 ```text
 dist/release/github/
-  GenInterfaceJP-<version>.zip   # TTF, all weights × both families
+  GenInterfaceKR-<version>.zip   # TTF, all weights × both families
 ```
 
 The asset filename embeds the version so each release can be linked
@@ -81,8 +81,8 @@ Release with the `gh` CLI:
 
 ```bash
 # Create a new release
-gh release create v<version> dist/release/github/GenInterfaceJP-<version>.zip \
-  --title "Gen Interface JP v<version>" \
+gh release create v<version> dist/release/github/GenInterfaceKR-<version>.zip \
+  --title "Gen Interface KR v<version>" \
   --notes "Release notes..."
 
 # Or attach to an existing (e.g. draft) release
@@ -93,7 +93,7 @@ A draft can be created up front and assets attached afterwards:
 
 ```bash
 gh release create v<version> --draft --target main \
-  --title "Gen Interface JP v<version>" --notes "..."
+  --title "Gen Interface KR v<version>" --notes "..."
 make release
 gh release upload v<version> dist/release/github/*.zip --clobber
 # Review on the GitHub UI, then "Publish release"
@@ -102,7 +102,7 @@ gh release upload v<version> dist/release/github/*.zip --clobber
 The site download button defaults to:
 
 ```text
-https://github.com/yamatoiizuka/gen-interface-jp/releases/download/v<version>/GenInterfaceJP-<version>.zip
+https://github.com/yamatoiizuka/gen-interface-jp/releases/download/v<version>/GenInterfaceKR-<version>.zip
 ```
 
 Use `VITE_DOWNLOAD_URL` and `VITE_DOWNLOAD_LABEL` when building the site to

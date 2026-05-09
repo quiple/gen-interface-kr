@@ -34,7 +34,7 @@ under `vendor/`, carry their own licenses:
 
 - vendor/fonts/Inter-4.1/        — SIL Open Font License 1.1
                                    (Copyright 2016 The Inter Project Authors)
-- vendor/fonts/Noto_Sans_JP/     — SIL Open Font License 1.1
+- vendor/fonts/Noto_Sans_KR/     — SIL Open Font License 1.1
                                    (Copyright 2014-2021 Adobe, with Reserved
                                    Font Name "Source")
 - vendor/nam-files/              — Apache License 2.0

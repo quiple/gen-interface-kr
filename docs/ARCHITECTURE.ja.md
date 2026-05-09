@@ -1,8 +1,8 @@
-# Gen Interface JP — アーキテクチャ
+# Gen Interface KR — アーキテクチャ
 
 ## 概要
 
-Gen Interface JP はフォントビルドパイプライン (アプリ/UI なし)。`make`
+Gen Interface KR はフォントビルドパイプライン (アプリ/UI なし)。`make`
 ターゲット経由で vendor のソースから配布用 TTF / WOFF2 / npm 成果物を
 生成する。各ウェイトは Python の 3 ステージを通り、最後に静的デモサイトが
 公開済みの webfont パッケージを参照する。
@@ -12,7 +12,7 @@ Gen Interface JP はフォントビルドパイプライン (アプリ/UI なし
 │  Source                                                            │
 │    vendor/fonts/Inter-4.1/extras/ttf/Inter-{Weight}.ttf            │
 │    vendor/fonts/Inter-4.1/extras/ttf/InterDisplay-{Weight}.ttf     │
-│    vendor/fonts/Noto_Sans_JP/NotoSansJP-VariableFont_wght.ttf      │
+│    vendor/fonts/Noto_Sans_KR/NotoSansKR-VF.ttf      │
 └─────────────────────────────┬──────────────────────────────────────┘
                               │
         ┌─────────────────────▼──────────────────────────┐
@@ -80,7 +80,7 @@ FAMILIES × WEIGHTS の各組合せに対して:
                      日本語慣習記号 (① Ⓐ ※ ◯ …) は Noto を維持
                      glyph-name collision (Inter U+0298 と Noto U+25CE が
                      共に `uni25CE`) も font-baker が自動 rename
-                     family/weight を「Gen Interface JP …」に刻印
+                     family/weight を「Gen Interface KR …」に刻印
                      metricsSource=sub で Inter 基準の hhea を採用
                      manufacturer / manufacturerURL を刻印
 ```
@@ -106,7 +106,7 @@ dist/ttf/{family}/{family}-{weight}.ttf を読み込み
 
 ```
 dist/ttf/ + dist/webfont/gen-interface-jp/ を要求
-  → GenInterfaceJP-<version>.zip (TTF、全ウェイト × 両ファミリー)
+  → GenInterfaceKR-<version>.zip (TTF、全ウェイト × 両ファミリー)
   → webfont package を npm/      にコピー (package.json 同梱)
   → webfont package を webfonts/ にコピー (Pages 配信用ミラー)
   → manifest.json に version, tag, アセット URL を記録
@@ -212,7 +212,7 @@ Inter の Latin 専用挙動 (各行のグリフに応じた行高動的調整) 
 ### 削除するグリフ
 
 `_strip_extreme_glyphs` は `yMax > 1200` または `yMin < -400` (em = 1000
-基準) のグリフを無効化する。Noto Sans JP では実質、縦組み用イテレーション
+基準) のグリフを無効化する。Noto Sans KR では実質、縦組み用イテレーション
 マークと `vert` / `vrt2` 代替に限定される。
 
 | Glyph | Codepoint | 削除理由 |
@@ -282,7 +282,7 @@ dist/webfont/gen-interface-jp/
 下流のコンシューマーが 3 種類、出力も 3 種類:
 
 - **GitHub Releases** (`dist/release/github/`) —
-  `GenInterfaceJP-<version>.zip` 1 本に TTF 全 16 本 (両ファミリー × 8
+  `GenInterfaceKR-<version>.zip` 1 本に TTF 全 16 本 (両ファミリー × 8
   ウェイト) を同梱。アセット名にバージョンが埋め込まれているので、より
   新しいリリースが「latest」になった後でも各リリースを一意にリンクできる。
   フル WOFF2 単一ファイルは意図的に再配布しない — Web 配信は下記 npm

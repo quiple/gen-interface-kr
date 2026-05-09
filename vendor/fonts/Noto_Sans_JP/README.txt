@@ -1,26 +1,26 @@
-Noto Sans JP Variable Font
+Noto Sans KR Variable Font
 ==========================
 
-This download contains Noto Sans JP as both a variable font and static fonts.
+This download contains Noto Sans KR as both a variable font and static fonts.
 
-Noto Sans JP is a variable font with this axis:
+Noto Sans KR is a variable font with this axis:
   wght
 
 This means all the styles are contained in a single file:
-  NotoSansJP-VariableFont_wght.ttf
+  NotoSansKR-VF.ttf
 
 If your app fully supports variable fonts, you can now pick intermediate styles
 that aren’t available as static fonts. Not all apps support variable fonts, and
-in those cases you can use the static font files for Noto Sans JP:
-  static/NotoSansJP-Thin.ttf
-  static/NotoSansJP-ExtraLight.ttf
-  static/NotoSansJP-Light.ttf
-  static/NotoSansJP-Regular.ttf
-  static/NotoSansJP-Medium.ttf
-  static/NotoSansJP-SemiBold.ttf
-  static/NotoSansJP-Bold.ttf
-  static/NotoSansJP-ExtraBold.ttf
-  static/NotoSansJP-Black.ttf
+in those cases you can use the static font files for Noto Sans KR:
+  static/NotoSansKR-Thin.ttf
+  static/NotoSansKR-ExtraLight.ttf
+  static/NotoSansKR-Light.ttf
+  static/NotoSansKR-Regular.ttf
+  static/NotoSansKR-Medium.ttf
+  static/NotoSansKR-SemiBold.ttf
+  static/NotoSansKR-Bold.ttf
+  static/NotoSansKR-ExtraBold.ttf
+  static/NotoSansKR-Black.ttf
 
 Get started
 -----------

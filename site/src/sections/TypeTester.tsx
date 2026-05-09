@@ -42,8 +42,8 @@ function useMediaQuery(query: string): boolean {
   );
 }
 
-const FAMILY_NORMAL = "'Gen Interface JP', sans-serif";
-const FAMILY_DISPLAY = "'Gen Interface JP Display', sans-serif";
+const FAMILY_NORMAL = "'Gen Interface KR', sans-serif";
+const FAMILY_DISPLAY = "'Gen Interface KR Display', sans-serif";
 
 const SIZE_MIN = 16;
 const SIZE_MAX = 128;

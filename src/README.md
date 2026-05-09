@@ -4,7 +4,7 @@ Repository-local source code is grouped under `src/`.
 
 ```text
 src/
-  font/       # core font baking: Inter + Noto Sans JP, spacing, TTF output
+  font/       # core font baking: Inter + Noto Sans KR, spacing, TTF output
   webfont/    # derived web font delivery: CSS + unicode-range subset WOFF2
   release/    # release packaging: GitHub Release zips + npm webfont layout
 ```

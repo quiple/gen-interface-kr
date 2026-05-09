@@ -40,7 +40,7 @@ body {
   padding: 0;
   background: var(--color-bg);
   color: var(--color-fg);
-  font-family: "Gen Interface JP", sans-serif;
+  font-family: "Gen Interface KR", sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -305,7 +305,7 @@ h2 {
 .composition__grid {
   display: grid;
   /* Liquid label, fixed group: extra horizontal space goes into the label
-     column so the JP+Latin pair stays anchored to a 770-wide visual block
+     column so the KR+Latin pair stays anchored to a 770-wide visual block
      (matching Variations' content side). */
   grid-template-columns: 1fr 48.125rem; /* 770 */
   align-items: center;
@@ -324,7 +324,7 @@ h2 {
 }
 
 /* Each sub-group is one text + its own bbox guide lines. Desktop overlays
-   them in the same row so JP and Latin share a baseline; mobile stacks them
+   them in the same row so KR and Latin share a baseline; mobile stacks them
    so each sample gets its own visible line set (per Figma mobile mock). */
 .composition__sub-group {
   position: absolute;
@@ -357,7 +357,7 @@ h2 {
   top: 1.1875rem;
 }
 
-/* Faint reference: the original Gen Interface JP CSS rendering, tinted blue
+/* Faint reference: the original Gen Interface KR CSS rendering, tinted blue
    (var(--color-accent)) at 5% opacity so the actual simulation reads black
    on top while any misalignment shows as a tiny blue ghost. */
 .composition__group-text--reference {
@@ -527,7 +527,7 @@ h2 {
 /* Second cell renders the Display family so the visual difference between
    the two styles is visible in the sample itself. */
 .styles-cell--display .styles-cell__head {
-  font-family: "Gen Interface JP Display", sans-serif;
+  font-family: "Gen Interface KR Display", sans-serif;
 }
 
 .styles-cell__name {
@@ -576,7 +576,7 @@ h2 {
 
 /* Web Fonts */
 
-/* Copy row: JP/EN sit side-by-side at the right column's 770 width. */
+/* Copy row: KR/EN sit side-by-side at the right column's 770 width. */
 .webfont__copy {
   width: 48.125rem; /* 770 — preferred, but shrinks with viewport */
   max-width: 100%;
@@ -631,7 +631,7 @@ h2 {
   border-radius: 0.5rem; /* 8 */
   padding: 1.25rem 1.875rem; /* 20 / 30 */
   font-family:
-    ui-monospace, "SFMono-Regular", Menlo, Consolas, "Gen Interface JP",
+    ui-monospace, "SFMono-Regular", Menlo, Consolas, "Gen Interface KR",
     monospace;
   font-size: 1.25rem; /* 20 */
   line-height: 1.8; /* 36/20 */
@@ -1069,7 +1069,7 @@ h2 {
 }
 
 /* Hidden by default; the mobile media query flips this to flex so the
-   12px JP/EN samples reflow into their own rows below the 21px ones. */
+   12px KR/EN samples reflow into their own rows below the 21px ones. */
 .reading__row--mobile-only {
   display: none;
 }
@@ -1185,7 +1185,7 @@ h2 {
 .footer__credits {
   /* 4-col grid keeps the same rhythm as `.weights-grid`, but the first
      column is widened to ~1.5× the natural 1fr (≈155 → 232.5) so labels
-     like "Noto Sans JP from:" fit on a single line. The value still spans
+     like "Noto Sans KR from:" fit on a single line. The value still spans
      the remaining three columns. */
   flex: 1;
   min-width: 0;
@@ -1267,7 +1267,7 @@ h2 {
   }
 
   /* Hero — drop absolute layout, switch to title + (download | descs) row.
-     Top padding 150 so Gen Interface JP (h1) has consistent breathing room
+     Top padding 150 so Gen Interface KR (h1) has consistent breathing room
      at this breakpoint (matches the inter-section gap). */
   .hero {
     height: auto;
@@ -1319,8 +1319,8 @@ h2 {
   /* Composition — Figma medium reorganizes this section: both visual groups
      stack as one full-width block, then the two labels sit side-by-side
      below as a legend, then Tweak below.
-     DOM order is [label-Latin, group-書体/Type, label-JP, group-デザイン/Design];
-     grid-template-areas remaps them to the medium layout, with `l2` (JP label)
+     DOM order is [label-Latin, group-書体/Type, label-KR, group-デザイン/Design];
+     grid-template-areas remaps them to the medium layout, with `l2` (KR label)
      on the left and `l1` (Latin label) on the right to match Figma's order. */
   .composition__grid {
     grid-template-columns: 1fr 1fr;
@@ -1637,7 +1637,7 @@ h2 {
     line-height: 1.667;
   }
 
-  /* Web Fonts / Bitmap Compatibility — JP/EN copy stacks vertically on
+  /* Web Fonts / Bitmap Compatibility — KR/EN copy stacks vertically on
      mobile to match the rest of the page (e.g. .styles-row). */
   .webfont__copy,
   .bitmap-sample__copy {
