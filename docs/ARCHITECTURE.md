@@ -367,7 +367,7 @@ flow.
 
 ## Maintaining This Document
 
-Update this file (and `ARCHITECTURE.ja.md`) whenever a change touches:
+Update this file whenever a change touches:
 
 - the build pipeline shape (stage boundaries, file outputs, intermediate
   artefacts)
