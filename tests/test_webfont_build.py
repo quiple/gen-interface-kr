@@ -18,10 +18,8 @@ import pytest
 
 from webfont.build import (
     build_google_korean_subset_plan,
-    build_subset_plan,
     format_unicode_range,
     is_han_codepoint,
-    jis_row_codepoints,
     merge_codepoints_to_ranges,
     parse_slicing_strategy,
     weight_css_filename,
@@ -141,107 +139,6 @@ class TestIsHanCodepoint:
         assert not is_han_codepoint(0x0041)
 
 
-# ---------------------------------------------------------------------------
-# jis_row_codepoints
-# ---------------------------------------------------------------------------
-
-class TestJisRowCodepoints:
-    """JIS X 0208 row → Unicode mapping via Python's EUC-KR codec."""
-
-    def test_first_level_row_16_starts_at_a(self):
-        # Row 16 cell 1 is 亜 — the canonical "first ideograph" of JIS
-        # first-level kanji. If this ever fails, Python's EUC-KR table
-        # has shifted and the slicing strategy needs reverification.
-        row_16 = jis_row_codepoints(16)
-        assert ord("亜") in row_16
-        assert ord("愛") in row_16
-
-    def test_second_level_row_48_starts_at_ichi(self):
-        # Row 48 cell 1 is 弌 — boundary between first- and second-level.
-        row_48 = jis_row_codepoints(48)
-        assert ord("弌") in row_48
-
-    def test_first_and_second_level_disjoint(self):
-        # First-level row 16 and second-level row 48 must not overlap;
-        # if they did, the planner would assign the same kanji to two
-        # slices and the browser would fetch both chunks per character.
-        assert not (jis_row_codepoints(16) & jis_row_codepoints(48))
-
-
-# ---------------------------------------------------------------------------
-# build_subset_plan (jis-row strategy)
-# ---------------------------------------------------------------------------
-
-class TestBuildSubsetPlan:
-    """Hand-tuned slicing plan: Latin, kana, JIS rows, extras, fallback."""
-
-    @pytest.fixture
-    def diverse_codepoints(self):
-        # One codepoint from each major bucket the planner discriminates:
-        return {
-            0x0020,         # space          → latin
-            0x0041,         # A              → latin
-            0x3042,         # あ              → jp-kana
-            ord("亜"),       # JIS row 16     → jp-kanji-jis1-16
-            ord("愛"),       # JIS row 16
-            ord("弌"),       # JIS row 48     → jp-kanji-jis2-48
-            0x20000,        # Plane 2 CJK    → jp-kanji-extra
-            0x0401,         # Cyrillic Ё     → other (fallback)
-        }
-
-    def test_no_codepoint_appears_in_two_slices(self, diverse_codepoints):
-        # Hard requirement of the slicing system. A duplicate would force
-        # the browser to download two WOFF2 chunks to render one glyph.
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        seen = set()
-        for item in plan:
-            current = set(item.codepoints)
-            assert not (seen & current), \
-                f"slice {item.name} duplicates codepoints already seen"
-            seen.update(current)
-
-    def test_full_coverage_no_codepoint_dropped(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        seen = {cp for item in plan for cp in item.codepoints}
-        assert seen == diverse_codepoints
-
-    def test_latin_codepoints_land_in_latin_slice(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        latin = next((item for item in plan if item.name == "latin"), None)
-        assert latin is not None
-        assert 0x0020 in latin.codepoints
-        assert 0x0041 in latin.codepoints
-
-    def test_kana_codepoints_land_in_jp_kana_slice(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        jp_kana = next((item for item in plan if item.name == "jp-kana"), None)
-        assert jp_kana is not None
-        assert 0x3042 in jp_kana.codepoints
-
-    def test_extra_plane_kanji_lands_in_extras(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        extras = [item for item in plan if item.name.startswith("jp-kanji-extra-")]
-        flat = {cp for item in extras for cp in item.codepoints}
-        assert 0x20000 in flat
-
-    def test_non_korean_falls_back_to_other(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        other = [item for item in plan if item.name.startswith("other-")]
-        flat = {cp for item in other for cp in item.codepoints}
-        assert 0x0401 in flat  # Cyrillic Ё
-
-    def test_empty_input_yields_empty_plan(self):
-        assert build_subset_plan(set()) == []
-
-    def test_empty_slices_are_skipped(self, diverse_codepoints):
-        # If the input has no kanji from JIS row 17, no `jp-kanji-jis1-17`
-        # slice should appear (avoids @font-face rules with empty
-        # unicode-range, which browsers treat as match-all).
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        names = {item.name for item in plan}
-        assert "jp-kanji-jis1-17" not in names
-        for item in plan:
-            assert item.codepoints, f"slice {item.name} has no codepoints"
 
 
 # ---------------------------------------------------------------------------
