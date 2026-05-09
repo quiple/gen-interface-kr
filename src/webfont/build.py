@@ -531,6 +531,7 @@ def build_all(args: argparse.Namespace) -> dict:
 
     all_css = css_entries["all"]
     print(f"\nCSS: {out_dir / all_css['path']}")
+    print(f"Manifest: {out_dir / 'manifest.json'}")
     print(f"Subset WOFF2: {subset_bytes / 1024 / 1024:.2f} MB")
     print(f"all.css: {all_css['bytes'] / 1024:.1f} KB raw, {all_css['gzipBytes'] / 1024:.1f} KB gzip")
     if all_css["brotliBytes"] is not None:
@@ -628,6 +629,7 @@ def build(args: argparse.Namespace) -> dict:
 
     print(f"\nCSS: {out_dir / 'gen-interface-kr-regular.css'}")
     print(f"Full CSS: {out_dir / 'gen-interface-kr-regular-full.css'}")
+    print(f"Manifest: {out_dir / 'manifest.json'}")
     return manifest
 
 

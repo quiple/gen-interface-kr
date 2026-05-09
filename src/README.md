@@ -17,6 +17,7 @@ Common entry points:
 ```bash
 make font
 make webfont
+make webfont-benchmark
 make release
 make site
 ```
