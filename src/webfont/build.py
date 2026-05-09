@@ -76,43 +76,6 @@ WEBFONT_FAMILIES = (
     ),
 )
 
-LATIN_RANGES = (
-    (0x0000, 0x00FF),
-    (0x0131, 0x0131),
-    (0x0152, 0x0153),
-    (0x02BB, 0x02BC),
-    (0x02C6, 0x02C6),
-    (0x02DA, 0x02DA),
-    (0x02DC, 0x02DC),
-    (0x0304, 0x0304),
-    (0x0308, 0x0308),
-    (0x0329, 0x0329),
-    (0x2000, 0x206F),
-    (0x20AC, 0x20AC),
-    (0x2122, 0x2122),
-    (0x2191, 0x2193),
-    (0x2212, 0x2215),
-    (0xFEFF, 0xFEFF),
-    (0xFFFD, 0xFFFD),
-)
-
-KR_KANA_RANGES = (
-    (0x3000, 0x303F),  # CJK punctuation
-    (0x3040, 0x309F),  # Hiragana
-    (0x30A0, 0x30FF),  # Katakana
-    (0x31F0, 0x31FF),  # Katakana phonetic extensions
-    (0xFF00, 0xFFEF),  # Halfwidth and fullwidth forms
-)
-
-KR_SYMBOL_RANGES = (
-    (0x2E80, 0x2EFF),  # CJK radicals supplement
-    (0x2F00, 0x2FDF),  # Kangxi radicals
-    (0x3100, 0x312F),  # Bopomofo
-    (0x3190, 0x319F),  # Kanbun
-    (0x3200, 0x32FF),  # Enclosed CJK letters/months
-    (0x3300, 0x33FF),  # CJK compatibility
-)
-
 
 @dataclass(frozen=True)
 class WebFontSubset:
@@ -159,48 +122,6 @@ def _chunk_evenly(values: list[int], chunks: int) -> list[list[int]]:
         return []
     chunk_size = max(1, math.ceil(len(values) / chunks))
     return [values[i : i + chunk_size] for i in range(0, len(values), chunk_size)]
-
-
-def build_subset_plan(font_codepoints: Iterable[int], extra_han_slices: int = 24) -> list[WebFontSubset]:
-    """Build non-overlapping subsets from the font cmap."""
-    supported = set(font_codepoints)
-    assigned: set[int] = set()
-    subsets: list[WebFontSubset] = []
-
-    def add(name: str, codepoints: Iterable[int], note: str) -> None:
-        usable = tuple(sorted((set(codepoints) & supported) - assigned))
-        if not usable:
-            return
-        subsets.append(WebFontSubset(name=name, codepoints=usable, note=note))
-        assigned.update(usable)
-
-    add("latin", codepoints_from_ranges(LATIN_RANGES), "Latin, Latin punctuation, and shared symbols")
-    add("jp-kana", codepoints_from_ranges(KR_KANA_RANGES), "Korean punctuation, kana, and fullwidth forms")
-    add("jp-symbols", codepoints_from_ranges(KR_SYMBOL_RANGES), "Korean radicals, enclosed forms, and CJK symbols")
-
-    for row in range(16, 48):
-        add(
-            f"jp-kanji-jis1-{row:02d}",
-            jis_row_codepoints(row),
-            f"JIS X 0208 first-level kanji row {row}",
-        )
-
-    for row in range(48, 85):
-        add(
-            f"jp-kanji-jis2-{row:02d}",
-            jis_row_codepoints(row),
-            f"JIS X 0208 second-level kanji row {row}",
-        )
-
-    remaining_han = sorted(cp for cp in supported - assigned if is_han_codepoint(cp))
-    for index, codepoints in enumerate(_chunk_evenly(remaining_han, extra_han_slices)):
-        add(f"jp-kanji-extra-{index:02d}", codepoints, "CJK codepoints outside JIS X 0208 rows")
-
-    remaining = sorted(supported - assigned)
-    for index, codepoints in enumerate(_chunk_evenly(remaining, 8)):
-        add(f"other-{index:02d}", codepoints, "Non-Korean fallback coverage")
-
-    return subsets
 
 
 def parse_slicing_strategy(path: Path) -> list[set[int]]:
@@ -290,8 +211,6 @@ def build_google_korean_subset_plan(
 
 
 def select_subset_plan(args: argparse.Namespace, font_codepoints: Iterable[int]) -> list[WebFontSubset]:
-    if args.strategy == "jis-row":
-        return build_subset_plan(font_codepoints, extra_han_slices=args.extra_han_slices)
     if args.strategy == "google-korean":
         return build_google_korean_subset_plan(
             font_codepoints,
