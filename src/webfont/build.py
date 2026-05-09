@@ -100,21 +100,6 @@ def is_han_codepoint(cp: int) -> bool:
     )
 
 
-def jis_row_codepoints(row: int) -> set[int]:
-    """Return Unicode codepoints for one JIS X 0208 row.
-
-    Rows 16-47 are first-level kanji, rows 48-84 are second-level kanji. Python's
-    EUC-KR codec gives us a portable mapping without vendoring a large table.
-    """
-    cps: set[int] = set()
-    for cell in range(1, 95):
-        try:
-            char = bytes([row + 0xA0, cell + 0xA0]).decode("euc_jp")
-        except UnicodeDecodeError:
-            continue
-        if len(char) == 1:
-            cps.add(ord(char))
-    return cps
 
 
 def _chunk_evenly(values: list[int], chunks: int) -> list[list[int]]:
@@ -639,7 +624,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--ttf", type=Path, default=DEFAULT_TTF, help="Source Gen Interface KR Regular TTF")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT, help="Output directory")
     parser.add_argument("--jobs", type=int, default=max(1, min(4, os.cpu_count() or 1)), help="Parallel workers for --all subset generation")
-    parser.add_argument("--strategy", choices=["google-korean", "jis-row"], default="google-korean", help="Subset partitioning strategy")
+    parser.add_argument("--strategy", choices=["google-korean"], default="google-korean", help="Subset partitioning strategy")
     parser.add_argument("--google-korean-slice", type=Path, default=DEFAULT_GOOGLE_KOREAN_SLICE, help="googlefonts/nam-files slices/korean_default.txt")
     parser.add_argument("--no-remaining", action="store_true", help="Do not add extra subsets for cmap codepoints outside the selected strategy")
     parser.add_argument("--remaining-slices", type=int, default=8, help="Number of extra subsets for codepoints outside the selected strategy")
