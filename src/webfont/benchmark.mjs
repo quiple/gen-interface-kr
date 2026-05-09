@@ -9,20 +9,20 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const DEFAULT_ARTIFACTS = path.join(ROOT, "dist", "webfont", "GenInterfaceJP-Regular");
+const DEFAULT_ARTIFACTS = path.join(ROOT, "dist", "webfont", "GenInterfaceKR-Regular");
 const DEFAULT_OUT = path.join(ROOT, "dist", "webfont", "benchmark");
 const VALID_MODES = new Set(["subset", "full"]);
 
 const SITE_PARAGRAPHS = [
-  "Gen Interface JP は、読みやすい本文と情報設計に向けて調整した日本語 UI フォントです。画面上の見出し、説明文、フォーム、ボタン、数値、短い通知が同じ密度で並ぶ場面を想定しています。",
-  "製品ページでは、導入事例、料金、機能一覧、よくある質問、サポート窓口などの短いセクションが続きます。一般的な Web サイトでは文字数は多すぎず、かな、句読点、基本的な漢字が中心になります。",
-  "このテストでは画像や JavaScript の負荷を抑え、Web フォントの CSS と WOFF2 の読み込み時間が見えるようにしています。通信条件はローカルサーバー側で遅延と帯域を加えて再現します。",
+  "Gen Interface KR은 가독성 높은 본문과 정보 설계에 최적화된 한국어 UI 폰트입니다. 화면상의 제목, 설명글, 폼, 버튼, 수치, 짧은 알림 등이 동일한 밀도로 나열되는 상황을 상정하여 제작되었습니다.",
+  "제품 페이지에서는 도입 사례, 요금, 기능 목록, 자주 묻는 질문, 고객 지원 창구와 같은 짧은 섹션들이 이어집니다. 일반적인 웹사이트에서는 글자 수가 너무 많지 않으며, 한글과 문장 부호, 기본적인 한자가 중심이 됩니다.",
+  "본 테스트에서는 이미지나 JavaScript의 부하를 억제하여, 웹 폰트의 CSS와 WOFF2 파일의 로드 시간을 확인할 수 있도록 했습니다. 통신 환경은 로컬 서버 측에서 지연 시간과 대역폭을 추가하여 재현합니다.",
 ];
 
 const NOVEL_PARAGRAPHS = [
-  "夜明け前の駅には、薄い青色の光が残っていた。改札の向こうで新聞を畳む音がして、遠くのホームから短い発車ベルが聞こえた。誰も急いでいないように見えるのに、町全体は静かに動きはじめていた。",
-  "彼女は古い鞄を抱え、昨日受け取った手紙の文面を何度も思い返した。そこには理由も説明もなく、ただ北の港で待つとだけ書かれていた。疑う余地はあったが、確かめずに忘れることはできなかった。",
-  "商店街の屋根を抜けると、雨上がりの舗道に看板の色が映っていた。魚屋の主人は桶を洗い、花屋の娘は濡れた葉を一枚ずつ払っていた。見慣れた朝の景色の中で、彼女だけが別の物語へ向かっているようだった。",
+  "동트기 전의 역에는 옅은 푸른빛이 남아 있었다. 개찰구 너머로 신문을 접는 소리가 들려왔고, 멀리 떨어진 승강장에서는 짧은 발차 벨 소리가 울렸다. 누구도 서두르지 않는 것처럼 보였지만, 마을 전체는 고요하게 움직이기 시작하고 있었다.",
+  "그녀는 낡은 가방을 품에 안고, 어제 받은 편지의 내용을 몇 번이고 되뇌었다. 그곳에는 이유도 설명도 없이, 그저 북쪽 항구에서 기다리겠다는 말만 적혀 있었다. 의심할 여지는 충분했지만, 확인하지 않은 채 잊어버릴 수는 없었다.",
+  "상점가의 지붕을 빠져나오자, 비에 젖은 보도 위로 간판의 색들이 비치고 있었다. 생선가게 주인은 대야를 씻고 있었고, 꽃가게 딸은 젖은 잎을 하나씩 털어내고 있었다. 익숙한 아침 풍경 속에서, 오직 그녀만이 다른 이야기 속으로 향하고 있는 듯했다.",
 ];
 
 function parseArgs() {
@@ -89,13 +89,13 @@ function loadModeConfigs(args, primaryManifest) {
   return {
     subset: {
       kind: "subset",
-      family: "Gen Interface JP",
+      family: "Gen Interface KR",
       artifacts: args.artifacts,
       manifest: primaryManifest,
     },
     full: {
       kind: "full",
-      family: "Gen Interface JP",
+      family: "Gen Interface KR",
       artifacts: args.artifacts,
       manifest: primaryManifest,
     },
@@ -123,7 +123,6 @@ function sampleSubsetCharacters(manifest, maxPerSubset = 3) {
     const rangeText = entry.cmapUnicodeRange || entry.unicodeRange;
     const ranges = parseUnicodeRange(rangeText);
     const hanRanges = ranges.filter(([start, end]) => end >= 0x3400 && start <= 0x2FA1F);
-    if (entry.name && !entry.name.startsWith("jp-kanji")) continue;
     if (!hanRanges.length) continue;
     let taken = 0;
     for (const [rawStart, rawEnd] of hanRanges) {
@@ -192,7 +191,7 @@ function escapeHtml(value) {
 
 function makePage({ mode, profile, runId, text, family }) {
   return `<!doctype html>
-<html lang="ja">
+<html lang="ko">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -444,7 +443,7 @@ class CdpClient {
 async function withBrowser(args, fn) {
   const chrome = findChrome(args.chromePath);
   const debugPort = await freePort();
-  const userDataDir = await mkdtemp(path.join(os.tmpdir(), "gen-interface-jp-font-bench-"));
+  const userDataDir = await mkdtemp(path.join(os.tmpdir(), "gen-interface-kr-font-bench-"));
   const proc = spawn(chrome, [
     "--headless=new",
     `--remote-debugging-port=${debugPort}`,

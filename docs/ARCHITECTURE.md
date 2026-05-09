@@ -1,18 +1,17 @@
-# Gen Interface JP — Architecture
+# Gen Interface KR — Architecture
 
 ## Overview
 
-Gen Interface JP is a font build pipeline (no app, no UI). A `make` target
+Gen Interface KR is a font build pipeline (no app, no UI). A `make` target
 turns vendor sources into distributable TTF / WOFF2 / npm artifacts. Each
-weight passes through three Python stages, then a static demo site
-consumes the published webfont package.
+weight passes through three Python stages.
 
 ```
 ┌────────────────────────────────────────────────────────────────────┐
 │  Source                                                            │
 │    vendor/fonts/Inter-4.1/extras/ttf/Inter-{Weight}.ttf            │
 │    vendor/fonts/Inter-4.1/extras/ttf/InterDisplay-{Weight}.ttf     │
-│    vendor/fonts/Noto_Sans_JP/NotoSansJP-VariableFont_wght.ttf      │
+│    vendor/fonts/Noto_Sans_KR/NotoSansKR-VF.ttf                     │
 └─────────────────────────────┬──────────────────────────────────────┘
                               │
         ┌─────────────────────▼──────────────────────────┐
@@ -33,27 +32,20 @@ consumes the published webfont package.
         │         metricsSource=sub, manufacturer stamp   │
         │             ↓                                   │
         │   dist/ttf/  (one TTF per family × weight)      │
-        │                                                  │
+        │                                                 │
         └─────────────────────┬───────────────────────────┘
                               │
         ┌─────────────────────▼──────────────────────────┐
         │  webfont/build.py — unicode-range subsetting    │
-        │     google-japanese strategy (default) →        │
+        │     google-korean strategy (default) →          │
         │     all.css + per-weight CSS + WOFF2 chunks     │
-        │     dist/webfont/gen-interface-jp/              │
+        │     dist/webfont/gen-interface-kr/              │
         └─────────────────────┬───────────────────────────┘
                               │
         ┌─────────────────────▼──────────────────────────┐
         │  release/build.py — packaging                   │
         │     dist/release/github/   → GitHub Releases    │
         │     dist/release/npm/      → npm publish        │
-        │     dist/release/webfonts/ → GitHub Pages       │
-        └─────────────────────┬───────────────────────────┘
-                              │
-        ┌─────────────────────▼──────────────────────────┐
-        │  site/  — Vite static demo                      │
-        │     loads webfont via jsDelivr (npm CDN)        │
-        │     deployed to GitHub Pages                    │
         └─────────────────────────────────────────────────┘
 ```
 
@@ -79,7 +71,7 @@ For each (family, weight) in FAMILIES × WEIGHTS:
                      keeps CJK-conventional symbols on Noto;
                      font-baker also auto-renames glyph-name collisions
                      (e.g. Inter U+0298 vs Noto U+25CE both `uni25CE`)
-                     family/weight stamped to "Gen Interface JP …"
+                     family/weight stamped to "Gen Interface KR …"
                      metricsSource=sub anchors hhea on Inter
                      manufacturer / manufacturerURL stamped
 ```
@@ -89,7 +81,7 @@ For each (family, weight) in FAMILIES × WEIGHTS:
 ```
 Read dist/ttf/{family}/{family}-{weight}.ttf
   → planner picks strategy:
-      google-japanese (default) — replays Google Fonts' Japanese
+      google-korean (default) — replays Google Fonts' Korean
                                   unicode-range slices (~120 chunks)
       gen              — hand-tuned slice plan
   → for each (family × weight × slice):
@@ -103,10 +95,9 @@ Read dist/ttf/{family}/{family}-{weight}.ttf
 ### 3. Package & Publish (`release.build`)
 
 ```
-require dist/ttf/ + dist/webfont/gen-interface-jp/
-  → zip GenInterfaceJP-<version>.zip (TTF, all weights × both families)
+require dist/ttf/ + dist/webfont/gen-interface-kr/
+  → zip GenInterfaceKR-<version>.zip (TTF, all weights × both families)
   → copy webfont package → npm/      (with package.json)
-  → copy webfont package → webfonts/ (Pages-hosted mirror)
   → manifest.json with version, tag, asset URLs
 ```
 
@@ -215,7 +206,7 @@ of new text frames.
 ### Stripped glyphs
 
 `_strip_extreme_glyphs` neutralises any glyph with `yMax > 1200` or
-`yMin < -400` (em = 1000 baseline). In Noto Sans JP these are exclusively
+`yMin < -400` (em = 1000 baseline). In Noto Sans KR these are exclusively
 the vertical-text iteration marks and their `vert` / `vrt2` alternates.
 
 | Glyph | Codepoint | Reason |
@@ -238,7 +229,7 @@ falls through to .notdef.
 
 This font is a **horizontal-only UI / body face**.
 
-- **Vertical typesetting / classical Japanese composition: not supported.**
+- **Vertical typesetting / classical Korean composition: not supported.**
 - Strict em-square compliance (Hiragino-style hhea = 880 / -120) is not
   pursued — `metricsSource: "sub"` inherits Inter's ratio (~1.21×em) so
   Vietnamese / accented Latin (~1.11×em) doesn't clip.
@@ -256,17 +247,15 @@ references.
 
 ### Strategies
 
-- **`google-japanese`** *(default)* — replays Google Fonts' Japanese
-  slicing strategy (`vendor/nam-files/slices/japanese_default.txt`).
+- **`google-korean`** — replays Google Fonts' Korean
+  slicing strategy (`vendor/nam-files/slices/korean_default.txt`).
   Same chunk boundaries as Google's hosted Noto, so coverage and cache
-  behaviour match what users already encounter on most Japanese sites.
-- **`gen`** — hand-tuned plan: Latin / kana / punct / JIS row 16-92 /
-  remaining Han split into `extra_han_slices` even chunks.
+  behaviour match what users already encounter on most Korean sites.
 
 ### Outputs
 
 ```
-dist/webfont/gen-interface-jp/
+dist/webfont/gen-interface-kr/
   all.css                # all weights × both families
   400.css                # normal Regular (one per weight)
   display-400.css        # display Regular (one per weight)
@@ -284,10 +273,10 @@ artifact set.
 
 ## Release Packaging (`release/build.py`)
 
-Three downstream consumers, three outputs:
+Three downstream consumers, two outputs:
 
 - **GitHub Releases** (`dist/release/github/`) — single
-  `GenInterfaceJP-<version>.zip` containing all 16 TTFs (both families ×
+  `GenInterfaceKR-<version>.zip` containing all 16 TTFs (both families ×
   8 weights). The asset filename embeds the version so each release is
   linkable unambiguously even after a newer "latest" lands. Full
   single-file WOFF2 is intentionally not redistributed — web delivery
@@ -296,20 +285,10 @@ Three downstream consumers, three outputs:
 - **npm package** (`dist/release/npm/`) — webfont subsets + a generated
   `package.json` (name, version, files, OFL-1.1 license). jsDelivr serves
   `all.css` and per-weight CSS from the package root.
-- **GitHub Pages mirror** (`dist/release/webfonts/gen-interface-jp/`) —
-  identical webfont package, served as static files alongside the demo
-  site.
 
 Version is read from `pyproject.toml` (or `GITHUB_REF_NAME` in CI). The
-`manifest.json` next to the github / npm / webfonts dirs records release
+`manifest.json` next to the github / npm dirs records release
 URLs for downstream tooling.
-
-## Site (`site/`)
-
-Vite static site under `site/`. Loads the published webfont package via
-jsDelivr's npm CDN at runtime — i.e. the live site uses the same npm
-artifact a third-party consumer would, exercising the package end-to-end.
-GitHub Pages deploys the build via `.github/workflows/pages.yml`.
 
 ## Tests
 
@@ -336,16 +315,16 @@ Tests live under `tests/`, split by surface:
   layout including `files` glob and license metadata that jsDelivr /
   `npm publish` consume.
 - **`tests/test_webfont_build.py`** — codepoint range merging, unicode-range
-  formatting, JIS row → codepoint mapping, subset plan non-overlap +
-  per-bucket placement, Google-Japanese strategy parsing including the
-  closing-brace-inside-comment edge case.
+  formatting, subset plan non-overlap + per-bucket placement,
+  Google-Korean strategy parsing including the closing-brace-inside-comment
+  edge case.
 
 | File | Tests | Verifies |
 |---|---|---|
 | `test_font_build.py` | 55 | Glyph-name parsing, kana / CJK classification, GSUB walk, x-scale, bbox strip, tracking |
 | `test_proportional.py` | 19 | palt extraction, glyph translation, GPOS feature removal, three-bucket policy |
 | `test_release.py` | 2 | GitHub asset URL contract, npm package layout (files glob, license, CSS entrypoints at root) |
-| `test_webfont_build.py` | 42 | Range merge / dedup, unicode-range formatting incl. 5-digit, JIS row mapping, subset plan placement / non-overlap / coverage, strategy parser edge cases |
+| `test_webfont_build.py` | 42 | Range merge / dedup, unicode-range formatting incl. 5-digit, subset plan placement / non-overlap / coverage, strategy parser edge cases |
 
 ## Commands
 
@@ -353,18 +332,15 @@ Tests live under `tests/`, split by surface:
 |---|---|
 | `make font` | Build TTF for both families × all weights |
 | `make webfont` | Build unicode-range subsets (depends on `font`) |
-| `make release` | Build GitHub zips + npm + Pages package (depends on `webfont`) |
+| `make release` | Build GitHub zips + npm package (depends on `webfont`) |
 | `make webfont-benchmark` | Throttled fetch benchmark of slicing strategy |
 | `make npm-pack` | Dry-run npm package inspection |
 | `make npm-publish` | Publish to npm |
-| `make site` | Build the demo site (`site/dist/` doubles as the GitHub Pages artifact) |
-| `make serve` | Local Vite dev server for the site |
-| `make clean` | Remove `dist/` and `site/dist/` |
+| `make clean` | Remove `dist/` |
 | `python3 -m font.build [family] [weight ...]` | Build a slice (e.g. `normal Regular`) |
 | `python3 -m pytest` | Run the test suite |
 
-CI: `.github/workflows/pages.yml` deploys the demo site to GitHub Pages
-on every push to `main`. Release packaging is run locally — see
+CI: Release packaging is run locally — see
 `src/release/README.md` for the `make release` + `gh release upload`
 flow.
 
@@ -387,15 +363,9 @@ flow.
 - `brotli` — WOFF2 compression (transitive via fontTools).
 - `pytest` — Test runner.
 
-### Node.js (site only)
-
-- `vite` — Build tool / dev server.
-- The site has no dependency on the webfont source — it loads the
-  published npm package via jsDelivr.
-
 ## Maintaining This Document
 
-Update this file (and `ARCHITECTURE.ja.md`) whenever a change touches:
+Update this file whenever a change touches:
 
 - the build pipeline shape (stage boundaries, file outputs, intermediate
   artefacts)

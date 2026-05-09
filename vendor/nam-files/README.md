@@ -6,8 +6,8 @@ https://github.com/googlefonts/nam-files
 
 Included file:
 
-- `slices/japanese_default.txt`
+- `slices/korean_default.txt`
 
 The source project is licensed under Apache-2.0. See `LICENSE` in this
-directory. The data is used as the default Japanese slicing strategy for
-Gen Interface JP web font subset generation.
+directory. The data is used as the default Korean slicing strategy for
+Gen Interface KR web font subset generation.

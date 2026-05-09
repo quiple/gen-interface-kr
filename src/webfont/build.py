@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build unicode-range web font subsets for Gen Interface JP Regular.
+"""Build unicode-range web font subsets for Gen Interface KR Regular.
 
 The output is one stylesheet with many @font-face rules, each pointing at a
 WOFF2 subset guarded by unicode-range. Browsers only fetch the subset files
@@ -31,12 +31,12 @@ from fontTools.ttLib import TTFont
 logging.getLogger("fontTools.ttLib.tables.otTables").setLevel(logging.ERROR)
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_TTF = ROOT / "dist" / "ttf" / "Gen Interface JP" / "GenInterfaceJP-Regular.ttf"
-DEFAULT_OUT = ROOT / "dist" / "webfont" / "GenInterfaceJP-Regular"
-DEFAULT_ALL_OUT = ROOT / "dist" / "webfont" / "gen-interface-jp"
-DEFAULT_GOOGLE_JAPANESE_SLICE = ROOT / "vendor" / "nam-files" / "slices" / "japanese_default.txt"
+DEFAULT_TTF = ROOT / "dist" / "ttf" / "Gen Interface KR" / "GenInterfaceKR-Regular.ttf"
+DEFAULT_OUT = ROOT / "dist" / "webfont" / "GenInterfaceKR-Regular"
+DEFAULT_ALL_OUT = ROOT / "dist" / "webfont" / "gen-interface-kr"
+DEFAULT_GOOGLE_KOREAN_SLICE = ROOT / "vendor" / "nam-files" / "slices" / "korean_default.txt"
 
-FAMILY_NAME = "Gen Interface JP"
+FAMILY_NAME = "Gen Interface KR"
 WEIGHT = 400
 STYLE = "normal"
 DISPLAY = "swap"
@@ -64,53 +64,16 @@ class WebFontFamily:
 WEBFONT_FAMILIES = (
     WebFontFamily(
         key="normal",
-        css_family="Gen Interface JP",
-        dist_folder="Gen Interface JP",
-        file_prefix="GenInterfaceJP",
+        css_family="Gen Interface KR",
+        dist_folder="Gen Interface KR",
+        file_prefix="GenInterfaceKR",
     ),
     WebFontFamily(
         key="display",
-        css_family="Gen Interface JP Display",
-        dist_folder="Gen Interface JP Display",
-        file_prefix="GenInterfaceJPDisplay",
+        css_family="Gen Interface KR Display",
+        dist_folder="Gen Interface KR Display",
+        file_prefix="GenInterfaceKRDisplay",
     ),
-)
-
-LATIN_RANGES = (
-    (0x0000, 0x00FF),
-    (0x0131, 0x0131),
-    (0x0152, 0x0153),
-    (0x02BB, 0x02BC),
-    (0x02C6, 0x02C6),
-    (0x02DA, 0x02DA),
-    (0x02DC, 0x02DC),
-    (0x0304, 0x0304),
-    (0x0308, 0x0308),
-    (0x0329, 0x0329),
-    (0x2000, 0x206F),
-    (0x20AC, 0x20AC),
-    (0x2122, 0x2122),
-    (0x2191, 0x2193),
-    (0x2212, 0x2215),
-    (0xFEFF, 0xFEFF),
-    (0xFFFD, 0xFFFD),
-)
-
-JP_KANA_RANGES = (
-    (0x3000, 0x303F),  # CJK punctuation
-    (0x3040, 0x309F),  # Hiragana
-    (0x30A0, 0x30FF),  # Katakana
-    (0x31F0, 0x31FF),  # Katakana phonetic extensions
-    (0xFF00, 0xFFEF),  # Halfwidth and fullwidth forms
-)
-
-JP_SYMBOL_RANGES = (
-    (0x2E80, 0x2EFF),  # CJK radicals supplement
-    (0x2F00, 0x2FDF),  # Kangxi radicals
-    (0x3100, 0x312F),  # Bopomofo
-    (0x3190, 0x319F),  # Kanbun
-    (0x3200, 0x32FF),  # Enclosed CJK letters/months
-    (0x3300, 0x33FF),  # CJK compatibility
 )
 
 
@@ -128,79 +91,11 @@ def codepoints_from_ranges(ranges: Iterable[tuple[int, int]]) -> set[int]:
     return cps
 
 
-def is_han_codepoint(cp: int) -> bool:
-    return (
-        0x3400 <= cp <= 0x4DBF
-        or 0x4E00 <= cp <= 0x9FFF
-        or 0xF900 <= cp <= 0xFAFF
-        or 0x20000 <= cp <= 0x2FA1F
-    )
-
-
-def jis_row_codepoints(row: int) -> set[int]:
-    """Return Unicode codepoints for one JIS X 0208 row.
-
-    Rows 16-47 are first-level kanji, rows 48-84 are second-level kanji. Python's
-    EUC-JP codec gives us a portable mapping without vendoring a large table.
-    """
-    cps: set[int] = set()
-    for cell in range(1, 95):
-        try:
-            char = bytes([row + 0xA0, cell + 0xA0]).decode("euc_jp")
-        except UnicodeDecodeError:
-            continue
-        if len(char) == 1:
-            cps.add(ord(char))
-    return cps
-
-
 def _chunk_evenly(values: list[int], chunks: int) -> list[list[int]]:
     if not values:
         return []
     chunk_size = max(1, math.ceil(len(values) / chunks))
     return [values[i : i + chunk_size] for i in range(0, len(values), chunk_size)]
-
-
-def build_subset_plan(font_codepoints: Iterable[int], extra_han_slices: int = 24) -> list[WebFontSubset]:
-    """Build non-overlapping subsets from the font cmap."""
-    supported = set(font_codepoints)
-    assigned: set[int] = set()
-    subsets: list[WebFontSubset] = []
-
-    def add(name: str, codepoints: Iterable[int], note: str) -> None:
-        usable = tuple(sorted((set(codepoints) & supported) - assigned))
-        if not usable:
-            return
-        subsets.append(WebFontSubset(name=name, codepoints=usable, note=note))
-        assigned.update(usable)
-
-    add("latin", codepoints_from_ranges(LATIN_RANGES), "Latin, Latin punctuation, and shared symbols")
-    add("jp-kana", codepoints_from_ranges(JP_KANA_RANGES), "Japanese punctuation, kana, and fullwidth forms")
-    add("jp-symbols", codepoints_from_ranges(JP_SYMBOL_RANGES), "Japanese radicals, enclosed forms, and CJK symbols")
-
-    for row in range(16, 48):
-        add(
-            f"jp-kanji-jis1-{row:02d}",
-            jis_row_codepoints(row),
-            f"JIS X 0208 first-level kanji row {row}",
-        )
-
-    for row in range(48, 85):
-        add(
-            f"jp-kanji-jis2-{row:02d}",
-            jis_row_codepoints(row),
-            f"JIS X 0208 second-level kanji row {row}",
-        )
-
-    remaining_han = sorted(cp for cp in supported - assigned if is_han_codepoint(cp))
-    for index, codepoints in enumerate(_chunk_evenly(remaining_han, extra_han_slices)):
-        add(f"jp-kanji-extra-{index:02d}", codepoints, "CJK codepoints outside JIS X 0208 rows")
-
-    remaining = sorted(supported - assigned)
-    for index, codepoints in enumerate(_chunk_evenly(remaining, 8)):
-        add(f"other-{index:02d}", codepoints, "Non-Japanese fallback coverage")
-
-    return subsets
 
 
 def parse_slicing_strategy(path: Path) -> list[set[int]]:
@@ -245,18 +140,18 @@ def parse_slicing_strategy(path: Path) -> list[set[int]]:
     return parsed
 
 
-def build_google_japanese_subset_plan(
+def build_google_korean_subset_plan(
     font_codepoints: Iterable[int],
-    slice_path: Path = DEFAULT_GOOGLE_JAPANESE_SLICE,
+    slice_path: Path = DEFAULT_GOOGLE_KOREAN_SLICE,
     include_remaining: bool = True,
     remaining_slices: int = 8,
 ) -> list[WebFontSubset]:
-    """Build subsets from googlefonts/nam-files' Japanese slicing strategy.
+    """Build subsets from googlefonts/nam-files' Korean slicing strategy.
 
     The strategy file is ordered the same way as Google Fonts' unicode-range
     prioritization. We preserve that order, intersect each slice with this
     font's cmap, then optionally add any cmap codepoints not covered by the
-    Japanese strategy so the self-hosted build can still serve the full font.
+    Korean strategy so the self-hosted build can still serve the full font.
     """
     supported = set(font_codepoints)
     assigned: set[int] = set()
@@ -268,9 +163,9 @@ def build_google_japanese_subset_plan(
             continue
         subsets.append(
             WebFontSubset(
-                name=f"google-japanese-{index:03d}",
+                name=f"google-korean-{index:03d}",
                 codepoints=usable,
-                note=f"googlefonts/nam-files slices/japanese_default.txt subset {index}",
+                note=f"googlefonts/nam-files slices/korean_default.txt subset {index}",
             )
         )
         assigned.update(usable)
@@ -280,9 +175,9 @@ def build_google_japanese_subset_plan(
         for index, codepoints in enumerate(_chunk_evenly(remaining, remaining_slices)):
             subsets.append(
                 WebFontSubset(
-                    name=f"google-japanese-extra-{index:02d}",
+                    name=f"google-korean-extra-{index:02d}",
                     codepoints=tuple(codepoints),
-                    note="Codepoints supported by Gen Interface JP but not covered by googlefonts/nam-files Japanese slicing strategy",
+                    note="Codepoints supported by Gen Interface KR but not covered by googlefonts/nam-files Korean slicing strategy",
                 )
             )
 
@@ -290,12 +185,10 @@ def build_google_japanese_subset_plan(
 
 
 def select_subset_plan(args: argparse.Namespace, font_codepoints: Iterable[int]) -> list[WebFontSubset]:
-    if args.strategy == "jis-row":
-        return build_subset_plan(font_codepoints, extra_han_slices=args.extra_han_slices)
-    if args.strategy == "google-japanese":
-        return build_google_japanese_subset_plan(
+    if args.strategy == "google-korean":
+        return build_google_korean_subset_plan(
             font_codepoints,
-            slice_path=args.google_japanese_slice.resolve(),
+            slice_path=args.google_korean_slice.resolve(),
             include_remaining=not args.no_remaining,
             remaining_slices=args.remaining_slices,
         )
@@ -462,13 +355,13 @@ def write_minified_css(path: Path, entries: list[dict]) -> dict:
 def write_css(out_dir: Path, subset_entries: list[dict], full_entry: dict) -> None:
     subset_css = [
         "/* Generated by webfont.build. */",
-        "/* Load with: <link rel=\"stylesheet\" href=\"/webfonts/gen-interface-jp/regular/gen-interface-jp-regular.css\"> */",
+        "/* Load with: <link rel=\"stylesheet\" href=\"/webfonts/gen-interface-kr/regular/gen-interface-kr-regular.css\"> */",
         "",
     ]
     for entry in subset_entries:
         subset_css.append(font_face_css(f"./{entry['path']}", entry["unicodeRange"]))
         subset_css.append("")
-    (out_dir / "gen-interface-jp-regular.css").write_text("\n".join(subset_css), encoding="utf-8")
+    (out_dir / "gen-interface-kr-regular.css").write_text("\n".join(subset_css), encoding="utf-8")
 
     full_css = [
         "/* Generated by webfont.build. */",
@@ -477,7 +370,7 @@ def write_css(out_dir: Path, subset_entries: list[dict], full_entry: dict) -> No
         font_face_css(f"./{full_entry['path']}"),
         "",
     ]
-    (out_dir / "gen-interface-jp-regular-full.css").write_text("\n".join(full_css), encoding="utf-8")
+    (out_dir / "gen-interface-kr-regular-full.css").write_text("\n".join(full_css), encoding="utf-8")
 
 
 def build_all(args: argparse.Namespace) -> dict:
@@ -575,7 +468,7 @@ def build_all(args: argparse.Namespace) -> dict:
 
     subset_bytes = sum(entry["bytes"] for entry in file_entries.values())
     manifest = {
-        "family": "Gen Interface JP",
+        "family": "Gen Interface KR",
         "style": STYLE,
         "fontDisplay": DISPLAY,
         "generatedAt": _dt.datetime.now(tz=_dt.timezone.utc).isoformat(),
@@ -603,8 +496,8 @@ def build_all(args: argparse.Namespace) -> dict:
             "subsets": list(file_entries.values()),
         },
     }
-    if args.strategy == "google-japanese":
-        manifest["source"]["googleJapaneseSlice"] = _relative_to_root(args.google_japanese_slice.resolve())
+    if args.strategy == "google-korean":
+        manifest["source"]["googleKoreanSlice"] = _relative_to_root(args.google_korean_slice.resolve())
     (out_dir / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
@@ -642,7 +535,7 @@ def build(args: argparse.Namespace) -> dict:
     font_codepoints = sorted(font.getBestCmap().keys())
     plan = select_subset_plan(args, font_codepoints)
 
-    full_out = out_dir / "full" / "GenInterfaceJP-Regular.woff2"
+    full_out = out_dir / "full" / "GenInterfaceKR-Regular.woff2"
     build_full_woff2(src_ttf, full_out)
     full_entry = {
         "path": str(full_out.relative_to(out_dir)),
@@ -651,7 +544,7 @@ def build(args: argparse.Namespace) -> dict:
 
     subset_entries: list[dict] = []
     for index, item in enumerate(plan, 1):
-        filename = f"GenInterfaceJP-Regular-{item.name}.woff2"
+        filename = f"GenInterfaceKR-Regular-{item.name}.woff2"
         out_path = out_dir / "subsets" / filename
         build_woff2_subset(src_ttf, out_path, item.codepoints)
         write_nam(out_dir / "nam" / f"{item.name}.nam", item.codepoints, item.note)
@@ -682,8 +575,8 @@ def build(args: argparse.Namespace) -> dict:
             "strategy": args.strategy,
         },
         "css": {
-            "subset": "gen-interface-jp-regular.css",
-            "full": "gen-interface-jp-regular-full.css",
+            "subset": "gen-interface-kr-regular.css",
+            "full": "gen-interface-kr-regular-full.css",
         },
         "files": {
             "full": full_entry,
@@ -697,19 +590,19 @@ def build(args: argparse.Namespace) -> dict:
             "coveredCodepoints": len(set().union(*(set(item.codepoints) for item in plan))) if plan else 0,
         },
     }
-    if args.strategy == "google-japanese":
-        manifest["source"]["googleJapaneseSlice"] = (
-            str(args.google_japanese_slice.resolve().relative_to(ROOT))
-            if args.google_japanese_slice.resolve().is_relative_to(ROOT)
-            else str(args.google_japanese_slice.resolve())
+    if args.strategy == "google-korean":
+        manifest["source"]["googleKoreanSlice"] = (
+            str(args.google_korean_slice.resolve().relative_to(ROOT))
+            if args.google_korean_slice.resolve().is_relative_to(ROOT)
+            else str(args.google_korean_slice.resolve())
         )
     (out_dir / "manifest.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
 
-    print(f"\nCSS: {out_dir / 'gen-interface-jp-regular.css'}")
-    print(f"Full CSS: {out_dir / 'gen-interface-jp-regular-full.css'}")
+    print(f"\nCSS: {out_dir / 'gen-interface-kr-regular.css'}")
+    print(f"Full CSS: {out_dir / 'gen-interface-kr-regular-full.css'}")
     print(f"Manifest: {out_dir / 'manifest.json'}")
     return manifest
 
@@ -717,14 +610,13 @@ def build(args: argparse.Namespace) -> dict:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--all", action="store_true", help="Build Text + Display subset WOFF2 for all weights and CSS entrypoints")
-    parser.add_argument("--ttf", type=Path, default=DEFAULT_TTF, help="Source Gen Interface JP Regular TTF")
+    parser.add_argument("--ttf", type=Path, default=DEFAULT_TTF, help="Source Gen Interface KR Regular TTF")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUT, help="Output directory")
     parser.add_argument("--jobs", type=int, default=max(1, min(4, os.cpu_count() or 1)), help="Parallel workers for --all subset generation")
-    parser.add_argument("--strategy", choices=["google-japanese", "jis-row"], default="google-japanese", help="Subset partitioning strategy")
-    parser.add_argument("--google-japanese-slice", type=Path, default=DEFAULT_GOOGLE_JAPANESE_SLICE, help="googlefonts/nam-files slices/japanese_default.txt")
+    parser.add_argument("--strategy", choices=["google-korean"], default="google-korean", help="Subset partitioning strategy")
+    parser.add_argument("--google-korean-slice", type=Path, default=DEFAULT_GOOGLE_KOREAN_SLICE, help="googlefonts/nam-files slices/korean_default.txt")
     parser.add_argument("--no-remaining", action="store_true", help="Do not add extra subsets for cmap codepoints outside the selected strategy")
     parser.add_argument("--remaining-slices", type=int, default=8, help="Number of extra subsets for codepoints outside the selected strategy")
-    parser.add_argument("--extra-han-slices", type=int, default=24, help="Slices for CJK codepoints outside JIS X 0208")
     parser.add_argument("--clean", action="store_true", help="Remove the output directory before building")
     return parser.parse_args()
 

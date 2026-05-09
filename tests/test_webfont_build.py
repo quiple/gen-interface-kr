@@ -17,16 +17,12 @@ testing fontTools' own behavior is out of scope.
 import pytest
 
 from webfont.build import (
-    build_google_japanese_subset_plan,
-    build_subset_plan,
+    build_google_korean_subset_plan,
     format_unicode_range,
-    is_han_codepoint,
-    jis_row_codepoints,
     merge_codepoints_to_ranges,
     parse_slicing_strategy,
     weight_css_filename,
 )
-
 
 # ---------------------------------------------------------------------------
 # merge_codepoints_to_ranges
@@ -92,15 +88,15 @@ class TestWeightCssFilename:
     """Public CSS file naming on the npm package root.
 
     These names are part of the published distribution contract: jsDelivr
-    consumers reference `gen-interface-jp/400.css` and
-    `gen-interface-jp/display-400.css` directly. Renaming here is a
+    consumers reference `gen-interface-kr/400.css` and
+    `gen-interface-kr/display-400.css` directly. Renaming here is a
     breaking change in the public CDN URL space.
     """
 
     def test_normal_family_uses_bare_weight(self):
         # `normal` is the default family — its CSS lives at the package
         # root with no family prefix, matching how Google Fonts CSS is
-        # commonly imported (`gen-interface-jp/400.css`).
+        # commonly imported (`gen-interface-kr/400.css`).
         assert weight_css_filename("normal", 400) == "400.css"
 
     def test_display_family_is_prefixed(self):
@@ -109,140 +105,6 @@ class TestWeightCssFilename:
     def test_unknown_family_falls_back_to_prefix(self):
         # Defensive: any future family key uses `{key}-{weight}.css`.
         assert weight_css_filename("mono", 700) == "mono-700.css"
-
-
-# ---------------------------------------------------------------------------
-# is_han_codepoint
-# ---------------------------------------------------------------------------
-
-class TestIsHanCodepoint:
-    """Boundary check for the Han block list used by the JIS-row planner."""
-
-    def test_main_block(self):
-        assert is_han_codepoint(0x4E00)  # 一
-        assert is_han_codepoint(0x9FFF)
-
-    def test_extension_a(self):
-        assert is_han_codepoint(0x3400)
-        assert is_han_codepoint(0x4DBF)
-
-    def test_extension_supplementary(self):
-        assert is_han_codepoint(0x20000)
-        assert is_han_codepoint(0x2FA1F)
-
-    def test_compatibility(self):
-        assert is_han_codepoint(0xF900)
-        assert is_han_codepoint(0xFAFF)
-
-    def test_kana_excluded(self):
-        assert not is_han_codepoint(0x3042)  # あ
-        assert not is_han_codepoint(0x30A2)  # ア
-
-    def test_ascii_excluded(self):
-        assert not is_han_codepoint(0x0041)
-
-
-# ---------------------------------------------------------------------------
-# jis_row_codepoints
-# ---------------------------------------------------------------------------
-
-class TestJisRowCodepoints:
-    """JIS X 0208 row → Unicode mapping via Python's EUC-JP codec."""
-
-    def test_first_level_row_16_starts_at_a(self):
-        # Row 16 cell 1 is 亜 — the canonical "first ideograph" of JIS
-        # first-level kanji. If this ever fails, Python's EUC-JP table
-        # has shifted and the slicing strategy needs reverification.
-        row_16 = jis_row_codepoints(16)
-        assert ord("亜") in row_16
-        assert ord("愛") in row_16
-
-    def test_second_level_row_48_starts_at_ichi(self):
-        # Row 48 cell 1 is 弌 — boundary between first- and second-level.
-        row_48 = jis_row_codepoints(48)
-        assert ord("弌") in row_48
-
-    def test_first_and_second_level_disjoint(self):
-        # First-level row 16 and second-level row 48 must not overlap;
-        # if they did, the planner would assign the same kanji to two
-        # slices and the browser would fetch both chunks per character.
-        assert not (jis_row_codepoints(16) & jis_row_codepoints(48))
-
-
-# ---------------------------------------------------------------------------
-# build_subset_plan (jis-row strategy)
-# ---------------------------------------------------------------------------
-
-class TestBuildSubsetPlan:
-    """Hand-tuned slicing plan: Latin, kana, JIS rows, extras, fallback."""
-
-    @pytest.fixture
-    def diverse_codepoints(self):
-        # One codepoint from each major bucket the planner discriminates:
-        return {
-            0x0020,         # space          → latin
-            0x0041,         # A              → latin
-            0x3042,         # あ              → jp-kana
-            ord("亜"),       # JIS row 16     → jp-kanji-jis1-16
-            ord("愛"),       # JIS row 16
-            ord("弌"),       # JIS row 48     → jp-kanji-jis2-48
-            0x20000,        # Plane 2 CJK    → jp-kanji-extra
-            0x0401,         # Cyrillic Ё     → other (fallback)
-        }
-
-    def test_no_codepoint_appears_in_two_slices(self, diverse_codepoints):
-        # Hard requirement of the slicing system. A duplicate would force
-        # the browser to download two WOFF2 chunks to render one glyph.
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        seen = set()
-        for item in plan:
-            current = set(item.codepoints)
-            assert not (seen & current), \
-                f"slice {item.name} duplicates codepoints already seen"
-            seen.update(current)
-
-    def test_full_coverage_no_codepoint_dropped(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        seen = {cp for item in plan for cp in item.codepoints}
-        assert seen == diverse_codepoints
-
-    def test_latin_codepoints_land_in_latin_slice(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        latin = next((item for item in plan if item.name == "latin"), None)
-        assert latin is not None
-        assert 0x0020 in latin.codepoints
-        assert 0x0041 in latin.codepoints
-
-    def test_kana_codepoints_land_in_jp_kana_slice(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        jp_kana = next((item for item in plan if item.name == "jp-kana"), None)
-        assert jp_kana is not None
-        assert 0x3042 in jp_kana.codepoints
-
-    def test_extra_plane_kanji_lands_in_extras(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        extras = [item for item in plan if item.name.startswith("jp-kanji-extra-")]
-        flat = {cp for item in extras for cp in item.codepoints}
-        assert 0x20000 in flat
-
-    def test_non_japanese_falls_back_to_other(self, diverse_codepoints):
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        other = [item for item in plan if item.name.startswith("other-")]
-        flat = {cp for item in other for cp in item.codepoints}
-        assert 0x0401 in flat  # Cyrillic Ё
-
-    def test_empty_input_yields_empty_plan(self):
-        assert build_subset_plan(set()) == []
-
-    def test_empty_slices_are_skipped(self, diverse_codepoints):
-        # If the input has no kanji from JIS row 17, no `jp-kanji-jis1-17`
-        # slice should appear (avoids @font-face rules with empty
-        # unicode-range, which browsers treat as match-all).
-        plan = build_subset_plan(diverse_codepoints, extra_han_slices=2)
-        names = {item.name for item in plan}
-        assert "jp-kanji-jis1-17" not in names
-        for item in plan:
-            assert item.codepoints, f"slice {item.name} has no codepoints"
 
 
 # ---------------------------------------------------------------------------
@@ -337,11 +199,11 @@ class TestParseSlicingStrategy:
 
 
 # ---------------------------------------------------------------------------
-# build_google_japanese_subset_plan
+# build_google_korean_subset_plan
 # ---------------------------------------------------------------------------
 
-class TestGoogleJapaneseSubsetPlan:
-    """Replays Google Fonts' Japanese slicing strategy against this font's cmap."""
+class TestGoogleKoreanSubsetPlan:
+    """Replays Google Fonts' Korean slicing strategy against this font's cmap."""
 
     def _write_strategy(self, tmp_path, blocks):
         strategy = tmp_path / "strategy.txt"
@@ -359,15 +221,15 @@ class TestGoogleJapaneseSubsetPlan:
             [0x20, 0x3042],
             [0x4E00],
         ])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x3042, 0x4E00, 0x41},  # 0x41 not in strategy → extra
             slice_path=strategy,
             remaining_slices=1,
         )
         assert [item.name for item in plan] == [
-            "google-japanese-000",
-            "google-japanese-001",
-            "google-japanese-extra-00",
+            "google-korean-000",
+            "google-korean-001",
+            "google-korean-extra-00",
         ]
         assert [set(item.codepoints) for item in plan] == [
             {0x20, 0x3042},
@@ -383,7 +245,7 @@ class TestGoogleJapaneseSubsetPlan:
             [0x20, 0x3042],
             [0x3042, 0x4E00],
         ])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x3042, 0x4E00},
             slice_path=strategy,
             include_remaining=False,
@@ -395,13 +257,13 @@ class TestGoogleJapaneseSubsetPlan:
 
     def test_include_remaining_false_skips_extras(self, tmp_path):
         strategy = self._write_strategy(tmp_path, [[0x20]])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x41, 0x42},
             slice_path=strategy,
             include_remaining=False,
         )
         # Only the strategy slice; the un-claimed Latin letters get dropped.
-        assert [item.name for item in plan] == ["google-japanese-000"]
+        assert [item.name for item in plan] == ["google-korean-000"]
         assert set(plan[0].codepoints) == {0x20}
 
     def test_empty_intersection_skips_slice(self, tmp_path):
@@ -414,27 +276,26 @@ class TestGoogleJapaneseSubsetPlan:
             [0x99999],       # NOT in font — should drop
             [0x3042],        # in font
         ])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x3042},
             slice_path=strategy,
             include_remaining=False,
         )
         # Note: the surviving slice from block index 2 keeps its
-        # original index in the name (`google-japanese-002`), preserving
+        # original index in the name (`google-korean-002`), preserving
         # the strategy's positional identity for cache-key stability.
         assert [item.name for item in plan] == [
-            "google-japanese-000",
-            "google-japanese-002",
+            "google-korean-000",
+            "google-korean-002",
         ]
 
     def test_slices_are_non_overlapping(self, tmp_path):
-        # Same hard requirement as build_subset_plan — no codepoint may
-        # land in two slices (browser would double-fetch).
+        # No codepoint may land in two slices (browser would double-fetch).
         strategy = self._write_strategy(tmp_path, [
             [0x20, 0x3042, 0x4E00],
             [0x41, 0x3042, 0x4E00],  # overlapping with first
         ])
-        plan = build_google_japanese_subset_plan(
+        plan = build_google_korean_subset_plan(
             {0x20, 0x3042, 0x4E00, 0x41},
             slice_path=strategy,
             include_remaining=False,

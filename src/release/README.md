@@ -4,7 +4,7 @@ This pipeline packages generated outputs for distribution.
 
 It creates a GitHub Release zip of the TTFs (for users installing the
 font into design tools, OS font folders, or bitmap conversion utilities)
-and prepares npm and Pages-hosted web font directories that deliver the
+and prepares an npm package that delivers the
 font on the web via CSS + unicode-range subset WOFF2.
 
 ## Build
@@ -17,7 +17,7 @@ This target runs:
 
 ```bash
 PYTHONPATH=src python3 -m font.build
-PYTHONPATH=src python3 -m webfont.build --all --clean --strategy google-japanese
+PYTHONPATH=src python3 -m webfont.build --all --clean --strategy google-korean
 PYTHONPATH=src python3 -m release.build
 ```
 
@@ -56,7 +56,7 @@ The npm cache defaults to the repository-local `.npm-cache/` directory. Override
 it with `NPM_CACHE` if needed:
 
 ```bash
-make npm-pack NPM_CACHE=/tmp/gen-interface-jp-npm-cache
+make npm-pack NPM_CACHE=/tmp/gen-interface-kr-npm-cache
 ```
 
 ## GitHub Release Assets
@@ -65,7 +65,7 @@ GitHub Release assets are written to:
 
 ```text
 dist/release/github/
-  GenInterfaceJP-<version>.zip   # TTF, all weights × both families
+  GenInterfaceKR-<version>.zip   # TTF, all weights × both families
 ```
 
 The asset filename embeds the version so each release can be linked
@@ -81,8 +81,8 @@ Release with the `gh` CLI:
 
 ```bash
 # Create a new release
-gh release create v<version> dist/release/github/GenInterfaceJP-<version>.zip \
-  --title "Gen Interface JP v<version>" \
+gh release create v<version> dist/release/github/GenInterfaceKR-<version>.zip \
+  --title "Gen Interface KR v<version>" \
   --notes "Release notes..."
 
 # Or attach to an existing (e.g. draft) release
@@ -93,25 +93,15 @@ A draft can be created up front and assets attached afterwards:
 
 ```bash
 gh release create v<version> --draft --target main \
-  --title "Gen Interface JP v<version>" --notes "..."
+  --title "Gen Interface KR v<version>" --notes "..."
 make release
 gh release upload v<version> dist/release/github/*.zip --clobber
 # Review on the GitHub UI, then "Publish release"
 ```
 
-The site download button defaults to:
-
-```text
-https://github.com/yamatoiizuka/gen-interface-jp/releases/download/v<version>/GenInterfaceJP-<version>.zip
-```
-
-Use `VITE_DOWNLOAD_URL` and `VITE_DOWNLOAD_LABEL` when building the site to
-override the URL or label.
-
 ## Web Font Hosting
 
-Web font files are written to an npm package root and to a mirrored Pages
-directory:
+Web font files are written to an npm package root:
 
 ```text
 dist/release/npm/
@@ -122,29 +112,21 @@ dist/release/npm/
   display-100.css ... display-800.css
   w/normal/.../*.woff2
   w/display/.../*.woff2
-
-dist/release/webfonts/
-  gen-interface-jp/
-    all.css
-    100.css ... 800.css
-    display-100.css ... display-800.css
-    w/normal/.../*.woff2
-    w/display/.../*.woff2
 ```
 
-For non-npm static hosting, copy `dist/release/webfonts/gen-interface-jp/` to
-the public directory. Example CSS path:
+For non-npm static hosting, copy the contents of `dist/release/npm/` to
+your public directory. Example CSS path:
 
 ```text
-/webfonts/gen-interface-jp/all.css
+/webfonts/all.css
 ```
 
 Publishing `dist/release/npm/` to npm makes the jsDelivr URL:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/all.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/400.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-jp@latest/display-400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/all.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/400.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gen-interface-kr@latest/display-400.css">
 ```
 
 The WOFF2 URLs inside the CSS are relative, so the CSS files and `w/` only need

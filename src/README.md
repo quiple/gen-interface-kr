@@ -4,7 +4,7 @@ Repository-local source code is grouped under `src/`.
 
 ```text
 src/
-  font/       # core font baking: Inter + Noto Sans JP, spacing, TTF output
+  font/       # core font baking: Inter + Noto Sans KR, spacing, TTF output
   webfont/    # derived web font delivery: CSS + unicode-range subset WOFF2
   release/    # release packaging: GitHub Release zips + npm webfont layout
 ```
@@ -19,7 +19,6 @@ make font
 make webfont
 make webfont-benchmark
 make release
-make site
 ```
 
 Direct module execution is also possible when `src/` is on `PYTHONPATH`:

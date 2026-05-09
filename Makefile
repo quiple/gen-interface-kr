@@ -13,8 +13,7 @@ NPM_CACHE ?= $(CURDIR)/.npm-cache
 .PHONY: all clean \
         font \
         webfont webfont-benchmark \
-        release npm-pack npm-publish-dry-run npm-publish \
-        site serve
+        release npm-pack npm-publish-dry-run npm-publish
 
 # Default: produce everything publishable.
 all: release
@@ -35,16 +34,16 @@ font:
 # ---------------------------------------------------------------------------
 
 webfont: font
-	$(PY) -m webfont.build --all --clean --strategy google-japanese --jobs $(WEBFONT_JOBS)
+	$(PY) -m webfont.build --all --clean --strategy google-korean --jobs $(WEBFONT_JOBS)
 
 # Throttled fetch comparison of the slicing plan against the full WOFF2.
 # Runs the single-Regular pipeline (webfont.build without --all) which
 # generates the full WOFF2 from the Regular TTF on demand into
-# dist/webfont/GenInterfaceJP-Regular/, then drives benchmark.mjs.
+# dist/webfont/GenInterfaceKR-Regular/, then drives benchmark.mjs.
 # Independent of `make webfont` (which is the --all multi-weight path
 # whose manifest shape differs from what benchmark.mjs reads).
 webfont-benchmark: font
-	$(PY) -m webfont.build --clean --strategy google-japanese
+	$(PY) -m webfont.build --clean --strategy google-korean
 	$(NODE) src/webfont/benchmark.mjs
 
 
@@ -69,24 +68,8 @@ npm-publish: release
 
 
 # ---------------------------------------------------------------------------
-# site  —  Vite static demo site (loads webfont via jsDelivr at runtime)
-# ---------------------------------------------------------------------------
-
-# site/dist/ is also the GitHub Pages artifact (.github/workflows/pages.yml
-# uploads it directly), so this single target serves both local builds and
-# Pages deployments.
-site:
-	cd site && npm run build
-
-# Local Vite dev server.
-serve:
-	cd site && npm run dev
-
-
-# ---------------------------------------------------------------------------
 # Meta
 # ---------------------------------------------------------------------------
 
 clean:
 	rm -rf dist/
-	rm -rf site/dist/

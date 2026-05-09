@@ -23,8 +23,8 @@ Usage:
 from __future__ import annotations
 
 import sys
-from fontTools.ttLib import TTFont
 
+from fontTools.ttLib import TTFont
 
 # GPOS features that provide proportional metric adjustments.
 # These become redundant once the font itself is proportional, so we strip
