@@ -91,16 +91,6 @@ def codepoints_from_ranges(ranges: Iterable[tuple[int, int]]) -> set[int]:
     return cps
 
 
-def is_han_codepoint(cp: int) -> bool:
-    return (
-        0x3400 <= cp <= 0x4DBF
-        or 0x4E00 <= cp <= 0x9FFF
-        or 0xF900 <= cp <= 0xFAFF
-        or 0x20000 <= cp <= 0x2FA1F
-    )
-
-
-
 
 def _chunk_evenly(values: list[int], chunks: int) -> list[list[int]]:
     if not values:
