@@ -112,6 +112,14 @@ class TestIsCjkCodepoint:
         assert _is_cjk_codepoint(0x3400)
         assert _is_cjk_codepoint(0x4DBF)
 
+    def test_hangul_syllables(self):
+        assert _is_cjk_codepoint(0xAC00)  # 가
+        assert _is_cjk_codepoint(0xD7AF)  # 힣
+
+    def test_hangul_compatibility_jamo(self):
+        assert _is_cjk_codepoint(0x3131)  # ㄱ
+        assert _is_cjk_codepoint(0x318E)  # ㆎ
+
     def test_extension_supplementary(self):
         assert _is_cjk_codepoint(0x20000)  # Extension B start
         assert _is_cjk_codepoint(0x2FA1F)  # Compatibility supplement end
