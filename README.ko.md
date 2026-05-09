@@ -98,7 +98,7 @@ docs/
 
 이 저장소의 주요 성과물은 `src/font/`에서 생성하는 폰트 패밀리입니다. `src/webfont/`와 `src/release/`는 해당 생성물로부터 파생되는 배포·공개용 공정입니다. 생성물은 `dist/` 아래에 위치하며, 저장소에는 커밋하지 않습니다.
 
-빌드 파이프라인이나 내부 사양의 상세한 내용은 [`docs/ARCHITECTURE.ko.md`](docs/ARCHITECTURE.ja.md)를 참조해 주세요.
+빌드 파이프라인이나 내부 사양의 상세한 내용은 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)를 참조해 주세요.
 
 ## 빠른 시작
 
@@ -108,7 +108,7 @@ make site     # 사이트 빌드 (site/dist/)
 make serve    # 사이트 로컬 개발 서버
 ```
 
-웹 폰트 서브셋화, 릴리스 패키징, 테스트, npm 공개 등의 모든 명령어는[`docs/ARCHITECTURE.ja.md`](docs/ARCHITECTURE.md)의 'Commands' 섹션을 참조해 주세요.
+웹 폰트 서브셋화, 릴리스 패키징, 테스트, npm 공개 등의 모든 명령어는[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)의 'Commands' 섹션을 참조해 주세요.
 
 ## 라이선스
 
