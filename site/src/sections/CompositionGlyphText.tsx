@@ -12,12 +12,12 @@ const BASELINE_FROM_TOP = 1030;
 const BELOW_BASELINE = 303;
 const VIEWBOX_HEIGHT = BASELINE_FROM_TOP + BELOW_BASELINE;
 
-const isKanaOrPunct = (cp: number): boolean =>
-  (cp >= 0x3000 && cp <= 0x303f) ||
-  (cp >= 0x3040 && cp <= 0x309f) ||
-  (cp >= 0x30a0 && cp <= 0x30ff) ||
-  (cp >= 0x31f0 && cp <= 0x31ff) ||
-  (cp >= 0xff00 && cp <= 0xffef);
+const isHangulOrPunct = (cp: number): boolean =>
+  (cp >= 0xac00 && cp <= 0xd7af) || // Hangul Syllables
+  (cp >= 0x1100 && cp <= 0x11ff) || // Hangul Jamo
+  (cp >= 0x3130 && cp <= 0x318f) || // Hangul Compatibility Jamo
+  (cp >= 0x3000 && cp <= 0x303f) || // CJK Symbols and Punctuation
+  (cp >= 0xff00 && cp <= 0xffef); // Halfwidth and Fullwidth Forms
 
 const clamp = (value: number, min: number, max: number): number =>
   Math.min(max, Math.max(min, value));
@@ -109,7 +109,7 @@ function placeLayer(
     const dx = lerp(glyph.noPalt.dx, glyph.withPalt.dx, paltAmount);
     const dy = lerp(glyph.noPalt.dy, glyph.withPalt.dy, paltAmount);
     const cp = shape.codepoints[glyph.cl] ?? 0;
-    const t = isKanaOrPunct(cp) ? trackingKana : tracking;
+    const t = isHangulOrPunct(cp) ? trackingKana : tracking;
     const half = t / 2;
     placed.push({ d: glyph.path, x: totalAdvance + dx + half, y: -dy });
     totalAdvance += ax + t;
