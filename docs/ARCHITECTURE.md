@@ -257,7 +257,7 @@ references.
 ### Strategies
 
 - **`google-japanese`** *(default)* — replays Google Fonts' Japanese
-  slicing strategy (`vendor/nam-files/slices/japanese_default.txt`).
+  slicing strategy (`vendor/nam-files/slices/korean_default.txt`).
   Same chunk boundaries as Google's hosted Noto, so coverage and cache
   behaviour match what users already encounter on most Japanese sites.
 - **`gen`** — hand-tuned plan: Latin / kana / punct / JIS row 16-92 /

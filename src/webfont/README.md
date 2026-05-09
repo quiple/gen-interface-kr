@@ -6,7 +6,7 @@ Interface KR Display weights.
 It generates a CSS file with `unicode-range` guarded `@font-face` rules and the
 corresponding WOFF2 subset files for Japanese web font delivery. The default
 Japanese slicing strategy uses the vendored `googlefonts/nam-files` data in
-`vendor/nam-files/slices/japanese_default.txt`; it does not inspect Google
+`vendor/nam-files/slices/korean_default.txt`; it does not inspect Google
 Fonts live CSS.
 
 ## Build
@@ -53,7 +53,7 @@ dist/webfont/gen-interface-jp/
 
 `nam/*.nam` follows the `googlefonts/nam-files` machine-readable style: one
 `0x...` codepoint per line. With `google-japanese`, the build intersects the
-120 slices from `japanese_default.txt` with the Gen Interface KR cmap, then
+120 slices from `korean_default.txt` with the Gen Interface KR cmap, then
 places supported codepoints outside that strategy into `google-japanese-extra-*`
 subsets.
 
