@@ -253,6 +253,7 @@ def _is_cjk_codepoint(cp: int) -> bool:
         or 0x3038 <= cp <= 0x303B   # CJK Symbols: 〸〹〺〻
         or 0x3100 <= cp <= 0x312F   # Bopomofo
         or 0x3130 <= cp <= 0x318F   # Hangul Compatibility Jamo
+        or 0xAC00 <= cp <= 0xD7AF   # Hangul Syllables
         or 0x3190 <= cp <= 0x319F   # Kanbun
         or 0x31A0 <= cp <= 0x31EF   # Bopomofo Extended + CJK Strokes
         or 0x3200 <= cp <= 0x32FF   # Enclosed CJK Letters and Months
