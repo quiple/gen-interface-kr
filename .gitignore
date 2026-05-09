@@ -10,8 +10,6 @@ dist/
 
 # Node
 node_modules/
-site/node_modules/
-site/dist/
 .vite/
 .npm-cache/
 

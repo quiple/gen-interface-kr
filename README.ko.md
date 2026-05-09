@@ -88,7 +88,6 @@ src/
   font/       # 핵심 폰트 생성
   webfont/    # 웹 폰트 배포용 CSS + 서브셋 WOFF2
   release/    # GitHub Release / npm 배포용 패키징
-site/         # 랜딩 페이지 겸 폰트 표시 확인 사이트
 vendor/
   fonts/      # Inter와 Noto Sans KR의 입력 폰트
   nam-files/  # 웹 폰트 분할용 googlefonts/nam-files 데이터
@@ -104,8 +103,6 @@ docs/
 
 ```bash
 make font     # dist/ttf/에 폰트 생성
-make site     # 사이트 빌드 (site/dist/)
-make serve    # 사이트 로컬 개발 서버
 ```
 
 웹 폰트 서브셋화, 릴리스 패키징, 테스트, npm 공개 등의 모든 명령어는[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)의 'Commands' 섹션을 참조해 주세요.

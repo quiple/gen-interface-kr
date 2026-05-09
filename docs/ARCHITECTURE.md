@@ -48,12 +48,6 @@ consumes the published webfont package.
         │     dist/release/github/   → GitHub Releases    │
         │     dist/release/npm/      → npm publish        │
         │     dist/release/webfonts/ → GitHub Pages       │
-        └─────────────────────┬───────────────────────────┘
-                              │
-        ┌─────────────────────▼──────────────────────────┐
-        │  site/  — Vite static demo                      │
-        │     loads webfont via jsDelivr (npm CDN)        │
-        │     deployed to GitHub Pages                    │
         └─────────────────────────────────────────────────┘
 ```
 

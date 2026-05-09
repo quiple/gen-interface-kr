@@ -87,7 +87,6 @@ src/
   font/       # Core font generation
   webfont/    # Web font CSS + subset WOFF2
   release/    # GitHub Release / npm packaging
-site/         # Landing page and font preview site
 vendor/
   fonts/      # Inter and Noto Sans KR source fonts
   nam-files/  # googlefonts/nam-files data for subsetting
@@ -103,8 +102,6 @@ Build pipeline and internal-spec details are in [`docs/ARCHITECTURE.md`](docs/AR
 
 ```bash
 make font     # Generate fonts under dist/ttf/
-make site     # Build the site (site/dist/)
-make serve    # Local dev server for the site
 ```
 
 For webfont subsetting, release packaging, tests, npm publishing, and the full command list, see the "Commands" section in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
