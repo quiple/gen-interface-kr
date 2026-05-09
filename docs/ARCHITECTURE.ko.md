@@ -1,4 +1,4 @@
-# Gen Interface KR — アーキテクチャ
+# Gen Interface KR — 아키텍처
 
 ## 概要
 
