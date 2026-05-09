@@ -13,8 +13,7 @@ NPM_CACHE ?= $(CURDIR)/.npm-cache
 .PHONY: all clean \
         font \
         webfont webfont-benchmark \
-        release npm-pack npm-publish-dry-run npm-publish \
-        site serve
+        release npm-pack npm-publish-dry-run npm-publish
 
 # Default: produce everything publishable.
 all: release
@@ -69,24 +68,8 @@ npm-publish: release
 
 
 # ---------------------------------------------------------------------------
-# site  —  Vite static demo site (loads webfont via jsDelivr at runtime)
-# ---------------------------------------------------------------------------
-
-# site/dist/ is also the GitHub Pages artifact (.github/workflows/pages.yml
-# uploads it directly), so this single target serves both local builds and
-# Pages deployments.
-site:
-	cd site && npm run build
-
-# Local Vite dev server.
-serve:
-	cd site && npm run dev
-
-
-# ---------------------------------------------------------------------------
 # Meta
 # ---------------------------------------------------------------------------
 
 clean:
 	rm -rf dist/
-	rm -rf site/dist/
