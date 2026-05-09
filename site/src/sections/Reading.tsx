@@ -3,7 +3,7 @@ import { SectionHead } from "./SectionHead";
 import { Slider } from "./Slider";
 
 const KR =
-  "Gen Interface KR は、デジタルインターフェースのために設計された、欧文と和文の調和を目指す書体です。明快な UI 用書体である Inter に、Noto Sans KR の和文グリフを合わせ、多言語環境で一貫した読みやすさを実現します。";
+  "Gen Interface KR은 디지털 인터페이스를 위해 설계된 영문과 국문의 조화를 목표로 하는 서체입니다. 명쾌한 UI용 서체인 Inter에 Noto Sans KR의 국문 글리프를 맞추어, 다국어 환경에서 일관된 가독성을 실현합니다.";
 
 const EN =
   "Gen Interface KR is a typeface designed for digital interfaces that aims to harmonize Latin script with Korean. Blending Inter with Noto Sans KR, it ensures consistent readability across multiple languages.";
